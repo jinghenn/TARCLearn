@@ -12,23 +12,25 @@ namespace TARCLearn
     using System;
     using System.Collections.Generic;
     
-    public partial class User
+    public partial class Chapter
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public User()
+        public Chapter()
         {
-            this.DiscussionMessages = new HashSet<DiscussionMessage>();
-            this.Courses = new HashSet<Course>();
+            this.DiscussionThreads = new HashSet<DiscussionThread>();
+            this.Materials = new HashSet<Material>();
+            this.Quizs = new HashSet<Quiz>();
         }
     
-        public string userId { get; set; }
-        public string password { get; set; }
-        public string username { get; set; }
-        public bool isLecturer { get; set; }
+        public string chapterId { get; set; }
+        public string courseId { get; set; }
+        public string chapterTitle { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DiscussionMessage> DiscussionMessages { get; set; }
+        public virtual ICollection<DiscussionThread> DiscussionThreads { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Course> Courses { get; set; }
+        public virtual ICollection<Material> Materials { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Quiz> Quizs { get; set; }
     }
 }

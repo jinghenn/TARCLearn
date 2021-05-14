@@ -12,23 +12,20 @@ namespace TARCLearn
     using System;
     using System.Collections.Generic;
     
-    public partial class User
+    public partial class Question
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public User()
+        public Question()
         {
-            this.DiscussionMessages = new HashSet<DiscussionMessage>();
-            this.Courses = new HashSet<Course>();
+            this.Choices = new HashSet<Choice>();
         }
     
-        public string userId { get; set; }
-        public string password { get; set; }
-        public string username { get; set; }
-        public bool isLecturer { get; set; }
+        public string questionId { get; set; }
+        public string question1 { get; set; }
+        public string quizId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DiscussionMessage> DiscussionMessages { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Course> Courses { get; set; }
+        public virtual ICollection<Choice> Choices { get; set; }
+        public virtual Quiz Quiz { get; set; }
     }
 }

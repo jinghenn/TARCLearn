@@ -18,6 +18,7 @@ namespace TARCLearn
         public TARCLearnEntities()
             : base("name=TARCLearnEntities")
         {
+            base.Configuration.ProxyCreationEnabled = false;
         }
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -25,6 +26,14 @@ namespace TARCLearn
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<Chapter> Chapters { get; set; }
+        public virtual DbSet<Choice> Choices { get; set; }
+        public virtual DbSet<Course> Courses { get; set; }
+        public virtual DbSet<DiscussionMessage> DiscussionMessages { get; set; }
+        public virtual DbSet<DiscussionThread> DiscussionThreads { get; set; }
+        public virtual DbSet<Material> Materials { get; set; }
+        public virtual DbSet<Question> Questions { get; set; }
+        public virtual DbSet<Quiz> Quizs { get; set; }
         public virtual DbSet<User> Users { get; set; }
     }
 }

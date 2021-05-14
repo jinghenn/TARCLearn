@@ -12,23 +12,19 @@ namespace TARCLearn
     using System;
     using System.Collections.Generic;
     
-    public partial class User
+    public partial class DiscussionThread
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public User()
+        public DiscussionThread()
         {
             this.DiscussionMessages = new HashSet<DiscussionMessage>();
-            this.Courses = new HashSet<Course>();
         }
     
-        public string userId { get; set; }
-        public string password { get; set; }
-        public string username { get; set; }
-        public bool isLecturer { get; set; }
+        public string threadId { get; set; }
+        public string chapterId { get; set; }
     
+        public virtual Chapter Chapter { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DiscussionMessage> DiscussionMessages { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Course> Courses { get; set; }
     }
 }
