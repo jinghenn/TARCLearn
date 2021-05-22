@@ -18,7 +18,6 @@ namespace TARCLearn
         public TARCLearnEntities()
             : base("name=TARCLearnEntities")
         {
-            //this.Configuration.ProxyCreationEnabled = false;
         }
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
