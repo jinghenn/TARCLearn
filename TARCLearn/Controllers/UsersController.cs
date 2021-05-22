@@ -3,36 +3,62 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Description;
+using TARCLearn.Models;
+using System.Data.Entity;
 
 namespace TARCLearn.Controllers
 {
     public class UsersController : ApiController
     {
         // GET api/<controller>
-        public IEnumerable<User> Get()
+        public IQueryable<UserDto> GetUsers()
         {
-            using(TARCLearnEntities entities = new TARCLearnEntities())
-            {
-                return entities.Users.ToList();
-            }
+            TARCLearnEntities entities = new TARCLearnEntities();
+            var users = from u in entities.Users
+                        select new UserDto()
+                        {
+                            userId = u.userId,
+                            username = u.username,
+                        };
+            return users;
         }
-        // GET api/<controller>/5
-        public HttpResponseMessage Get(string id)
+        [ResponseType(typeof(UserDetailDto))]
+        public async Task<IHttpActionResult> GetUser(string id)
         {
-            using (TARCLearnEntities entities = new TARCLearnEntities())
+            TARCLearnEntities entities = new TARCLearnEntities();
+            var user = await entities.Users.Select(u =>
+            new UserDetailDto()
             {
-
-                var entity = entities.Users.FirstOrDefault(e => e.userId == id);
-                if (entity != null)
-                {
-                    return Request.CreateResponse(HttpStatusCode.OK, entity);
-                }
-                else
-                {
-                    return Request.CreateResponse(HttpStatusCode.NotFound, "User with id = " + id + "not found.");
-                }
+                userId = u.userId,
+                username = u.username,
+                password = u.password,
+                isLecturer = u.isLecturer
+            }).SingleOrDefaultAsync(c => c.userId == id);
+            if (user == null)
+            {
+                return NotFound();
             }
+            return Ok(user);
+        }
+
+        [Route("api/users/{id}/courses")]
+        [ResponseType(typeof(UserCoursesDto))]
+        public async Task<IHttpActionResult> GetUserCourses(string id)
+        {
+            TARCLearnEntities entities = new TARCLearnEntities();
+            var user = await entities.Users.Include(c => c.Courses).Select(u =>
+            new UserCoursesDto()
+            {
+                CourseIds = u.Courses.Select(cid => cid.courseId)
+            }).SingleOrDefaultAsync(c => c.userId == id);
+            if(user == null)
+            {
+                return NotFound();
+            }
+            return Ok(user);
         }
 
         // POST api/<controller>

@@ -24,6 +24,15 @@
             </asp:RadioButtonList>
             <br />
             <asp:Button ID="btnAdd" runat="server" OnClick="btnAdd_Click" Text="Button" />
+            <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" DataKeyNames="userId" DataSourceID="SqlDataSource1">
+                <Columns>
+                    <asp:BoundField DataField="userId" HeaderText="userId" ReadOnly="True" SortExpression="userId" />
+                    <asp:BoundField DataField="password" HeaderText="password" SortExpression="password" />
+                    <asp:BoundField DataField="username" HeaderText="username" SortExpression="username" />
+                    <asp:CheckBoxField DataField="isLecturer" HeaderText="isLecturer" SortExpression="isLecturer" />
+                </Columns>
+            </asp:GridView>
+            <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:ConnectionString %>" SelectCommand="SELECT * FROM [User]"></asp:SqlDataSource>
         </div>
     </form>
 </body>
