@@ -109,6 +109,7 @@
     <Content Include="App_Data\TARCLearn_log.ldf">
       <DependentUpon>TARCLearn.mdf</DependentUpon>
     </Content>
+    <Content Include="App_Pages\Login.aspx" />
     <Content Include="App_Pages\Users.aspx" />
     <Content Include="DataModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -121,9 +122,24 @@
       <LastGenOutput>DataModel.cs</LastGenOutput>
     </Content>
     <Content Include="Global.asax" />
+    <Content Include="TARC_logo.png" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Pages\Login.aspx.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="App_Pages\Login.aspx.designer.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="App_Pages\TARCLearn.Master.cs">
+      <DependentUpon>TARCLearn.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="App_Pages\TARCLearn.Master.designer.cs">
+      <DependentUpon>TARCLearn.Master</DependentUpon>
+    </Compile>
     <Compile Include="App_Pages\Users.aspx.cs">
       <DependentUpon>Users.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -188,6 +204,7 @@
     <Content Include="DataModel.edmx.diagram">
       <DependentUpon>DataModel.edmx</DependentUpon>
     </Content>
+    <Content Include="App_Pages\TARCLearn.Master" />
     <None Include="packages.config" />
     <None Include="Properties\PublishProfiles\IISProfile.pubxml" />
     <None Include="Web.Debug.config">
