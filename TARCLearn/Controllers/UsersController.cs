@@ -45,20 +45,25 @@ namespace TARCLearn.Controllers
         }
 
         [Route("api/users/{id}/courses")]
-        [ResponseType(typeof(UserCoursesDto))]
+        [ResponseType(typeof(IEnumerable<CourseDto>))]
         public async Task<IHttpActionResult> GetUserCourses(string id)
         {
             TARCLearnEntities entities = new TARCLearnEntities();
             var user = await entities.Users.Include(c => c.Courses).Select(u =>
             new UserCoursesDto()
             {
-                CourseIds = u.Courses.Select(cid => cid.courseId)
+                userId = u.userId,
+                Courses = u.Courses.Select(cid => new CourseDto()
+                {
+                    courseId = cid.courseId,
+                    courseName = cid.courseTitle
+                })
             }).SingleOrDefaultAsync(c => c.userId == id);
             if(user == null)
             {
                 return NotFound();
             }
-            return Ok(user);
+            return Ok(user.Courses);
         }
 
         // POST api/<controller>

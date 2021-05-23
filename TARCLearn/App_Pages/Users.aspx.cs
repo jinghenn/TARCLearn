@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data.Entity.Core.EntityClient;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -41,8 +42,9 @@ namespace TARCLearn.App_Pages
             //    context.Users.Add(newUser);
             //    context.SaveChanges();
             //}
-            string conStr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-            SqlConnection con = new SqlConnection(conStr);
+            string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
+            string providerConStr = new EntityConnectionStringBuilder(conStr).ProviderConnectionString;
+            SqlConnection con = new SqlConnection(providerConStr);
             con.Open();
             SqlCommand cmd = new SqlCommand("INSERT INTO [User] values(@userId, @pw, @username, @isLect)", con);
             cmd.Parameters.AddWithValue("@userId", txtUserId.Text);
