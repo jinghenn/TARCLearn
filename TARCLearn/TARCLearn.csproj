@@ -109,8 +109,12 @@
     <Content Include="App_Data\TARCLearn_log.ldf">
       <DependentUpon>TARCLearn.mdf</DependentUpon>
     </Content>
+    <Content Include="App_Pages\Chapter.aspx" />
     <Content Include="App_Pages\Login.aspx" />
+    <Content Include="App_Pages\Courses.aspx" />
     <Content Include="App_Pages\Users.aspx" />
+    <Content Include="Css\cssLogin.css" />
+    <Content Include="Css\cssTARCLearn.css" />
     <Content Include="DataModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>DataModel.edmx</DependentUpon>
@@ -122,16 +126,31 @@
       <LastGenOutput>DataModel.cs</LastGenOutput>
     </Content>
     <Content Include="Global.asax" />
-    <Content Include="TARC_logo.png" />
+    <Content Include="image\TARC.png" />
+    <Content Include="image\TARC_logo.png" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Pages\Chapter.aspx.cs">
+      <DependentUpon>Chapter.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="App_Pages\Chapter.aspx.designer.cs">
+      <DependentUpon>Chapter.aspx</DependentUpon>
+    </Compile>
     <Compile Include="App_Pages\Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="App_Pages\Login.aspx.designer.cs">
       <DependentUpon>Login.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="App_Pages\Courses.aspx.cs">
+      <DependentUpon>Courses.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="App_Pages\Courses.aspx.designer.cs">
+      <DependentUpon>Courses.aspx</DependentUpon>
     </Compile>
     <Compile Include="App_Pages\TARCLearn.Master.cs">
       <DependentUpon>TARCLearn.Master</DependentUpon>

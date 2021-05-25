@@ -11,12 +11,19 @@ namespace TARCLearn.App_Pages
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if(lblUserType.Text == "Teacher")
+            if (Session["username"] != null)
             {
-                btnMS.Visible = true;
+                lblUserName.Text = Session["username"].ToString();
+                lblUserType.Text = Session["usertype"].ToString();
+
+            }
+            
+            if (Session["usertype"].ToString() == "Student")
+            {
+                btnMS.Visible = false;
             }
         }
 
-        
+       
     }
 }

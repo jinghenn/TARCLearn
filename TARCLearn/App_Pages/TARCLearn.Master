@@ -10,6 +10,7 @@
     <style>
     .size{
         width:250px;
+        height:100%;
     }
     .image{
         margin: 30px 0px 0px 10px;
@@ -29,6 +30,15 @@
       background-color: #D6E4F1; /* light blue */
       color: #0275d8;
     }
+
+    .text{
+        margin-top:10px;
+        text-transform:uppercase;
+    }
+    td {
+      
+      vertical-align: top;
+    }
        
     </style>
 
@@ -47,27 +57,27 @@
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top shadow">
             <div class="container-fluid ">                
                 <a class="navbar-brand">
-                    <asp:Image ID="Image1" Width="40px" runat="server" ImageUrl="~/TARC_logo.png"/>
-                    TARUC Education Repository
+                    <asp:Image ID="imgLogo" Width="30px" runat="server" ImageUrl="~/image/TARC_logo.png"/>
+                    TARUC Learn
                 </a>                  
-                <a class="navbar-nav justify-content-end navbar-brand" id="logoutLink" runat="server" >Logout</a>                                
+                <a class="navbar-nav justify-content-end navbar-brand" id="logoutLink" runat="server" href="Login.aspx" >Logout</a>                                
             </div>
         </nav>
 
-        <table style="width:100%;">
+        <table style="width:100%; height:100%">
                     <tr>
                         <td class="size">                      
                            <asp:Panel ID="Panel1" runat="server" ScrollBars="Auto" HorizontalAlign="Left" >
                                 <asp:Panel ID="Panel2" runat="server"  HorizontalAlign="Left">
-                                    <asp:Image ID="imgUser" CssClass="image" runat="server" Width="50px" Height="50px" ImageUrl="~/TARC_logo.png"/>
+                                    <asp:Image ID="imgUser" CssClass="image" runat="server" Width="50px" Height="50px" ImageUrl="~/image/TARC_logo.png"/>
                                       <div class="label">
-                                         <asp:Label ID="lblUserName" runat="server" Width="220px"></asp:Label>
-                                         <asp:Label ID="lblUserType" runat="server" Width="220px"></asp:Label>
+                                         <asp:Label ID="lblUserName" CssClass="text" runat="server" Width="220px" Font-Bold="True" Font-Size="Large" Height="20px"  ></asp:Label>
+                                         <asp:Label ID="lblUserType" runat="server" Width="220px"  ForeColor="#666666" Font-Size="Smaller" Height="20px"></asp:Label>
                                        </div>
                                  </asp:Panel>
                                  <asp:Button ID="btnCourses" runat="server" class=" button" Text="Courses" Width="250px" Height="70px" BorderWidth="0px" />
                                  <asp:Button ID="btnDN" runat="server" class=" button" Text="Discussion Notification" Width="250px" Height="70px" BorderWidth="0px"/>
-                                 <asp:Button ID="btnMS" runat="server" class=" button" Text="Manage Students" Width="250px" Visible="False" Height="70px" BorderWidth="0px" />  
+                                 <asp:Button ID="btnMS" runat="server" class=" button" Text="Manage Students" Width="250px" Height="70px" BorderWidth="0px" />  
                             </asp:Panel>
                             
                         </td>
