@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-
+using TARCLearn.Models;
 namespace TARCLearn.Models
 {
     public class UserDto
@@ -17,12 +17,12 @@ namespace TARCLearn.Models
         public string password { get; set; }
         public bool isLecturer { get; set; }
     }
-}
-namespace TARCLearn.Models
-{
+
+
     public class UserCoursesDto
     {
         public string userId { get; set; }
-        public virtual IEnumerable<string> CourseIds { get; set; }
+        public virtual IEnumerable<CourseDto> Courses { get; set; }
+        //public virtual IEnumerable<string> CourseNames { get; set; }
     }
 }

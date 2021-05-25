@@ -24,15 +24,13 @@
             </asp:RadioButtonList>
             <br />
             <asp:Button ID="btnAdd" runat="server" OnClick="btnAdd_Click" Text="Button" />
-            <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" DataKeyNames="userId" DataSourceID="SqlDataSource1">
+            <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" DataKeyNames="userId,courseId" DataSourceID="SqlDataSource1">
                 <Columns>
                     <asp:BoundField DataField="userId" HeaderText="userId" ReadOnly="True" SortExpression="userId" />
-                    <asp:BoundField DataField="password" HeaderText="password" SortExpression="password" />
-                    <asp:BoundField DataField="username" HeaderText="username" SortExpression="username" />
-                    <asp:CheckBoxField DataField="isLecturer" HeaderText="isLecturer" SortExpression="isLecturer" />
+                    <asp:BoundField DataField="courseId" HeaderText="courseId" SortExpression="courseId" ReadOnly="True" />
                 </Columns>
             </asp:GridView>
-            <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:ConnectionString %>" SelectCommand="SELECT * FROM [User]"></asp:SqlDataSource>
+            <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\TARCLearn.mdf;Integrated Security=True;MultipleActiveResultSets=True;Application Name=EntityFramework" ProviderName="System.Data.SqlClient" SelectCommand="SELECT * FROM [Enrolment]"></asp:SqlDataSource>
         </div>
     </form>
 </body>
