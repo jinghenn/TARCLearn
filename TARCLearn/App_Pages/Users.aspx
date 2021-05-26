@@ -30,6 +30,14 @@
                     <asp:BoundField DataField="courseId" HeaderText="courseId" SortExpression="courseId" ReadOnly="True" />
                 </Columns>
             </asp:GridView>
+            <asp:GridView ID="GridView2" runat="server" AutoGenerateColumns="False" DataKeyNames="courseId" DataSourceID="SqlDataSource2">
+                <Columns>
+                    <asp:BoundField DataField="courseId" HeaderText="courseId" ReadOnly="True" SortExpression="courseId" />
+                    <asp:BoundField DataField="courseTitle" HeaderText="courseTitle" SortExpression="courseTitle" />
+                    <asp:BoundField DataField="courseDescription" HeaderText="courseDescription" SortExpression="courseDescription" />
+                </Columns>
+            </asp:GridView>
+            <asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\TARCLearn.mdf;Integrated Security=True;MultipleActiveResultSets=True;Application Name=EntityFramework" ProviderName="System.Data.SqlClient" SelectCommand="SELECT * FROM [Course]"></asp:SqlDataSource>
             <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\TARCLearn.mdf;Integrated Security=True;MultipleActiveResultSets=True;Application Name=EntityFramework" ProviderName="System.Data.SqlClient" SelectCommand="SELECT * FROM [Enrolment]"></asp:SqlDataSource>
         </div>
     </form>

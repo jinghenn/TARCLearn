@@ -140,7 +140,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Enrolment_ToCourse">
-          <End Role="Course" Type="Self.Course" Multiplicity="1" />
+          <End Role="Course" Type="Self.Course" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Enrolment" Type="Self.Enrolment" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Course">
@@ -430,8 +432,10 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="Enrolment">
-          <End Role="Course" Type="Self.Course" Multiplicity="*" />
-          <End Role="User" Type="Self.User" Multiplicity="*" />
+          <End Role="Course" Type="Self.Course" Multiplicity="*" >
+          </End>
+          <End Role="User" Type="Self.User" Multiplicity="*" >
+          </End>
         </Association>
         <EntityContainer Name="TARCLearnEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Chapters" EntityType="Self.Chapter" />

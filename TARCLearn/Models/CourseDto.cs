@@ -8,7 +8,13 @@ namespace TARCLearn.Models
     public class CourseDto
     {
         public string courseId { get; set; }
-        public string courseName { get; set; }
+        public string courseTitle { get; set; }
+    }
+    public class CourseDetailDto
+    {
+        public string courseId { get; set; }
+        public string courseTitle { get; set; }
+        public string courseDescription { get; set; }
     }
     public class CourseUsersDto
     {
