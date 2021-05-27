@@ -9,7 +9,8 @@
           <Key>
             <PropertyRef Name="chapterId" />
           </Key>
-          <Property Name="chapterId" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="chapterId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="chapterNo" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="courseId" Type="varchar" MaxLength="8" Nullable="false" />
           <Property Name="chapterTitle" Type="varchar" MaxLength="100" Nullable="false" />
         </EntityType>
@@ -44,7 +45,7 @@
             <PropertyRef Name="threadId" />
           </Key>
           <Property Name="threadId" Type="varchar" MaxLength="10" Nullable="false" />
-          <Property Name="chapterId" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="chapterId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Enrolment">
           <Key>
@@ -59,12 +60,13 @@
             <PropertyRef Name="materialId" />
           </Key>
           <Property Name="materialId" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="index" Type="int" Nullable="false" />
           <Property Name="materialTitle" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="materialDescription" Type="varchar" MaxLength="2000" />
           <Property Name="materialUrl" Type="varchar" MaxLength="500" Nullable="false" />
           <Property Name="materialName" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="mode" Type="varchar" MaxLength="10" Nullable="false" />
-          <Property Name="chapterId" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="chapterId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Question">
           <Key>
@@ -80,7 +82,7 @@
           </Key>
           <Property Name="quizId" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="quizTitle" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="chapterId" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="chapterId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -275,13 +277,14 @@
           <Key>
             <PropertyRef Name="chapterId" />
           </Key>
-          <Property Name="chapterId" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="chapterId" Type="String" Nullable="false" />
           <Property Name="courseId" Type="String" MaxLength="8" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="chapterTitle" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="DiscussionThreads" Relationship="Self.FK_DiscussionThread_Chapter" FromRole="Chapter" ToRole="DiscussionThread" />
           <NavigationProperty Name="Materials" Relationship="Self.FK_Material_Chapter" FromRole="Chapter" ToRole="Material" />
           <NavigationProperty Name="Quizs" Relationship="Self.FK_Quiz_chapter" FromRole="Chapter" ToRole="Quiz" />
           <NavigationProperty Name="Course" Relationship="TARCLearnModel.FK_Chapter_ToCourse" FromRole="Chapter" ToRole="Course" />
+          <Property Name="chapterNo" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Choice">
           <Key>
@@ -319,7 +322,7 @@
             <PropertyRef Name="threadId" />
           </Key>
           <Property Name="threadId" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="chapterId" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="chapterId" Type="String" Nullable="false" />
           <NavigationProperty Name="Chapter" Relationship="Self.FK_DiscussionThread_Chapter" FromRole="DiscussionThread" ToRole="Chapter" />
           <NavigationProperty Name="DiscussionMessages" Relationship="Self.FK_DiscussionMessage_DiscussionThread" FromRole="DiscussionThread" ToRole="DiscussionMessage" />
         </EntityType>
@@ -333,8 +336,9 @@
           <Property Name="materialUrl" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="materialName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="mode" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="chapterId" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="chapterId" Type="String" Nullable="false" />
           <NavigationProperty Name="Chapter" Relationship="Self.FK_Material_Chapter" FromRole="Material" ToRole="Chapter" />
+          <Property Name="index" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="Question">
           <Key>
@@ -352,7 +356,7 @@
           </Key>
           <Property Name="quizId" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="quizTitle" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="chapterId" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="chapterId" Type="String" Nullable="false" />
           <NavigationProperty Name="Chapter" Relationship="Self.FK_Quiz_chapter" FromRole="Quiz" ToRole="Chapter" />
           <NavigationProperty Name="Questions" Relationship="Self.FK_Question_Quiz" FromRole="Quiz" ToRole="Question" />
         </EntityType>
@@ -527,6 +531,7 @@
           <EntitySetMapping Name="Chapters">
             <EntityTypeMapping TypeName="TARCLearnModel.Chapter">
               <MappingFragment StoreEntitySet="Chapter">
+                <ScalarProperty Name="chapterNo" ColumnName="chapterNo" />
                 <ScalarProperty Name="chapterId" ColumnName="chapterId" />
                 <ScalarProperty Name="courseId" ColumnName="courseId" />
                 <ScalarProperty Name="chapterTitle" ColumnName="chapterTitle" />
@@ -573,6 +578,7 @@
           <EntitySetMapping Name="Materials">
             <EntityTypeMapping TypeName="TARCLearnModel.Material">
               <MappingFragment StoreEntitySet="Material">
+                <ScalarProperty Name="index" ColumnName="index" />
                 <ScalarProperty Name="materialId" ColumnName="materialId" />
                 <ScalarProperty Name="materialTitle" ColumnName="materialTitle" />
                 <ScalarProperty Name="materialDescription" ColumnName="materialDescription" />

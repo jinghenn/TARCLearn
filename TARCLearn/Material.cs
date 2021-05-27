@@ -21,6 +21,7 @@ namespace TARCLearn
         public string materialName { get; set; }
         public string mode { get; set; }
         public string chapterId { get; set; }
+        public int index { get; set; }
     
         public virtual Chapter Chapter { get; set; }
     }
