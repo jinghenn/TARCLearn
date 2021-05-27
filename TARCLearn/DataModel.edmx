@@ -9,7 +9,8 @@
           <Key>
             <PropertyRef Name="chapterId" />
           </Key>
-          <Property Name="chapterId" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="chapterId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="chapterNo" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="courseId" Type="varchar" MaxLength="8" Nullable="false" />
           <Property Name="chapterTitle" Type="varchar" MaxLength="100" Nullable="false" />
         </EntityType>
@@ -44,7 +45,7 @@
             <PropertyRef Name="threadId" />
           </Key>
           <Property Name="threadId" Type="varchar" MaxLength="10" Nullable="false" />
-          <Property Name="chapterId" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="chapterId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Enrolment">
           <Key>
@@ -59,12 +60,13 @@
             <PropertyRef Name="materialId" />
           </Key>
           <Property Name="materialId" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="index" Type="int" Nullable="false" />
           <Property Name="materialTitle" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="materialDescription" Type="varchar" MaxLength="2000" />
           <Property Name="materialUrl" Type="varchar" MaxLength="500" Nullable="false" />
           <Property Name="materialName" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="mode" Type="varchar" MaxLength="10" Nullable="false" />
-          <Property Name="chapterId" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="chapterId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
         </EntityType>
         <EntityType Name="Question">
           <Key>
@@ -80,7 +82,7 @@
           </Key>
           <Property Name="quizId" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="quizTitle" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="chapterId" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="chapterId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -91,6 +93,20 @@
           <Property Name="username" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="isLecturer" Type="bit" Nullable="false" />
         </EntityType>
+        <Association Name="FK_Chapter_ToCourse">
+          <End Role="Course" Type="Self.Course" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Chapter" Type="Self.Chapter" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Course">
+              <PropertyRef Name="courseId" />
+            </Principal>
+            <Dependent Role="Chapter">
+              <PropertyRef Name="courseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Choices_Question">
           <End Role="Question" Type="Self.Question" Multiplicity="1" />
           <End Role="Choices" Type="Self.Choices" Multiplicity="*" />
@@ -140,7 +156,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Enrolment_ToCourse">
-          <End Role="Course" Type="Self.Course" Multiplicity="1" />
+          <End Role="Course" Type="Self.Course" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Enrolment" Type="Self.Enrolment" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Course">
@@ -210,6 +228,10 @@
           <EntitySet Name="Question" EntityType="Self.Question" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Quiz" EntityType="Self.Quiz" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Chapter_ToCourse" Association="Self.FK_Chapter_ToCourse">
+            <End Role="Course" EntitySet="Course" />
+            <End Role="Chapter" EntitySet="Chapter" />
+          </AssociationSet>
           <AssociationSet Name="FK_Choices_Question" Association="Self.FK_Choices_Question">
             <End Role="Question" EntitySet="Question" />
             <End Role="Choices" EntitySet="Choices" />
@@ -251,103 +273,168 @@
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="TARCLearnModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="TARCLearnEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Chapters" EntityType="TARCLearnModel.Chapter" />
+          <EntitySet Name="Choices" EntityType="TARCLearnModel.Choice" />
+          <EntitySet Name="Courses" EntityType="TARCLearnModel.Course" />
+          <EntitySet Name="DiscussionMessages" EntityType="TARCLearnModel.DiscussionMessage" />
+          <EntitySet Name="DiscussionThreads" EntityType="TARCLearnModel.DiscussionThread" />
+          <EntitySet Name="Materials" EntityType="TARCLearnModel.Material" />
+          <EntitySet Name="Questions" EntityType="TARCLearnModel.Question" />
+          <EntitySet Name="Quizs" EntityType="TARCLearnModel.Quiz" />
+          <EntitySet Name="Users" EntityType="TARCLearnModel.User" />
+          <AssociationSet Name="FK_Chapter_ToCourse" Association="TARCLearnModel.FK_Chapter_ToCourse">
+            <End Role="Course" EntitySet="Courses" />
+            <End Role="Chapter" EntitySet="Chapters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DiscussionThread_Chapter" Association="TARCLearnModel.FK_DiscussionThread_Chapter">
+            <End Role="Chapter" EntitySet="Chapters" />
+            <End Role="DiscussionThread" EntitySet="DiscussionThreads" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Material_Chapter" Association="TARCLearnModel.FK_Material_Chapter">
+            <End Role="Chapter" EntitySet="Chapters" />
+            <End Role="Material" EntitySet="Materials" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Quiz_chapter" Association="TARCLearnModel.FK_Quiz_chapter">
+            <End Role="Chapter" EntitySet="Chapters" />
+            <End Role="Quiz" EntitySet="Quizs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Choices_Question" Association="TARCLearnModel.FK_Choices_Question">
+            <End Role="Question" EntitySet="Questions" />
+            <End Role="Choice" EntitySet="Choices" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DiscussionMessage_DiscussionThread" Association="TARCLearnModel.FK_DiscussionMessage_DiscussionThread">
+            <End Role="DiscussionThread" EntitySet="DiscussionThreads" />
+            <End Role="DiscussionMessage" EntitySet="DiscussionMessages" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DiscussionMessage_User" Association="TARCLearnModel.FK_DiscussionMessage_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="DiscussionMessage" EntitySet="DiscussionMessages" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Question_Quiz" Association="TARCLearnModel.FK_Question_Quiz">
+            <End Role="Quiz" EntitySet="Quizs" />
+            <End Role="Question" EntitySet="Questions" />
+          </AssociationSet>
+          <AssociationSet Name="Enrolment" Association="TARCLearnModel.Enrolment">
+            <End Role="Course" EntitySet="Courses" />
+            <End Role="User" EntitySet="Users" />
+          </AssociationSet>
+        </EntityContainer>
         <EntityType Name="Chapter">
           <Key>
             <PropertyRef Name="chapterId" />
           </Key>
-          <Property Name="chapterId" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="courseId" Type="String" MaxLength="8" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="chapterTitle" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="DiscussionThreads" Relationship="Self.FK_DiscussionThread_Chapter" FromRole="Chapter" ToRole="DiscussionThread" />
-          <NavigationProperty Name="Materials" Relationship="Self.FK_Material_Chapter" FromRole="Chapter" ToRole="Material" />
-          <NavigationProperty Name="Quizs" Relationship="Self.FK_Quiz_chapter" FromRole="Chapter" ToRole="Quiz" />
+          <Property Name="chapterId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="chapterNo" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="courseId" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="false" />
+          <Property Name="chapterTitle" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Course" Relationship="TARCLearnModel.FK_Chapter_ToCourse" FromRole="Chapter" ToRole="Course" />
+          <NavigationProperty Name="DiscussionThreads" Relationship="TARCLearnModel.FK_DiscussionThread_Chapter" FromRole="Chapter" ToRole="DiscussionThread" />
+          <NavigationProperty Name="Materials" Relationship="TARCLearnModel.FK_Material_Chapter" FromRole="Chapter" ToRole="Material" />
+          <NavigationProperty Name="Quizs" Relationship="TARCLearnModel.FK_Quiz_chapter" FromRole="Chapter" ToRole="Quiz" />
         </EntityType>
         <EntityType Name="Choice">
           <Key>
             <PropertyRef Name="choiceId" />
           </Key>
-          <Property Name="choiceId" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="choice1" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="choiceId" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="choice1" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="isAnswer" Type="Boolean" Nullable="false" />
-          <Property Name="questionId" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Question" Relationship="Self.FK_Choices_Question" FromRole="Choices" ToRole="Question" />
+          <Property Name="questionId" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Question" Relationship="TARCLearnModel.FK_Choices_Question" FromRole="Choice" ToRole="Question" />
         </EntityType>
         <EntityType Name="Course">
           <Key>
             <PropertyRef Name="courseId" />
           </Key>
-          <Property Name="courseId" Type="String" MaxLength="8" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="courseTitle" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="courseId" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="false" />
+          <Property Name="courseTitle" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="courseDescription" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Users" Relationship="Self.Enrolment" FromRole="Course" ToRole="User" />
+          <NavigationProperty Name="Chapters" Relationship="TARCLearnModel.FK_Chapter_ToCourse" FromRole="Course" ToRole="Chapter" />
+          <NavigationProperty Name="Users" Relationship="TARCLearnModel.Enrolment" FromRole="Course" ToRole="User" />
         </EntityType>
         <EntityType Name="DiscussionMessage">
           <Key>
             <PropertyRef Name="messageId" />
           </Key>
-          <Property Name="messageId" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="message" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="userId" Type="String" MaxLength="7" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="threadId" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="DiscussionThread" Relationship="Self.FK_DiscussionMessage_DiscussionThread" FromRole="DiscussionMessage" ToRole="DiscussionThread" />
-          <NavigationProperty Name="User" Relationship="Self.FK_DiscussionMessage_User" FromRole="DiscussionMessage" ToRole="User" />
+          <Property Name="messageId" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="message" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="userId" Type="String" Nullable="false" MaxLength="7" FixedLength="false" Unicode="false" />
+          <Property Name="threadId" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="DiscussionThread" Relationship="TARCLearnModel.FK_DiscussionMessage_DiscussionThread" FromRole="DiscussionMessage" ToRole="DiscussionThread" />
+          <NavigationProperty Name="User" Relationship="TARCLearnModel.FK_DiscussionMessage_User" FromRole="DiscussionMessage" ToRole="User" />
         </EntityType>
         <EntityType Name="DiscussionThread">
           <Key>
             <PropertyRef Name="threadId" />
           </Key>
-          <Property Name="threadId" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="chapterId" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Chapter" Relationship="Self.FK_DiscussionThread_Chapter" FromRole="DiscussionThread" ToRole="Chapter" />
-          <NavigationProperty Name="DiscussionMessages" Relationship="Self.FK_DiscussionMessage_DiscussionThread" FromRole="DiscussionThread" ToRole="DiscussionMessage" />
+          <Property Name="threadId" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="chapterId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Chapter" Relationship="TARCLearnModel.FK_DiscussionThread_Chapter" FromRole="DiscussionThread" ToRole="Chapter" />
+          <NavigationProperty Name="DiscussionMessages" Relationship="TARCLearnModel.FK_DiscussionMessage_DiscussionThread" FromRole="DiscussionThread" ToRole="DiscussionMessage" />
         </EntityType>
         <EntityType Name="Material">
           <Key>
             <PropertyRef Name="materialId" />
           </Key>
-          <Property Name="materialId" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="materialTitle" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="materialId" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="index" Type="Int32" Nullable="false" />
+          <Property Name="materialTitle" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="materialDescription" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
-          <Property Name="materialUrl" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="materialName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="mode" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="chapterId" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Chapter" Relationship="Self.FK_Material_Chapter" FromRole="Material" ToRole="Chapter" />
+          <Property Name="materialUrl" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="materialName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="mode" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="chapterId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Chapter" Relationship="TARCLearnModel.FK_Material_Chapter" FromRole="Material" ToRole="Chapter" />
         </EntityType>
         <EntityType Name="Question">
           <Key>
             <PropertyRef Name="questionId" />
           </Key>
-          <Property Name="questionId" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="question1" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="quizId" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Choices" Relationship="Self.FK_Choices_Question" FromRole="Question" ToRole="Choices" />
-          <NavigationProperty Name="Quiz" Relationship="Self.FK_Question_Quiz" FromRole="Question" ToRole="Quiz" />
+          <Property Name="questionId" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="question1" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="quizId" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Choices" Relationship="TARCLearnModel.FK_Choices_Question" FromRole="Question" ToRole="Choice" />
+          <NavigationProperty Name="Quiz" Relationship="TARCLearnModel.FK_Question_Quiz" FromRole="Question" ToRole="Quiz" />
         </EntityType>
         <EntityType Name="Quiz">
           <Key>
             <PropertyRef Name="quizId" />
           </Key>
-          <Property Name="quizId" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="quizTitle" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="chapterId" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Chapter" Relationship="Self.FK_Quiz_chapter" FromRole="Quiz" ToRole="Chapter" />
-          <NavigationProperty Name="Questions" Relationship="Self.FK_Question_Quiz" FromRole="Quiz" ToRole="Question" />
+          <Property Name="quizId" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="quizTitle" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="chapterId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Chapter" Relationship="TARCLearnModel.FK_Quiz_chapter" FromRole="Quiz" ToRole="Chapter" />
+          <NavigationProperty Name="Questions" Relationship="TARCLearnModel.FK_Question_Quiz" FromRole="Quiz" ToRole="Question" />
         </EntityType>
         <EntityType Name="User">
           <Key>
             <PropertyRef Name="userId" />
           </Key>
-          <Property Name="userId" Type="String" MaxLength="7" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="password" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="username" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="userId" Type="String" Nullable="false" MaxLength="7" FixedLength="false" Unicode="false" />
+          <Property Name="password" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="username" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="isLecturer" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="DiscussionMessages" Relationship="Self.FK_DiscussionMessage_User" FromRole="User" ToRole="DiscussionMessage" />
-          <NavigationProperty Name="Courses" Relationship="Self.Enrolment" FromRole="User" ToRole="Course" />
+          <NavigationProperty Name="DiscussionMessages" Relationship="TARCLearnModel.FK_DiscussionMessage_User" FromRole="User" ToRole="DiscussionMessage" />
+          <NavigationProperty Name="Courses" Relationship="TARCLearnModel.Enrolment" FromRole="User" ToRole="Course" />
         </EntityType>
+        <Association Name="FK_Chapter_ToCourse">
+          <End Type="TARCLearnModel.Course" Role="Course" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="TARCLearnModel.Chapter" Role="Chapter" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Course">
+              <PropertyRef Name="courseId" />
+            </Principal>
+            <Dependent Role="Chapter">
+              <PropertyRef Name="courseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_DiscussionThread_Chapter">
-          <End Role="Chapter" Type="Self.Chapter" Multiplicity="1" />
-          <End Role="DiscussionThread" Type="Self.DiscussionThread" Multiplicity="*" />
+          <End Type="TARCLearnModel.Chapter" Role="Chapter" Multiplicity="1" />
+          <End Type="TARCLearnModel.DiscussionThread" Role="DiscussionThread" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Chapter">
               <PropertyRef Name="chapterId" />
@@ -358,8 +445,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Material_Chapter">
-          <End Role="Chapter" Type="Self.Chapter" Multiplicity="1" />
-          <End Role="Material" Type="Self.Material" Multiplicity="*" />
+          <End Type="TARCLearnModel.Chapter" Role="Chapter" Multiplicity="1" />
+          <End Type="TARCLearnModel.Material" Role="Material" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Chapter">
               <PropertyRef Name="chapterId" />
@@ -370,8 +457,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Quiz_chapter">
-          <End Role="Chapter" Type="Self.Chapter" Multiplicity="1" />
-          <End Role="Quiz" Type="Self.Quiz" Multiplicity="*" />
+          <End Type="TARCLearnModel.Chapter" Role="Chapter" Multiplicity="1" />
+          <End Type="TARCLearnModel.Quiz" Role="Quiz" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Chapter">
               <PropertyRef Name="chapterId" />
@@ -382,20 +469,20 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Choices_Question">
-          <End Role="Question" Type="Self.Question" Multiplicity="1" />
-          <End Role="Choices" Type="Self.Choice" Multiplicity="*" />
+          <End Type="TARCLearnModel.Question" Role="Question" Multiplicity="1" />
+          <End Type="TARCLearnModel.Choice" Role="Choice" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Question">
               <PropertyRef Name="questionId" />
             </Principal>
-            <Dependent Role="Choices">
+            <Dependent Role="Choice">
               <PropertyRef Name="questionId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_DiscussionMessage_DiscussionThread">
-          <End Role="DiscussionThread" Type="Self.DiscussionThread" Multiplicity="1" />
-          <End Role="DiscussionMessage" Type="Self.DiscussionMessage" Multiplicity="*" />
+          <End Type="TARCLearnModel.DiscussionThread" Role="DiscussionThread" Multiplicity="1" />
+          <End Type="TARCLearnModel.DiscussionMessage" Role="DiscussionMessage" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="DiscussionThread">
               <PropertyRef Name="threadId" />
@@ -406,8 +493,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_DiscussionMessage_User">
-          <End Role="User" Type="Self.User" Multiplicity="1" />
-          <End Role="DiscussionMessage" Type="Self.DiscussionMessage" Multiplicity="*" />
+          <End Type="TARCLearnModel.User" Role="User" Multiplicity="1" />
+          <End Type="TARCLearnModel.DiscussionMessage" Role="DiscussionMessage" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="User">
               <PropertyRef Name="userId" />
@@ -418,8 +505,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Question_Quiz">
-          <End Role="Quiz" Type="Self.Quiz" Multiplicity="1" />
-          <End Role="Question" Type="Self.Question" Multiplicity="*" />
+          <End Type="TARCLearnModel.Quiz" Role="Quiz" Multiplicity="1" />
+          <End Type="TARCLearnModel.Question" Role="Question" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Quiz">
               <PropertyRef Name="quizId" />
@@ -430,53 +517,10 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="Enrolment">
-          <End Role="Course" Type="Self.Course" Multiplicity="*" />
-          <End Role="User" Type="Self.User" Multiplicity="*" />
+          <End Type="TARCLearnModel.Course" Role="Course" Multiplicity="*" />
+          <End Type="TARCLearnModel.User" Role="User" Multiplicity="*" />
         </Association>
-        <EntityContainer Name="TARCLearnEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Chapters" EntityType="Self.Chapter" />
-          <EntitySet Name="Choices" EntityType="Self.Choice" />
-          <EntitySet Name="Courses" EntityType="Self.Course" />
-          <EntitySet Name="DiscussionMessages" EntityType="Self.DiscussionMessage" />
-          <EntitySet Name="DiscussionThreads" EntityType="Self.DiscussionThread" />
-          <EntitySet Name="Materials" EntityType="Self.Material" />
-          <EntitySet Name="Questions" EntityType="Self.Question" />
-          <EntitySet Name="Quizs" EntityType="Self.Quiz" />
-          <EntitySet Name="Users" EntityType="Self.User" />
-          <AssociationSet Name="FK_DiscussionThread_Chapter" Association="Self.FK_DiscussionThread_Chapter">
-            <End Role="Chapter" EntitySet="Chapters" />
-            <End Role="DiscussionThread" EntitySet="DiscussionThreads" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Material_Chapter" Association="Self.FK_Material_Chapter">
-            <End Role="Chapter" EntitySet="Chapters" />
-            <End Role="Material" EntitySet="Materials" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Quiz_chapter" Association="Self.FK_Quiz_chapter">
-            <End Role="Chapter" EntitySet="Chapters" />
-            <End Role="Quiz" EntitySet="Quizs" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Choices_Question" Association="Self.FK_Choices_Question">
-            <End Role="Question" EntitySet="Questions" />
-            <End Role="Choices" EntitySet="Choices" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DiscussionMessage_DiscussionThread" Association="Self.FK_DiscussionMessage_DiscussionThread">
-            <End Role="DiscussionThread" EntitySet="DiscussionThreads" />
-            <End Role="DiscussionMessage" EntitySet="DiscussionMessages" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DiscussionMessage_User" Association="Self.FK_DiscussionMessage_User">
-            <End Role="User" EntitySet="Users" />
-            <End Role="DiscussionMessage" EntitySet="DiscussionMessages" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Question_Quiz" Association="Self.FK_Question_Quiz">
-            <End Role="Quiz" EntitySet="Quizs" />
-            <End Role="Question" EntitySet="Questions" />
-          </AssociationSet>
-          <AssociationSet Name="Enrolment" Association="Self.Enrolment">
-            <End Role="Course" EntitySet="Courses" />
-            <End Role="User" EntitySet="Users" />
-          </AssociationSet>
-        </EntityContainer>
-      </Schema>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -485,96 +529,98 @@
           <EntitySetMapping Name="Chapters">
             <EntityTypeMapping TypeName="TARCLearnModel.Chapter">
               <MappingFragment StoreEntitySet="Chapter">
-                <ScalarProperty Name="chapterId" ColumnName="chapterId" />
-                <ScalarProperty Name="courseId" ColumnName="courseId" />
                 <ScalarProperty Name="chapterTitle" ColumnName="chapterTitle" />
+                <ScalarProperty Name="courseId" ColumnName="courseId" />
+                <ScalarProperty Name="chapterNo" ColumnName="chapterNo" />
+                <ScalarProperty Name="chapterId" ColumnName="chapterId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Choices">
             <EntityTypeMapping TypeName="TARCLearnModel.Choice">
               <MappingFragment StoreEntitySet="Choices">
-                <ScalarProperty Name="choiceId" ColumnName="choiceId" />
-                <ScalarProperty Name="choice1" ColumnName="choice" />
-                <ScalarProperty Name="isAnswer" ColumnName="isAnswer" />
                 <ScalarProperty Name="questionId" ColumnName="questionId" />
+                <ScalarProperty Name="isAnswer" ColumnName="isAnswer" />
+                <ScalarProperty Name="choice1" ColumnName="choice" />
+                <ScalarProperty Name="choiceId" ColumnName="choiceId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Courses">
             <EntityTypeMapping TypeName="TARCLearnModel.Course">
               <MappingFragment StoreEntitySet="Course">
-                <ScalarProperty Name="courseId" ColumnName="courseId" />
-                <ScalarProperty Name="courseTitle" ColumnName="courseTitle" />
                 <ScalarProperty Name="courseDescription" ColumnName="courseDescription" />
+                <ScalarProperty Name="courseTitle" ColumnName="courseTitle" />
+                <ScalarProperty Name="courseId" ColumnName="courseId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DiscussionMessages">
             <EntityTypeMapping TypeName="TARCLearnModel.DiscussionMessage">
               <MappingFragment StoreEntitySet="DiscussionMessage">
-                <ScalarProperty Name="messageId" ColumnName="messageId" />
-                <ScalarProperty Name="message" ColumnName="message" />
-                <ScalarProperty Name="userId" ColumnName="userId" />
                 <ScalarProperty Name="threadId" ColumnName="threadId" />
+                <ScalarProperty Name="userId" ColumnName="userId" />
+                <ScalarProperty Name="message" ColumnName="message" />
+                <ScalarProperty Name="messageId" ColumnName="messageId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DiscussionThreads">
             <EntityTypeMapping TypeName="TARCLearnModel.DiscussionThread">
               <MappingFragment StoreEntitySet="DiscussionThread">
-                <ScalarProperty Name="threadId" ColumnName="threadId" />
                 <ScalarProperty Name="chapterId" ColumnName="chapterId" />
+                <ScalarProperty Name="threadId" ColumnName="threadId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Materials">
             <EntityTypeMapping TypeName="TARCLearnModel.Material">
               <MappingFragment StoreEntitySet="Material">
-                <ScalarProperty Name="materialId" ColumnName="materialId" />
-                <ScalarProperty Name="materialTitle" ColumnName="materialTitle" />
-                <ScalarProperty Name="materialDescription" ColumnName="materialDescription" />
-                <ScalarProperty Name="materialUrl" ColumnName="materialUrl" />
-                <ScalarProperty Name="materialName" ColumnName="materialName" />
-                <ScalarProperty Name="mode" ColumnName="mode" />
                 <ScalarProperty Name="chapterId" ColumnName="chapterId" />
+                <ScalarProperty Name="mode" ColumnName="mode" />
+                <ScalarProperty Name="materialName" ColumnName="materialName" />
+                <ScalarProperty Name="materialUrl" ColumnName="materialUrl" />
+                <ScalarProperty Name="materialDescription" ColumnName="materialDescription" />
+                <ScalarProperty Name="materialTitle" ColumnName="materialTitle" />
+                <ScalarProperty Name="index" ColumnName="index" />
+                <ScalarProperty Name="materialId" ColumnName="materialId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Questions">
             <EntityTypeMapping TypeName="TARCLearnModel.Question">
               <MappingFragment StoreEntitySet="Question">
-                <ScalarProperty Name="questionId" ColumnName="questionId" />
-                <ScalarProperty Name="question1" ColumnName="question" />
                 <ScalarProperty Name="quizId" ColumnName="quizId" />
+                <ScalarProperty Name="question1" ColumnName="question" />
+                <ScalarProperty Name="questionId" ColumnName="questionId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Quizs">
             <EntityTypeMapping TypeName="TARCLearnModel.Quiz">
               <MappingFragment StoreEntitySet="Quiz">
-                <ScalarProperty Name="quizId" ColumnName="quizId" />
-                <ScalarProperty Name="quizTitle" ColumnName="quizTitle" />
                 <ScalarProperty Name="chapterId" ColumnName="chapterId" />
+                <ScalarProperty Name="quizTitle" ColumnName="quizTitle" />
+                <ScalarProperty Name="quizId" ColumnName="quizId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="TARCLearnModel.User">
               <MappingFragment StoreEntitySet="User">
-                <ScalarProperty Name="userId" ColumnName="userId" />
-                <ScalarProperty Name="password" ColumnName="password" />
-                <ScalarProperty Name="username" ColumnName="username" />
                 <ScalarProperty Name="isLecturer" ColumnName="isLecturer" />
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="userId" ColumnName="userId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <AssociationSetMapping Name="Enrolment" TypeName="TARCLearnModel.Enrolment" StoreEntitySet="Enrolment">
-            <EndProperty Name="Course">
-              <ScalarProperty Name="courseId" ColumnName="courseId" />
-            </EndProperty>
             <EndProperty Name="User">
               <ScalarProperty Name="userId" ColumnName="userId" />
+            </EndProperty>
+            <EndProperty Name="Course">
+              <ScalarProperty Name="courseId" ColumnName="courseId" />
             </EndProperty>
           </AssociationSetMapping>
         </EntityContainerMapping>

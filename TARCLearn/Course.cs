@@ -17,6 +17,7 @@ namespace TARCLearn
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Course()
         {
+            this.Chapters = new HashSet<Chapter>();
             this.Users = new HashSet<User>();
         }
     
@@ -24,6 +25,8 @@ namespace TARCLearn
         public string courseTitle { get; set; }
         public string courseDescription { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Chapter> Chapters { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<User> Users { get; set; }
     }

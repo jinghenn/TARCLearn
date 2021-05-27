@@ -22,10 +22,12 @@ namespace TARCLearn
             this.Quizs = new HashSet<Quiz>();
         }
     
-        public string chapterId { get; set; }
+        public int chapterId { get; set; }
+        public string chapterNo { get; set; }
         public string courseId { get; set; }
         public string chapterTitle { get; set; }
     
+        public virtual Course Course { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DiscussionThread> DiscussionThreads { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

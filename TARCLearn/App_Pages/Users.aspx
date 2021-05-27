@@ -30,6 +30,15 @@
                     <asp:BoundField DataField="courseId" HeaderText="courseId" SortExpression="courseId" ReadOnly="True" />
                 </Columns>
             </asp:GridView>
+            <asp:GridView ID="GridView2" runat="server" AutoGenerateColumns="False" DataKeyNames="chapterId" DataSourceID="SqlDataSource2">
+                <Columns>
+                    <asp:BoundField DataField="chapterId" HeaderText="chapterId" ReadOnly="True" SortExpression="chapterId" InsertVisible="False" />
+                    <asp:BoundField DataField="chapterNo" HeaderText="chapterNo" SortExpression="chapterNo" />
+                    <asp:BoundField DataField="courseId" HeaderText="courseId" SortExpression="courseId" />
+                    <asp:BoundField DataField="chapterTitle" HeaderText="chapterTitle" SortExpression="chapterTitle" />
+                </Columns>
+            </asp:GridView>
+            <asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\TARCLearn.mdf;Integrated Security=True;MultipleActiveResultSets=True;Application Name=EntityFramework" ProviderName="System.Data.SqlClient" SelectCommand="SELECT * FROM [Chapter]"></asp:SqlDataSource>
             <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\TARCLearn.mdf;Integrated Security=True;MultipleActiveResultSets=True;Application Name=EntityFramework" ProviderName="System.Data.SqlClient" SelectCommand="SELECT * FROM [Enrolment]"></asp:SqlDataSource>
         </div>
     </form>

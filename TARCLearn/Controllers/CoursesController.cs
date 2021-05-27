@@ -34,9 +34,28 @@ namespace TARCLearn.Controllers
             }
             return Ok(course.Users);
         }
+        [HttpGet]
+        [Route("api/courses/{CourseId}")]
+        [ResponseType(typeof(CourseDetailDto))]
+        public async Task<IHttpActionResult> GetCourseDetail(string courseId)
+        {
+            TARCLearnEntities entities = new TARCLearnEntities();
+            var course = await entities.Courses.Select(c =>
+            new CourseDetailDto()
+            {
+                courseId = c.courseId,
+                courseDescription = c.courseDescription,
+                courseTitle = c.courseTitle
+            }).SingleOrDefaultAsync(c => c.courseId == courseId);
+            if (course == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Course: " + courseId + " not found");
+            }
+            return Ok(course);
+        }
 
         [HttpPost]
-        [ResponseType(typeof(CourseDto))]
+        [ResponseType(typeof(CourseDetailDto))]
         public async Task<IHttpActionResult> PostCourse([FromBody] Course newCourse)
         {
             try
@@ -48,23 +67,56 @@ namespace TARCLearn.Controllers
                     entities.Courses.Add(newCourse);
                     await entities.SaveChangesAsync();
 
-                    var dto = new CourseDto()
+                    var dto = new CourseDetailDto()
                     {
                         courseId = newCourse.courseId,
-                        courseName = newCourse.courseTitle,
+                        courseTitle = newCourse.courseTitle,
+                        courseDescription = newCourse.courseDescription
                     };
                     return CreatedAtRoute("DefaultApi", new { courseId = newCourse.courseId }, dto);
                 }
-                else{
+                else
+                {
                     return Content(HttpStatusCode.Conflict, "Course: " + newCourse.courseId + " already exist");
                 }
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 return Content(HttpStatusCode.BadRequest, e.ToString());
             }
         }
+
+        [HttpPut]
+        [Route("api/courses/{courseId}")]
+        [ResponseType(typeof(CourseDetailDto))]
+        public async Task<IHttpActionResult> PutCourse(string courseId, [FromBody] Course updatedCourse)
+        {
+            try
+            {
+                TARCLearnEntities entities = new TARCLearnEntities();
+                var course = await entities.Courses.SingleOrDefaultAsync(c => c.courseId == courseId);
+                if (course == null)
+                {
+                    return Content(HttpStatusCode.NotFound, "Course: " + courseId + " not found");
+                }
+                course.courseTitle = updatedCourse.courseTitle;
+                course.courseDescription = updatedCourse.courseDescription;
+                await entities.SaveChangesAsync();
+                var dto = new CourseDetailDto()
+                {
+                    courseId = course.courseId,
+                    courseDescription = course.courseDescription,
+                    courseTitle = course.courseTitle
+                };
+                return Ok(dto);
+            }
+            catch (Exception e)
+            {
+                return Content(HttpStatusCode.BadRequest, e);
+            }
+        }
         [HttpPost]
-        [Route("api/courses/enrol", Name="EnrolUser")]
+        [Route("api/courses/enrol", Name = "EnrolUser")]
         [ResponseType(typeof(IEnumerable<UserDto>))]
         public async Task<IHttpActionResult> PostEnrolment(string courseId, string userId)
         {
@@ -100,14 +152,14 @@ namespace TARCLearn.Controllers
                     })
                 };
 
-                return CreatedAtRoute("EnrolUser", new {courseId = course.courseId}, dto.Users);
+                return CreatedAtRoute("EnrolUser", new { courseId = course.courseId }, dto.Users);
             }
             catch (Exception e)
             {
                 return Content(HttpStatusCode.BadRequest, e.ToString());
             }
 
-            
+
         }
 
         [HttpDelete]
@@ -143,6 +195,60 @@ namespace TARCLearn.Controllers
                 return Content(HttpStatusCode.BadRequest, e.ToString());
             }
 
+        }
+
+        [HttpDelete]
+        [Route("api/courses/{courseId}")]
+        [ResponseType(typeof(CourseDetailDto))]
+        public async Task<IHttpActionResult> DeleteCourse(string courseId)
+        {
+            try
+            {
+                TARCLearnEntities entities = new TARCLearnEntities();
+                var course = await entities.Courses.FirstOrDefaultAsync(c => c.courseId == courseId);
+                if(course == null)
+                {
+                    return Content(HttpStatusCode.NotFound, "Course: " + courseId + " not found");
+                }
+                
+                var dto = new CourseDetailDto()
+                {
+                    courseId = course.courseId,
+                    courseDescription = course.courseDescription,
+                    courseTitle = course.courseTitle
+                };
+                entities.Courses.Remove(course);
+                await entities.SaveChangesAsync();
+                return Ok(dto);
+            }
+            catch(Exception e)
+            {
+                return Content(HttpStatusCode.BadRequest, e);
+            }
+        }
+        [HttpGet]
+        [Route("api/courses/{id}/chapters")]
+        [ResponseType(typeof(IEnumerable<ChapterDetailDto>))]
+        public async Task<IHttpActionResult> GetCourseChapters(string id)
+        {
+            TARCLearnEntities entities = new TARCLearnEntities();
+            var course = await entities.Courses.Include(c => c.Chapters).Select(c =>
+            new CourseChaptersDto()
+            {
+                courseId = c.courseId,
+                Chapters = c.Chapters.OrderBy(ch => ch.chapterId).Select(ch => new ChapterDetailDto()
+                {
+                    chapterId = ch.chapterId,
+                    chapterNo = ch.chapterNo,
+                    chapterTitle = ch.chapterTitle
+                })
+               
+            }).SingleOrDefaultAsync(c => c.courseId == id);
+            if (course == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Course: " + course.courseId + " not found");
+            }
+            return Ok(course);
         }
 
     }
