@@ -13,33 +13,33 @@ namespace TARCLearn.Controllers
     public class ChaptersController : ApiController
     {
         [HttpPost]
-        [Route("api/chapters")]
+        [Route("api/chapters", Name ="CreateChapter")]
         [ResponseType(typeof(ChapterDto))]
-        public async Task<IHttpActionResult> PostChapter(string cid, [FromBody] ChapterDto newChapter)
+        public async Task<IHttpActionResult> PostChapter(string courseId, [FromBody] ChapterDto newChapter)
         {
             try
             {
                 TARCLearnEntities db = new TARCLearnEntities();
                 var course = await db.Courses.Include(ch => ch.Chapters)
-                    .FirstOrDefaultAsync(c => c.courseId == cid);
+                    .FirstOrDefaultAsync(c => c.courseId == courseId);
                 if(course == null)
                 {
                     return Content(HttpStatusCode.NotFound, course);
                 }
-                Chapter chap = new Chapter()
+                var chap = new Chapter()
                 {
-                    courseId = cid,
-                    chapterId = newChapter.chapterId,
+                    chapterNo = newChapter.chapterNo,
                     chapterTitle = newChapter.chapterTitle
                 };
                 course.Chapters.Add(chap);
                 await db.SaveChangesAsync();
-                var dto = new ChapterDto()
+                var dto = await db.Chapters.Select(z => new ChapterDetailDto()
                 {
-                    chapterId = chap.chapterId,
-                    chapterTitle = chap.chapterTitle
-                };
-                return CreatedAtRoute("DefaultApi", new { chapterId = newChapter.chapterId }, dto);
+                    chapterId = z.chapterId,
+                    chapterNo = z.chapterNo,
+                    chapterTitle = z.chapterTitle
+                }).SingleOrDefaultAsync(z => z.chapterId == chap.chapterId);
+                return CreatedAtRoute("CreateChapter", new { chapterId = chap.chapterId }, dto);
             }catch(Exception e)
             {
                 return Content(HttpStatusCode.BadRequest, e);

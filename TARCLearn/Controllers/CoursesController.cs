@@ -228,7 +228,7 @@ namespace TARCLearn.Controllers
         }
         [HttpGet]
         [Route("api/courses/{id}/chapters")]
-        [ResponseType(typeof(IEnumerable<ChapterDto>))]
+        [ResponseType(typeof(IEnumerable<ChapterDetailDto>))]
         public async Task<IHttpActionResult> GetCourseChapters(string id)
         {
             TARCLearnEntities entities = new TARCLearnEntities();
@@ -236,9 +236,10 @@ namespace TARCLearn.Controllers
             new CourseChaptersDto()
             {
                 courseId = c.courseId,
-                Chapters = c.Chapters.OrderBy(ch => ch.chapterId).Select(ch => new ChapterDto()
+                Chapters = c.Chapters.OrderBy(ch => ch.chapterId).Select(ch => new ChapterDetailDto()
                 {
                     chapterId = ch.chapterId,
+                    chapterNo = ch.chapterNo,
                     chapterTitle = ch.chapterTitle
                 })
                
@@ -247,7 +248,7 @@ namespace TARCLearn.Controllers
             {
                 return Content(HttpStatusCode.NotFound, "Course: " + course.courseId + " not found");
             }
-            return Ok(course.Chapters);
+            return Ok(course);
         }
 
     }

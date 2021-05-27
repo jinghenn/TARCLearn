@@ -21,7 +21,7 @@ namespace TARCLearn
         }
     
         public string threadId { get; set; }
-        public string chapterId { get; set; }
+        public int chapterId { get; set; }
     
         public virtual Chapter Chapter { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

@@ -24,7 +24,7 @@ namespace TARCLearn.Models
     public class CourseChaptersDto
     {
         public string courseId { get; set; }
-        public IEnumerable<ChapterDto> Chapters { get; set; }
+        public IEnumerable<ChapterDetailDto> Chapters { get; set; }
     }
     
 }

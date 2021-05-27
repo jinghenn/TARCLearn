@@ -7,8 +7,14 @@ namespace TARCLearn.Models
 {
     public class ChapterDto
     {
-        public string chapterId { get; set; }
+        public string chapterNo { get; set; }
         public string chapterTitle { get; set; }
         
+    }
+    public class ChapterDetailDto
+    {
+        public int chapterId { get; set; }
+        public string chapterNo { get; set; }
+        public string chapterTitle { get; set; }
     }
 }
