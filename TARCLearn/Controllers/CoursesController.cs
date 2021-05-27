@@ -226,5 +226,29 @@ namespace TARCLearn.Controllers
                 return Content(HttpStatusCode.BadRequest, e);
             }
         }
+        [HttpGet]
+        [Route("api/courses/{id}/chapters")]
+        [ResponseType(typeof(IEnumerable<ChapterDto>))]
+        public async Task<IHttpActionResult> GetCourseChapters(string id)
+        {
+            TARCLearnEntities entities = new TARCLearnEntities();
+            var course = await entities.Courses.Include(c => c.Chapters).Select(c =>
+            new CourseChaptersDto()
+            {
+                courseId = c.courseId,
+                Chapters = c.Chapters.OrderBy(ch => ch.chapterId).Select(ch => new ChapterDto()
+                {
+                    chapterId = ch.chapterId,
+                    chapterTitle = ch.chapterTitle
+                })
+               
+            }).SingleOrDefaultAsync(c => c.courseId == id);
+            if (course == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Course: " + course.courseId + " not found");
+            }
+            return Ok(course.Chapters);
+        }
+
     }
 }

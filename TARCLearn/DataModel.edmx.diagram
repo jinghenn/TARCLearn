@@ -22,6 +22,7 @@
         <AssociationConnector Association="TARCLearnModel.FK_DiscussionMessage_User" ManuallyRouted="false" />
         <AssociationConnector Association="TARCLearnModel.FK_Question_Quiz" ManuallyRouted="false" />
         <AssociationConnector Association="TARCLearnModel.Enrolment" ManuallyRouted="false" />
+        <AssociationConnector Association="TARCLearnModel.FK_Chapter_ToCourse" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

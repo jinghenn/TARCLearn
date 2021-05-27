@@ -91,6 +91,20 @@
           <Property Name="username" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="isLecturer" Type="bit" Nullable="false" />
         </EntityType>
+        <Association Name="FK_Chapter_ToCourse">
+          <End Role="Course" Type="Self.Course" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Chapter" Type="Self.Chapter" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Course">
+              <PropertyRef Name="courseId" />
+            </Principal>
+            <Dependent Role="Chapter">
+              <PropertyRef Name="courseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Choices_Question">
           <End Role="Question" Type="Self.Question" Multiplicity="1" />
           <End Role="Choices" Type="Self.Choices" Multiplicity="*" />
@@ -212,6 +226,10 @@
           <EntitySet Name="Question" EntityType="Self.Question" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Quiz" EntityType="Self.Quiz" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Chapter_ToCourse" Association="Self.FK_Chapter_ToCourse">
+            <End Role="Course" EntitySet="Course" />
+            <End Role="Chapter" EntitySet="Chapter" />
+          </AssociationSet>
           <AssociationSet Name="FK_Choices_Question" Association="Self.FK_Choices_Question">
             <End Role="Question" EntitySet="Question" />
             <End Role="Choices" EntitySet="Choices" />
@@ -263,6 +281,7 @@
           <NavigationProperty Name="DiscussionThreads" Relationship="Self.FK_DiscussionThread_Chapter" FromRole="Chapter" ToRole="DiscussionThread" />
           <NavigationProperty Name="Materials" Relationship="Self.FK_Material_Chapter" FromRole="Chapter" ToRole="Material" />
           <NavigationProperty Name="Quizs" Relationship="Self.FK_Quiz_chapter" FromRole="Chapter" ToRole="Quiz" />
+          <NavigationProperty Name="Course" Relationship="TARCLearnModel.FK_Chapter_ToCourse" FromRole="Chapter" ToRole="Course" />
         </EntityType>
         <EntityType Name="Choice">
           <Key>
@@ -282,6 +301,7 @@
           <Property Name="courseTitle" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="courseDescription" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Users" Relationship="Self.Enrolment" FromRole="Course" ToRole="User" />
+          <NavigationProperty Name="Chapters" Relationship="TARCLearnModel.FK_Chapter_ToCourse" FromRole="Course" ToRole="Chapter" />
         </EntityType>
         <EntityType Name="DiscussionMessage">
           <Key>
@@ -479,7 +499,25 @@
             <End Role="Course" EntitySet="Courses" />
             <End Role="User" EntitySet="Users" />
           </AssociationSet>
+          <AssociationSet Name="FK_Chapter_ToCourse" Association="TARCLearnModel.FK_Chapter_ToCourse">
+            <End Role="Course" EntitySet="Courses" />
+            <End Role="Chapter" EntitySet="Chapters" />
+          </AssociationSet>
         </EntityContainer>
+        <Association Name="FK_Chapter_ToCourse">
+          <End Type="TARCLearnModel.Course" Role="Course" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="TARCLearnModel.Chapter" Role="Chapter" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Course">
+              <PropertyRef Name="courseId" />
+            </Principal>
+            <Dependent Role="Chapter">
+              <PropertyRef Name="courseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
