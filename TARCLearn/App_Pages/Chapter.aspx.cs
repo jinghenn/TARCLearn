@@ -34,7 +34,30 @@ namespace TARCLearn.App_Pages
 
         protected void chapterRepeater_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
+            String chapter = e.CommandArgument.ToString();
+            Button btnRM = (Button)e.Item.FindControl("btnRM");
+            Button btnVideo = (Button)e.Item.FindControl("btnVideo");
+            Button btnDis = (Button)e.Item.FindControl("btnDis");
+            Button btnQuiz = (Button)e.Item.FindControl("btnQuiz");
+            if (e.CommandName == "selectChp")
+            {
+                if (btnRM.Visible)
+                {
+                    btnRM.Visible = false;
+                    btnVideo.Visible = false;
+                    btnDis.Visible = false;
+                    btnQuiz.Visible = false;
+                }
+                else {
+                    btnRM.Visible = true;
+                    btnVideo.Visible = true;
+                    btnDis.Visible = true;
+                    btnQuiz.Visible = true;
 
+                }
+                
+                
+            }
         }
     }
 }
