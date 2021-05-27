@@ -45,5 +45,36 @@ namespace TARCLearn.Controllers
                 return Content(HttpStatusCode.BadRequest, e);
             }
         }
+
+        [HttpDelete]
+        [Route("api/chapters")]
+        [ResponseType(typeof(ChapterDetailDto))]
+        public async Task<IHttpActionResult> DeleteChapter(int chapterId)
+        {
+            try
+            {
+                TARCLearnEntities entities = new TARCLearnEntities();
+                var chapter = await entities.Chapters.FirstOrDefaultAsync(c => c.chapterId == chapterId);
+                if (chapter == null)
+                {
+                    return Content(HttpStatusCode.NotFound, "Chapter: " + chapterId + " not found");
+                }
+
+                var dto = new ChapterDetailDto()
+                {
+                    chapterId = chapter.chapterId,
+                    chapterNo = chapter.chapterNo,
+                    chapterTitle = chapter.chapterTitle
+                };
+                entities.Chapters.Remove(chapter);
+                await entities.SaveChangesAsync();
+                return Ok(dto);
+            }
+            catch (Exception e)
+            {
+                return Content(HttpStatusCode.BadRequest, e);
+            }
+        }
+        
     }
 }

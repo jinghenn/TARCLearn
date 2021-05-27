@@ -248,7 +248,7 @@ namespace TARCLearn.Controllers
             {
                 return Content(HttpStatusCode.NotFound, "Course: " + course.courseId + " not found");
             }
-            return Ok(course);
+            return Ok(course.Chapters);
         }
 
     }
