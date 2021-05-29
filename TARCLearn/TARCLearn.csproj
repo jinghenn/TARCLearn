@@ -112,7 +112,10 @@
     <Content Include="App_Pages\Chapter.aspx" />
     <Content Include="App_Pages\Login.aspx" />
     <Content Include="App_Pages\Courses.aspx" />
+    <Content Include="App_Pages\pdfViewer.aspx" />
+    <Content Include="App_Pages\readingMaterial.aspx" />
     <Content Include="App_Pages\Users.aspx" />
+    <Content Include="App_Pages\videoViewer.aspx" />
     <Content Include="Css\cssLogin.css" />
     <Content Include="Css\cssTARCLearn.css" />
     <Content Include="DataModel.Context.tt">
@@ -126,8 +129,9 @@
       <LastGenOutput>DataModel.cs</LastGenOutput>
     </Content>
     <Content Include="Global.asax" />
-    <Content Include="image\TARC.png" />
-    <Content Include="image\TARC_logo.png" />
+    <Content Include="images\TARC.png" />
+    <Content Include="images\TARC_logo.png" />
+    <Content Include="videos\【 恋と呼ぶには気持ち悪い 】OPテーマ ACE COLLECTION『モノクロシティ』MusicVideo.webm" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -152,6 +156,20 @@
     <Compile Include="App_Pages\Courses.aspx.designer.cs">
       <DependentUpon>Courses.aspx</DependentUpon>
     </Compile>
+    <Compile Include="App_Pages\pdfViewer.aspx.cs">
+      <DependentUpon>pdfViewer.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="App_Pages\pdfViewer.aspx.designer.cs">
+      <DependentUpon>pdfViewer.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="App_Pages\readingMaterial.aspx.cs">
+      <DependentUpon>readingMaterial.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="App_Pages\readingMaterial.aspx.designer.cs">
+      <DependentUpon>readingMaterial.aspx</DependentUpon>
+    </Compile>
     <Compile Include="App_Pages\TARCLearn.Master.cs">
       <DependentUpon>TARCLearn.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -165,6 +183,13 @@
     </Compile>
     <Compile Include="App_Pages\Users.aspx.designer.cs">
       <DependentUpon>Users.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="App_Pages\videoViewer.aspx.cs">
+      <DependentUpon>videoViewer.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="App_Pages\videoViewer.aspx.designer.cs">
+      <DependentUpon>videoViewer.aspx</DependentUpon>
     </Compile>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Chapter.cs">
@@ -231,6 +256,8 @@
     <Content Include="App_Pages\TARCLearn.Master" />
     <None Include="packages.config" />
     <None Include="Properties\PublishProfiles\IISProfile.pubxml" />
+    <Content Include="ReadingMaterials\Chap1-The_nature_of_AI.pdf" />
+    <Content Include="ReadingMaterials\TEST.pdf" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
