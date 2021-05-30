@@ -58,7 +58,7 @@
     <asp:Repeater ID="chpRepeater" runat="server" OnItemCommand="chapterRepeater_ItemCommand" >
         <ItemTemplate>
             
-            <asp:Button ID="btnChp" CommandName="selectChp"  Text= '<%#(Eval("chpTitle")) %>' CssClass="button1" runat="server"/>           
+            <asp:Button ID="btnChp" CommandName="selectChp"  Text= '<%# "Chapter " + (Eval("chpNo")) + " " + (Eval("chpTitle")) %>' CssClass="button1" runat="server"/>           
             <asp:Button ID="btnRM" CommandName="selectRM" CommandArgument='<%# Eval("chpId")%>' Text= "Reading Material"  CssClass="button2" runat="server" Visible="False"/>
             <asp:Button ID="btnVideo" CommandName="selectVideo" CommandArgument='<%# Eval("chpId")%>' Text= "Videos"  CssClass="button2" runat="server" Visible="False"/>
             <asp:Button ID="btnDis" CommandName="selectDis" CommandArgument='<%# Eval("chpId")%>' Text= "Discussion"  CssClass="button2" runat="server" Visible="False"/>
