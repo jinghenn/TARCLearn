@@ -236,7 +236,7 @@ namespace TARCLearn.Controllers
             new CourseChaptersDto()
             {
                 courseId = c.courseId,
-                Chapters = c.Chapters.OrderBy(ch => ch.chapterId).Select(ch => new ChapterDetailDto()
+                Chapters = c.Chapters.OrderBy(ch => ch.chapterNo).Select(ch => new ChapterDetailDto()
                 {
                     chapterId = ch.chapterId,
                     chapterNo = ch.chapterNo,

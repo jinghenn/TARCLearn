@@ -17,4 +17,10 @@ namespace TARCLearn.Models
         public string chapterNo { get; set; }
         public string chapterTitle { get; set; }
     }
+    public class ChapterMaterialsDto
+    {
+        public int chapterId { get; set; }
+        
+        public IEnumerable<MaterialDto> materials{get;set;}
+    }
 }

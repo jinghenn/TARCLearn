@@ -11,7 +11,7 @@
 	
     <div class="whiteboxPosition">
 		<div>
-			<asp:Image ID="Image1" class="image" runat="server" ImageUrl="~/image/TARC.png"/>
+			<asp:Image ID="Image1" class="image" runat="server" ImageUrl="~/images/TARC.png"/>
 		
 			<span class= "test">
 			TARC LEARN

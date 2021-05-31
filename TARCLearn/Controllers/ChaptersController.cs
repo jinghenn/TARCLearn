@@ -75,6 +75,90 @@ namespace TARCLearn.Controllers
                 return Content(HttpStatusCode.BadRequest, e);
             }
         }
-        
+
+        [HttpGet]
+        [Route("api/chapters/{chapterId}/vids")]
+        [ResponseType(typeof(IEnumerable<MaterialDto>))]
+        public async Task<IHttpActionResult> GetChapterVideos(int chapterId)
+        {
+            try
+            {
+                TARCLearnEntities db = new TARCLearnEntities();
+                var chapter = await db.Chapters.Include(chap => chap.Materials).Select(chap => new ChapterMaterialsDto()
+                {
+                    chapterId = chap.chapterId,
+                    materials = chap.Materials.Select(m => new MaterialDto()
+                    {
+                        materialId = m.materialId,
+                        materialTitle = m.materialTitle,
+                        isVideo = m.isVideo,
+                        index = m.index
+                    }).Where(mat => mat.isVideo == true)
+                }).SingleOrDefaultAsync(chap => chap.chapterId == chapterId);
+                if (chapter == null)
+                {
+                    return Content(HttpStatusCode.NotFound, "Chapter: " + chapterId + " not found");
+                }
+                return Ok(chapter.materials);
+            }
+            catch (Exception e)
+            {
+                return Content(HttpStatusCode.BadRequest, e);
+            }
+        }
+
+        [HttpPut]
+        [Route("api/chapters/{chapterId}")]
+        [ResponseType(typeof(ChapterDetailDto))]
+        public async Task<IHttpActionResult> PutChapter(int chapterId, [FromBody] ChapterDto updatedChapter)
+        {
+            try
+            {
+                TARCLearnEntities db = new TARCLearnEntities();
+                var chapter = await db.Chapters.SingleOrDefaultAsync(c => c.chapterId == chapterId);
+                if(chapter == null)
+                {
+                    return Content(HttpStatusCode.NotFound, "Chapter " + chapterId + " not found");
+                }
+                chapter.chapterNo = updatedChapter.chapterNo;
+                chapter.chapterTitle = updatedChapter.chapterTitle;
+                await db.SaveChangesAsync();
+                var dto = new ChapterDetailDto()
+                {
+                    chapterId = chapter.chapterId,
+                    chapterNo = chapter.chapterNo,
+                    chapterTitle = chapter.chapterTitle
+                };
+                return Ok(dto);
+            }catch(Exception e)
+            {
+                return Content(HttpStatusCode.BadRequest, e);
+            }
+        }
+
+        [HttpGet]
+        [Route("api/chapters/{chapterId}")]
+        [ResponseType(typeof(ChapterDto))]
+        public async Task<IHttpActionResult> GetChapter(int chapterId)
+        {
+            try
+            {
+                TARCLearnEntities db = new TARCLearnEntities();
+                var chapter = await db.Chapters.SingleOrDefaultAsync(c => c.chapterId == chapterId);
+                if(chapter == null)
+                {
+                    return Content(HttpStatusCode.NotFound, "Chapter " + chapterId + " not found");
+                }
+                var dto = new ChapterDto()
+                {
+                    chapterNo = chapter.chapterNo,
+                    chapterTitle = chapter.chapterTitle
+                };
+                return Ok(dto);
+            }catch(Exception e)
+            {
+                return Content(HttpStatusCode.BadRequest, e);
+            }
+        }
     }
 }

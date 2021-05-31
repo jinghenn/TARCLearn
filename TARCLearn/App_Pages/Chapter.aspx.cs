@@ -16,6 +16,7 @@ namespace TARCLearn.App_Pages
         {
             if (!IsPostBack)
             {
+                
                 string courseId = Request.QueryString["courseId"];
                 string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
                 string providerConStr = new EntityConnectionStringBuilder(conStr).ProviderConnectionString;
@@ -23,12 +24,13 @@ namespace TARCLearn.App_Pages
                 chpCon.Open();
 
                 //select data to be bound
-                String strSelectChp = "Select chapterTitle AS chpTitle, chapterId as chpId from Chapter Where courseId=@courseId;";
+                String strSelectChp = "Select chapterTitle AS chpTitle, chapterId AS chpId, chapterNo AS chpNo from Chapter Where courseId=@courseId;";
                 SqlCommand cmdSelectCourse = new SqlCommand(strSelectChp, chpCon);
                 cmdSelectCourse.Parameters.AddWithValue("@courseId", courseId);
 
                 chpRepeater.DataSource = cmdSelectCourse.ExecuteReader();
-                chpRepeater.DataBind();
+                chpRepeater.DataBind();              
+                chpCon.Close();
             }
         }
 
@@ -55,8 +57,19 @@ namespace TARCLearn.App_Pages
                     btnQuiz.Visible = true;
 
                 }
-                
-                
+                               
+            }if(e.CommandName == "selectRM")
+            {
+                String chapterId = e.CommandArgument.ToString();
+                String url = "readingMaterial.aspx?chapterId=" + chapterId;
+                Response.Redirect(url);
+               
+            }
+            if (e.CommandName == "selectVideo")
+            {
+               
+                Response.Redirect("videoViewer.aspx");
+
             }
         }
     }

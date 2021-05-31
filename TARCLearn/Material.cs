@@ -14,12 +14,13 @@ namespace TARCLearn
     
     public partial class Material
     {
-        public string materialId { get; set; }
+        public int materialId { get; set; }
         public int index { get; set; }
         public string materialTitle { get; set; }
         public string materialDescription { get; set; }
         public string materialUrl { get; set; }
         public string materialName { get; set; }
+        public bool isVideo { get; set; }
         public string mode { get; set; }
         public int chapterId { get; set; }
     
