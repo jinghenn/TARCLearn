@@ -27,7 +27,7 @@ namespace TARCLearn.Controllers
             }
             else if(type == "material")
             {
-                fileuploadPath = HttpContext.Current.Server.MapPath("~/materials");
+                fileuploadPath = HttpContext.Current.Server.MapPath("~/ReadingMaterials");
             }
             try
             {
@@ -85,12 +85,14 @@ namespace TARCLearn.Controllers
                                     materialDescription = newMat.materialDescription,
                                     materialTitle = newMat.materialTitle,
                                     chapterId = chapterId,
+                                    isVideo = newMat.isVideo,
                                     mode = newMat.mode,
                                     index = newMat.index
                                     
                                 };
                                 db.Materials.Add(myMat);
                                 db.SaveChanges();
+                                return Request.CreateResponse(HttpStatusCode.OK, newMat);
                             }
                             catch (Exception e)
                             {
