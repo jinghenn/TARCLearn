@@ -77,9 +77,42 @@ namespace TARCLearn.Controllers
         }
 
         [HttpGet]
-        [Route("api/chapters/{chapterId}/vids")]
-        [ResponseType(typeof(IEnumerable<MaterialDto>))]
-        public async Task<IHttpActionResult> GetChapterVideos(int chapterId)
+        [Route("api/chapters/{chapterId}/videos")]
+        [ResponseType(typeof(IEnumerable<MaterialDetailDto>))]
+        public async Task<IHttpActionResult> GetChapterVideos(int chapterId, string mode)
+        { 
+            try
+            {
+                TARCLearnEntities db = new TARCLearnEntities();
+                var chapter = await db.Chapters.Include(chap => chap.Materials).Select(chap => new ChapterMaterialsDto()
+                {
+                    chapterId = chap.chapterId,
+                    materials = chap.Materials.OrderBy(m => m.index).Select(m => new MaterialDetailDto()
+                    {
+                        materialId = m.materialId,
+                        materialTitle = m.materialTitle,
+                        isVideo = m.isVideo,
+                        index = m.index,
+                        mode = m.mode,
+                        materialDescription = m.materialDescription
+                    }).Where(mat => mat.isVideo == true).Where(mat => mat.mode == mode)
+                }).SingleOrDefaultAsync(chap => chap.chapterId == chapterId);
+                if (chapter == null)
+                {
+                    return Content(HttpStatusCode.NotFound, "Chapter: " + chapterId + " not found");
+                }
+                return Ok(chapter.materials);
+            }
+            catch (Exception e)
+            {
+                return Content(HttpStatusCode.BadRequest, e);
+            }
+        }
+
+        [HttpGet]
+        [Route("api/chapters/{chapterId}/materials")]
+        [ResponseType(typeof(IEnumerable<MaterialDetailDto>))]
+        public async Task<IHttpActionResult> GetChapterMaterials(int chapterId, string mode)
         {
             try
             {
@@ -87,13 +120,15 @@ namespace TARCLearn.Controllers
                 var chapter = await db.Chapters.Include(chap => chap.Materials).Select(chap => new ChapterMaterialsDto()
                 {
                     chapterId = chap.chapterId,
-                    materials = chap.Materials.Select(m => new MaterialDto()
+                    materials = chap.Materials.OrderBy(m => m.index).Select(m => new MaterialDetailDto()
                     {
                         materialId = m.materialId,
                         materialTitle = m.materialTitle,
                         isVideo = m.isVideo,
-                        index = m.index
-                    }).Where(mat => mat.isVideo == true)
+                        index = m.index,
+                        mode = m.mode,
+                        materialDescription = m.materialDescription
+                    }).Where(mat => mat.isVideo == false).Where(mat => mat.mode == mode)
                 }).SingleOrDefaultAsync(chap => chap.chapterId == chapterId);
                 if (chapter == null)
                 {

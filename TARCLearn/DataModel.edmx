@@ -63,8 +63,7 @@
           <Property Name="index" Type="int" Nullable="false" />
           <Property Name="materialTitle" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="materialDescription" Type="varchar" MaxLength="2000" />
-          <Property Name="materialUrl" Type="varchar" MaxLength="500" />
-          <Property Name="materialName" Type="varchar" MaxLength="100" />
+          <Property Name="materialName" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="isVideo" Type="bit" Nullable="false" />
           <Property Name="mode" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="chapterId" Type="int" Nullable="false" />
@@ -382,8 +381,7 @@
           <Property Name="index" Type="Int32" Nullable="false" />
           <Property Name="materialTitle" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="materialDescription" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
-          <Property Name="materialUrl" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="materialName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="materialName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="isVideo" Type="Boolean" Nullable="false" />
           <Property Name="mode" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="chapterId" Type="Int32" Nullable="false" />
@@ -582,7 +580,6 @@
                 <ScalarProperty Name="mode" ColumnName="mode" />
                 <ScalarProperty Name="isVideo" ColumnName="isVideo" />
                 <ScalarProperty Name="materialName" ColumnName="materialName" />
-                <ScalarProperty Name="materialUrl" ColumnName="materialUrl" />
                 <ScalarProperty Name="materialDescription" ColumnName="materialDescription" />
                 <ScalarProperty Name="materialTitle" ColumnName="materialTitle" />
                 <ScalarProperty Name="index" ColumnName="index" />
