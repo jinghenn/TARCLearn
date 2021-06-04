@@ -118,22 +118,17 @@ namespace TARCLearn.App_Pages
             courseCon.Open();
             if (e.CommandName == "deleteChapter")
             {
-               /** String strDelChapter1 = "DELETE Chapter,DiscussionThread,Material,Quiz FROM Chapter " +
-                    "INNER JOIN DiscussionThread ON Chapter.chapterId = DiscussionThread.chapterId " +
-                    "INNER JOIN Material ON Chapter.chapterId = Material.chapterId " +
-                    "INNER JOIN DiscussionThread ON Chapter.chapterId = DiscussionThread.chapterId " +
-                    "INNER JOIN Quiz ON Chapter.chapterId = Quiz.chapterId " +
-                    "WHERE chapterId=@chapterId ;";
-                SqlCommand cmdDelChapter1 = new SqlCommand(strDelChapter1, courseCon);
-                cmdDelChapter1.Parameters.AddWithValue("@chapterId", chpId);
-                cmdDelChapter1.ExecuteNonQuery();
+               String strDelChapter = "DELETE FROM Chapter WHERE chapterId=@chapterId ;";
+                SqlCommand cmdDelChapter = new SqlCommand(strDelChapter, courseCon);
+                cmdDelChapter.Parameters.AddWithValue("@chapterId", chpId);
+                cmdDelChapter.ExecuteNonQuery();
 
                  
                 
                 courseCon.Close();
                 string courseId = Request.QueryString["courseId"];
                 String url = "Chapter.aspx?courseId=" + courseId;
-                Response.Redirect(url);**/
+                Response.Redirect(url);
 
             }
         }
