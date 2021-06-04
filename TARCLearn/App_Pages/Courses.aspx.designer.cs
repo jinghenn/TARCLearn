@@ -15,6 +15,15 @@ namespace TARCLearn.App_Pages
     {
 
         /// <summary>
+        /// formddlCourse control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList formddlCourse;
+
+        /// <summary>
         /// lblTittle control.
         /// </summary>
         /// <remarks>
@@ -24,6 +33,24 @@ namespace TARCLearn.App_Pages
         protected global::System.Web.UI.WebControls.Label lblTittle;
 
         /// <summary>
+        /// btnDeleteEnrolCourse control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ImageButton btnDeleteEnrolCourse;
+
+        /// <summary>
+        /// btnEnrolCourse control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ImageButton btnEnrolCourse;
+
+        /// <summary>
         /// courseRepeater control.
         /// </summary>
         /// <remarks>
@@ -31,5 +58,14 @@ namespace TARCLearn.App_Pages
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Repeater courseRepeater;
+
+        /// <summary>
+        /// rptDeleteCourse control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater rptDeleteCourse;
     }
 }

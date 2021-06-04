@@ -129,6 +129,10 @@
       <LastGenOutput>DataModel.cs</LastGenOutput>
     </Content>
     <Content Include="Global.asax" />
+    <Content Include="images\add_icon.png" />
+    <Content Include="images\delete2_icon.png" />
+    <Content Include="images\delete_icon.png" />
+    <Content Include="images\edit_icon.png" />
     <Content Include="images\TARC.png" />
     <Content Include="images\TARC_logo.png" />
     <Content Include="Web.config" />

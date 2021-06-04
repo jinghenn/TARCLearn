@@ -24,6 +24,9 @@ namespace TARCLearn.App_Pages
             }
         }
 
-       
+        protected void btnCourses_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("Courses.aspx");
+        }
     }
 }
