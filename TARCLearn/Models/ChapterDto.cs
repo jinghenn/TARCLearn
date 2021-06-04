@@ -21,6 +21,6 @@ namespace TARCLearn.Models
     {
         public int chapterId { get; set; }
         
-        public IEnumerable<MaterialDto> materials{get;set;}
+        public IEnumerable<MaterialDetailDto> materials{get;set;}
     }
 }

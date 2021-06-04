@@ -30,7 +30,6 @@
                     <asp:BoundField DataField="index" HeaderText="index" SortExpression="index" />
                     <asp:BoundField DataField="materialTitle" HeaderText="materialTitle" SortExpression="materialTitle" />
                     <asp:BoundField DataField="materialDescription" HeaderText="materialDescription" SortExpression="materialDescription" />
-                    <asp:BoundField DataField="materialUrl" HeaderText="materialUrl" SortExpression="materialUrl" />
                     <asp:BoundField DataField="materialName" HeaderText="materialName" SortExpression="materialName" />
                     <asp:CheckBoxField DataField="isVideo" HeaderText="isVideo" SortExpression="isVideo" />
                     <asp:BoundField DataField="mode" HeaderText="mode" SortExpression="mode" />

@@ -92,7 +92,7 @@ namespace TARCLearn.Controllers
                                 };
                                 db.Materials.Add(myMat);
                                 db.SaveChanges();
-                                return Request.CreateResponse(HttpStatusCode.OK, newMat);
+                                return Request.CreateResponse(HttpStatusCode.Created, newMat);
                             }
                             catch (Exception e)
                             {

@@ -273,7 +273,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="materials\" />
     <Folder Include="videos\" />
   </ItemGroup>
   <ItemGroup>
