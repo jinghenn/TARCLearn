@@ -10,6 +10,7 @@ using System.Data.Entity;
 using System.Threading.Tasks;
 using System.Web;
 using System.IO;
+using System.Net.Http.Headers;
 
 namespace TARCLearn.Controllers
 {
@@ -123,6 +124,43 @@ namespace TARCLearn.Controllers
             {
                 return Content(HttpStatusCode.BadRequest, e);
             }
+        }
+
+        [HttpGet]
+        [Route("api/materials/download")]
+        public HttpResponseMessage GetFile(int materialId)
+        {
+            try
+            {
+                TARCLearnEntities db = new TARCLearnEntities();
+                var material = db.Materials.FirstOrDefault(m => m.materialId == materialId);
+                if(material == null)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Material " + materialId + " not found");
+                }
+
+                string filePath = HttpContext.Current.Server.MapPath("~/ReadingMaterials/" + material.materialName);
+                if (!File.Exists(filePath))
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.Gone, material.materialName);
+                }
+                var dataBytes = File.ReadAllBytes(filePath);
+                var dataStream = new MemoryStream(dataBytes);
+
+                HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+                response.Content = new StreamContent(dataStream);
+                response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
+                response.Content.Headers.ContentDisposition.FileName = material.materialName;
+                string type = MimeMapping.GetMimeMapping(material.materialName);
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue(type);
+                return response;
+
+            }
+            catch(Exception e)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, e);
+            }
+
         }
     }
 }
