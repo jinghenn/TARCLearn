@@ -15,7 +15,7 @@ namespace TARCLearn.Controllers
         [HttpPost]
         [Route("api/chapters", Name ="CreateChapter")]
         [ResponseType(typeof(ChapterDto))]
-        public async Task<IHttpActionResult> PostChapter(string courseId, [FromBody] ChapterDto newChapter)
+        public async Task<IHttpActionResult> PostChapter(int courseId, [FromBody] ChapterDto newChapter)
         {
             try
             {

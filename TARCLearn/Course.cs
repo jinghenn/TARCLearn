@@ -21,7 +21,8 @@ namespace TARCLearn
             this.Users = new HashSet<User>();
         }
     
-        public string courseId { get; set; }
+        public int courseId { get; set; }
+        public string courseCode { get; set; }
         public string courseTitle { get; set; }
         public string courseDescription { get; set; }
     

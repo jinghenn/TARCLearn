@@ -11,7 +11,7 @@
           </Key>
           <Property Name="chapterId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="chapterNo" Type="varchar" MaxLength="10" Nullable="false" />
-          <Property Name="courseId" Type="varchar" MaxLength="8" Nullable="false" />
+          <Property Name="courseId" Type="int" Nullable="false" />
           <Property Name="chapterTitle" Type="varchar" MaxLength="100" Nullable="false" />
         </EntityType>
         <EntityType Name="Choices">
@@ -27,7 +27,8 @@
           <Key>
             <PropertyRef Name="courseId" />
           </Key>
-          <Property Name="courseId" Type="varchar" MaxLength="8" Nullable="false" />
+          <Property Name="courseId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="courseCode" Type="varchar" MaxLength="8" Nullable="false" />
           <Property Name="courseTitle" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="courseDescription" Type="varchar" MaxLength="2000" />
         </EntityType>
@@ -53,7 +54,7 @@
             <PropertyRef Name="courseId" />
           </Key>
           <Property Name="userId" Type="varchar" MaxLength="7" Nullable="false" />
-          <Property Name="courseId" Type="varchar" MaxLength="8" Nullable="false" />
+          <Property Name="courseId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Material">
           <Key>
@@ -108,7 +109,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Choices_Question">
-          <End Role="Question" Type="Self.Question" Multiplicity="1" />
+          <End Role="Question" Type="Self.Question" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Choices" Type="Self.Choices" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Question">
@@ -120,7 +123,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_DiscussionMessage_DiscussionThread">
-          <End Role="DiscussionThread" Type="Self.DiscussionThread" Multiplicity="1" />
+          <End Role="DiscussionThread" Type="Self.DiscussionThread" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="DiscussionMessage" Type="Self.DiscussionMessage" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="DiscussionThread">
@@ -132,7 +137,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_DiscussionMessage_User">
-          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="User" Type="Self.User" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="DiscussionMessage" Type="Self.DiscussionMessage" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="User">
@@ -144,7 +151,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_DiscussionThread_Chapter">
-          <End Role="Chapter" Type="Self.Chapter" Multiplicity="1" />
+          <End Role="Chapter" Type="Self.Chapter" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="DiscussionThread" Type="Self.DiscussionThread" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Chapter">
@@ -182,7 +191,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Material_Chapter">
-          <End Role="Chapter" Type="Self.Chapter" Multiplicity="1" />
+          <End Role="Chapter" Type="Self.Chapter" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Material" Type="Self.Material" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Chapter">
@@ -194,7 +205,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Question_Quiz">
-          <End Role="Quiz" Type="Self.Quiz" Multiplicity="1" />
+          <End Role="Quiz" Type="Self.Quiz" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Question" Type="Self.Question" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Quiz">
@@ -206,7 +219,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Quiz_chapter">
-          <End Role="Chapter" Type="Self.Chapter" Multiplicity="1" />
+          <End Role="Chapter" Type="Self.Chapter" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Quiz" Type="Self.Quiz" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Chapter">
@@ -326,7 +341,7 @@
           </Key>
           <Property Name="chapterId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="chapterNo" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="courseId" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="false" />
+          <Property Name="courseId" Type="Int32" Nullable="false" />
           <Property Name="chapterTitle" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Course" Relationship="TARCLearnModel.FK_Chapter_ToCourse" FromRole="Chapter" ToRole="Course" />
           <NavigationProperty Name="DiscussionThreads" Relationship="TARCLearnModel.FK_DiscussionThread_Chapter" FromRole="Chapter" ToRole="DiscussionThread" />
@@ -347,7 +362,8 @@
           <Key>
             <PropertyRef Name="courseId" />
           </Key>
-          <Property Name="courseId" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="false" />
+          <Property Name="courseId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="courseCode" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="false" />
           <Property Name="courseTitle" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="courseDescription" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Chapters" Relationship="TARCLearnModel.FK_Chapter_ToCourse" FromRole="Course" ToRole="Chapter" />
@@ -433,7 +449,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_DiscussionThread_Chapter">
-          <End Type="TARCLearnModel.Chapter" Role="Chapter" Multiplicity="1" />
+          <End Type="TARCLearnModel.Chapter" Role="Chapter" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Type="TARCLearnModel.DiscussionThread" Role="DiscussionThread" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Chapter">
@@ -445,7 +463,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Material_Chapter">
-          <End Type="TARCLearnModel.Chapter" Role="Chapter" Multiplicity="1" />
+          <End Type="TARCLearnModel.Chapter" Role="Chapter" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Type="TARCLearnModel.Material" Role="Material" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Chapter">
@@ -457,7 +477,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Quiz_chapter">
-          <End Type="TARCLearnModel.Chapter" Role="Chapter" Multiplicity="1" />
+          <End Type="TARCLearnModel.Chapter" Role="Chapter" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Type="TARCLearnModel.Quiz" Role="Quiz" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Chapter">
@@ -469,7 +491,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Choices_Question">
-          <End Type="TARCLearnModel.Question" Role="Question" Multiplicity="1" />
+          <End Type="TARCLearnModel.Question" Role="Question" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Type="TARCLearnModel.Choice" Role="Choice" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Question">
@@ -481,7 +505,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_DiscussionMessage_DiscussionThread">
-          <End Type="TARCLearnModel.DiscussionThread" Role="DiscussionThread" Multiplicity="1" />
+          <End Type="TARCLearnModel.DiscussionThread" Role="DiscussionThread" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Type="TARCLearnModel.DiscussionMessage" Role="DiscussionMessage" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="DiscussionThread">
@@ -493,7 +519,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_DiscussionMessage_User">
-          <End Type="TARCLearnModel.User" Role="User" Multiplicity="1" />
+          <End Type="TARCLearnModel.User" Role="User" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Type="TARCLearnModel.DiscussionMessage" Role="DiscussionMessage" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="User">
@@ -505,7 +533,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Question_Quiz">
-          <End Type="TARCLearnModel.Quiz" Role="Quiz" Multiplicity="1" />
+          <End Type="TARCLearnModel.Quiz" Role="Quiz" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Type="TARCLearnModel.Question" Role="Question" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Quiz">
@@ -551,6 +581,7 @@
               <MappingFragment StoreEntitySet="Course">
                 <ScalarProperty Name="courseDescription" ColumnName="courseDescription" />
                 <ScalarProperty Name="courseTitle" ColumnName="courseTitle" />
+                <ScalarProperty Name="courseCode" ColumnName="courseCode" />
                 <ScalarProperty Name="courseId" ColumnName="courseId" />
               </MappingFragment>
             </EntityTypeMapping>

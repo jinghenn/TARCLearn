@@ -15,7 +15,7 @@ namespace TARCLearn.Controllers
     {
         [Route("api/courses/{id}/users")]
         [ResponseType(typeof(IEnumerable<UserDto>))]
-        public async Task<IHttpActionResult> GetCourseUsers(string id)
+        public async Task<IHttpActionResult> GetCourseUsers(int id)
         {
             TARCLearnEntities entities = new TARCLearnEntities();
             var course = await entities.Courses.Include(c => c.Users).Select(c =>
@@ -37,13 +37,14 @@ namespace TARCLearn.Controllers
         [HttpGet]
         [Route("api/courses/{CourseId}")]
         [ResponseType(typeof(CourseDetailDto))]
-        public async Task<IHttpActionResult> GetCourseDetail(string courseId)
+        public async Task<IHttpActionResult> GetCourseDetail(int courseId)
         {
             TARCLearnEntities entities = new TARCLearnEntities();
             var course = await entities.Courses.Select(c =>
             new CourseDetailDto()
             {
                 courseId = c.courseId,
+                courseCode = c.courseCode,
                 courseDescription = c.courseDescription,
                 courseTitle = c.courseTitle
             }).SingleOrDefaultAsync(c => c.courseId == courseId);
@@ -70,14 +71,15 @@ namespace TARCLearn.Controllers
                     var dto = new CourseDetailDto()
                     {
                         courseId = newCourse.courseId,
+                        courseCode = newCourse.courseCode,
                         courseTitle = newCourse.courseTitle,
                         courseDescription = newCourse.courseDescription
                     };
-                    return CreatedAtRoute("DefaultApi", new { courseId = newCourse.courseId }, dto);
+                    return CreatedAtRoute("DefaultApi", new { newCourse.courseId }, dto);
                 }
                 else
                 {
-                    return Content(HttpStatusCode.Conflict, "Course: " + newCourse.courseId + " already exist");
+                    return Content(HttpStatusCode.Conflict, "Course: " + newCourse.courseCode + " already exist");
                 }
             }
             catch (Exception e)
@@ -89,7 +91,7 @@ namespace TARCLearn.Controllers
         [HttpPut]
         [Route("api/courses/{courseId}")]
         [ResponseType(typeof(CourseDetailDto))]
-        public async Task<IHttpActionResult> PutCourse(string courseId, [FromBody] Course updatedCourse)
+        public async Task<IHttpActionResult> PutCourse(int courseId, [FromBody] Course updatedCourse)
         {
             try
             {
@@ -105,6 +107,7 @@ namespace TARCLearn.Controllers
                 var dto = new CourseDetailDto()
                 {
                     courseId = course.courseId,
+                    courseCode = course.courseCode,
                     courseDescription = course.courseDescription,
                     courseTitle = course.courseTitle
                 };
@@ -118,7 +121,7 @@ namespace TARCLearn.Controllers
         [HttpPost]
         [Route("api/courses/enrol", Name = "EnrolUser")]
         [ResponseType(typeof(IEnumerable<UserDto>))]
-        public async Task<IHttpActionResult> PostEnrolment(string courseId, string userId)
+        public async Task<IHttpActionResult> PostEnrolment(int courseId, string userId)
         {
             try
             {
@@ -164,7 +167,7 @@ namespace TARCLearn.Controllers
 
         [HttpDelete]
         [Route("api/courses/unenrol")]
-        public async Task<IHttpActionResult> DeleteEnrolment(string courseId, string userId)
+        public async Task<IHttpActionResult> DeleteEnrolment(int courseId, string userId)
         {
             TARCLearnEntities entities = new TARCLearnEntities();
             try
@@ -200,7 +203,7 @@ namespace TARCLearn.Controllers
         [HttpDelete]
         [Route("api/courses/{courseId}")]
         [ResponseType(typeof(CourseDetailDto))]
-        public async Task<IHttpActionResult> DeleteCourse(string courseId)
+        public async Task<IHttpActionResult> DeleteCourse(int courseId)
         {
             try
             {
@@ -214,6 +217,7 @@ namespace TARCLearn.Controllers
                 var dto = new CourseDetailDto()
                 {
                     courseId = course.courseId,
+                    courseCode = course.courseCode,
                     courseDescription = course.courseDescription,
                     courseTitle = course.courseTitle
                 };
@@ -229,7 +233,7 @@ namespace TARCLearn.Controllers
         [HttpGet]
         [Route("api/courses/{id}/chapters")]
         [ResponseType(typeof(IEnumerable<ChapterDetailDto>))]
-        public async Task<IHttpActionResult> GetCourseChapters(string id)
+        public async Task<IHttpActionResult> GetCourseChapters(int id)
         {
             TARCLearnEntities entities = new TARCLearnEntities();
             var course = await entities.Courses.Include(c => c.Chapters).Select(c =>
