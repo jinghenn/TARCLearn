@@ -10,7 +10,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <asp:Repeater ID="viewPDFRepeater" runat="server" >
        <ItemTemplate>
-          <embed  src="<%# Eval("MaterialUrl")%>"  class="pdfView">
+          <embed  src="<%# "../ReadingMaterials/"+(Eval("materialName"))%>"  class="pdfView">
        </ItemTemplate>
     </asp:Repeater>
 </asp:Content>
