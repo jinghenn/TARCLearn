@@ -240,13 +240,14 @@ namespace TARCLearn.Controllers
             new CourseChaptersDto()
             {
                 courseId = c.courseId,
-                Chapters = c.Chapters.OrderBy(ch => ch.chapterNo).Select(ch => new ChapterDetailDto()
+                Chapters = c.Chapters.OrderBy(ch => new ChapterComparer()).Select(ch => new ChapterDetailDto()
                 {
                     chapterId = ch.chapterId,
                     chapterNo = ch.chapterNo,
                     chapterTitle = ch.chapterTitle
+                    
                 })
-               
+                             
             }).SingleOrDefaultAsync(c => c.courseId == id);
             if (course == null)
             {
@@ -255,5 +256,17 @@ namespace TARCLearn.Controllers
             return Ok(course.Chapters);
         }
 
+    }
+    internal class ChapterComparer : IComparer<Chapter>
+    {
+        
+        public int Compare(Chapter x, Chapter y)
+        {
+            var a = Convert.ToDouble(x.chapterNo);
+            var b = Convert.ToDouble(y.chapterNo);
+            if (a > b) return 1;
+            if (a < b) return -1;
+            return 0;
+        }
     }
 }
