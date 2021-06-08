@@ -39,14 +39,17 @@
           <Property Name="messageId" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="message" Type="varchar(max)" Nullable="false" />
           <Property Name="userId" Type="varchar" MaxLength="7" Nullable="false" />
-          <Property Name="threadId" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="threadId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="DiscussionThread">
           <Key>
             <PropertyRef Name="threadId" />
           </Key>
-          <Property Name="threadId" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="threadId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="threadTitle" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="threadDescription" Type="varchar(max)" Nullable="false" />
           <Property Name="chapterId" Type="int" Nullable="false" />
+          <Property Name="userId" Type="varchar" MaxLength="7" Nullable="false" />
         </EntityType>
         <EntityType Name="Enrolment">
           <Key>
@@ -122,7 +125,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_DiscussionMessage_DiscussionThread">
+        <Association Name="FK_DiscussionMessage_ToDiscussionThread">
           <End Role="DiscussionThread" Type="Self.DiscussionThread" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -137,9 +140,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_DiscussionMessage_User">
-          <End Role="User" Type="Self.User" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
+          <End Role="User" Type="Self.User" Multiplicity="1" />
           <End Role="DiscussionMessage" Type="Self.DiscussionMessage" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="User">
@@ -161,6 +162,18 @@
             </Principal>
             <Dependent Role="DiscussionThread">
               <PropertyRef Name="chapterId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DiscussionThread_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="DiscussionThread" Type="Self.DiscussionThread" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="userId" />
+            </Principal>
+            <Dependent Role="DiscussionThread">
+              <PropertyRef Name="userId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -251,7 +264,7 @@
             <End Role="Question" EntitySet="Question" />
             <End Role="Choices" EntitySet="Choices" />
           </AssociationSet>
-          <AssociationSet Name="FK_DiscussionMessage_DiscussionThread" Association="Self.FK_DiscussionMessage_DiscussionThread">
+          <AssociationSet Name="FK_DiscussionMessage_ToDiscussionThread" Association="Self.FK_DiscussionMessage_ToDiscussionThread">
             <End Role="DiscussionThread" EntitySet="DiscussionThread" />
             <End Role="DiscussionMessage" EntitySet="DiscussionMessage" />
           </AssociationSet>
@@ -261,6 +274,10 @@
           </AssociationSet>
           <AssociationSet Name="FK_DiscussionThread_Chapter" Association="Self.FK_DiscussionThread_Chapter">
             <End Role="Chapter" EntitySet="Chapter" />
+            <End Role="DiscussionThread" EntitySet="DiscussionThread" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DiscussionThread_User" Association="Self.FK_DiscussionThread_User">
+            <End Role="User" EntitySet="User" />
             <End Role="DiscussionThread" EntitySet="DiscussionThread" />
           </AssociationSet>
           <AssociationSet Name="FK_Enrolment_ToCourse" Association="Self.FK_Enrolment_ToCourse">
@@ -318,13 +335,17 @@
             <End Role="Question" EntitySet="Questions" />
             <End Role="Choice" EntitySet="Choices" />
           </AssociationSet>
-          <AssociationSet Name="FK_DiscussionMessage_DiscussionThread" Association="TARCLearnModel.FK_DiscussionMessage_DiscussionThread">
+          <AssociationSet Name="FK_DiscussionMessage_ToDiscussionThread" Association="TARCLearnModel.FK_DiscussionMessage_ToDiscussionThread">
             <End Role="DiscussionThread" EntitySet="DiscussionThreads" />
             <End Role="DiscussionMessage" EntitySet="DiscussionMessages" />
           </AssociationSet>
           <AssociationSet Name="FK_DiscussionMessage_User" Association="TARCLearnModel.FK_DiscussionMessage_User">
             <End Role="User" EntitySet="Users" />
             <End Role="DiscussionMessage" EntitySet="DiscussionMessages" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DiscussionThread_User" Association="TARCLearnModel.FK_DiscussionThread_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="DiscussionThread" EntitySet="DiscussionThreads" />
           </AssociationSet>
           <AssociationSet Name="FK_Question_Quiz" Association="TARCLearnModel.FK_Question_Quiz">
             <End Role="Quiz" EntitySet="Quizs" />
@@ -376,18 +397,22 @@
           <Property Name="messageId" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="message" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="userId" Type="String" Nullable="false" MaxLength="7" FixedLength="false" Unicode="false" />
-          <Property Name="threadId" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="DiscussionThread" Relationship="TARCLearnModel.FK_DiscussionMessage_DiscussionThread" FromRole="DiscussionMessage" ToRole="DiscussionThread" />
+          <Property Name="threadId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="DiscussionThread" Relationship="TARCLearnModel.FK_DiscussionMessage_ToDiscussionThread" FromRole="DiscussionMessage" ToRole="DiscussionThread" />
           <NavigationProperty Name="User" Relationship="TARCLearnModel.FK_DiscussionMessage_User" FromRole="DiscussionMessage" ToRole="User" />
         </EntityType>
         <EntityType Name="DiscussionThread">
           <Key>
             <PropertyRef Name="threadId" />
           </Key>
-          <Property Name="threadId" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="threadId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="threadTitle" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="threadDescription" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="chapterId" Type="Int32" Nullable="false" />
+          <Property Name="userId" Type="String" Nullable="false" MaxLength="7" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Chapter" Relationship="TARCLearnModel.FK_DiscussionThread_Chapter" FromRole="DiscussionThread" ToRole="Chapter" />
-          <NavigationProperty Name="DiscussionMessages" Relationship="TARCLearnModel.FK_DiscussionMessage_DiscussionThread" FromRole="DiscussionThread" ToRole="DiscussionMessage" />
+          <NavigationProperty Name="DiscussionMessages" Relationship="TARCLearnModel.FK_DiscussionMessage_ToDiscussionThread" FromRole="DiscussionThread" ToRole="DiscussionMessage" />
+          <NavigationProperty Name="User" Relationship="TARCLearnModel.FK_DiscussionThread_User" FromRole="DiscussionThread" ToRole="User" />
         </EntityType>
         <EntityType Name="Material">
           <Key>
@@ -432,6 +457,7 @@
           <Property Name="username" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="isLecturer" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="DiscussionMessages" Relationship="TARCLearnModel.FK_DiscussionMessage_User" FromRole="User" ToRole="DiscussionMessage" />
+          <NavigationProperty Name="DiscussionThreads" Relationship="TARCLearnModel.FK_DiscussionThread_User" FromRole="User" ToRole="DiscussionThread" />
           <NavigationProperty Name="Courses" Relationship="TARCLearnModel.Enrolment" FromRole="User" ToRole="Course" />
         </EntityType>
         <Association Name="FK_Chapter_ToCourse">
@@ -504,7 +530,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_DiscussionMessage_DiscussionThread">
+        <Association Name="FK_DiscussionMessage_ToDiscussionThread">
           <End Type="TARCLearnModel.DiscussionThread" Role="DiscussionThread" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -519,15 +545,25 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_DiscussionMessage_User">
-          <End Type="TARCLearnModel.User" Role="User" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
+          <End Type="TARCLearnModel.User" Role="User" Multiplicity="1" />
           <End Type="TARCLearnModel.DiscussionMessage" Role="DiscussionMessage" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="User">
               <PropertyRef Name="userId" />
             </Principal>
             <Dependent Role="DiscussionMessage">
+              <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DiscussionThread_User">
+          <End Type="TARCLearnModel.User" Role="User" Multiplicity="1" />
+          <End Type="TARCLearnModel.DiscussionThread" Role="DiscussionThread" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="userId" />
+            </Principal>
+            <Dependent Role="DiscussionThread">
               <PropertyRef Name="userId" />
             </Dependent>
           </ReferentialConstraint>
@@ -599,7 +635,10 @@
           <EntitySetMapping Name="DiscussionThreads">
             <EntityTypeMapping TypeName="TARCLearnModel.DiscussionThread">
               <MappingFragment StoreEntitySet="DiscussionThread">
+                <ScalarProperty Name="userId" ColumnName="userId" />
                 <ScalarProperty Name="chapterId" ColumnName="chapterId" />
+                <ScalarProperty Name="threadDescription" ColumnName="threadDescription" />
+                <ScalarProperty Name="threadTitle" ColumnName="threadTitle" />
                 <ScalarProperty Name="threadId" ColumnName="threadId" />
               </MappingFragment>
             </EntityTypeMapping>

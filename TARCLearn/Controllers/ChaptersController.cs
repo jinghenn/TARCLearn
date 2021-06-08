@@ -195,5 +195,36 @@ namespace TARCLearn.Controllers
                 return Content(HttpStatusCode.BadRequest, e);
             }
         }
+
+        [HttpGet]
+        [Route("api/chapters/{chapterId}/discussions")]
+        [ResponseType(typeof(IEnumerable<DiscussionThreadDetailDto>))]
+        public async Task<IHttpActionResult> GetChapterDiscussions(int chapterId)
+        {
+            try
+            {
+                TARCLearnEntities db = new TARCLearnEntities();
+                var chapter = await db.Chapters.Include(chap => chap.DiscussionThreads).Select(dis => new ChapterDiscussionsDto()
+                {
+                    chapterId = dis.chapterId,
+                    discussionThreads = dis.DiscussionThreads.Select(d => new DiscussionThreadDto()
+                    {
+                        threadId = d.threadId,
+                        threadTitle = d.threadTitle,
+                        userName = db.Users.FirstOrDefault(u => u.userId == d.userId).username,
+                    })
+
+                }).SingleOrDefaultAsync(chap => chap.chapterId == chapterId);
+                if (chapter == null)
+                {
+                    return Content(HttpStatusCode.NotFound, "Chapter: " + chapterId + " not found");
+                }
+                return Ok(chapter.discussionThreads);
+            }
+            catch (Exception e)
+            {
+                return Content(HttpStatusCode.BadRequest, e);
+            }
+        }
     }
 }

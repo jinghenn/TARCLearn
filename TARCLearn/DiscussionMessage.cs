@@ -17,7 +17,7 @@ namespace TARCLearn
         public string messageId { get; set; }
         public string message { get; set; }
         public string userId { get; set; }
-        public string threadId { get; set; }
+        public int threadId { get; set; }
     
         public virtual DiscussionThread DiscussionThread { get; set; }
         public virtual User User { get; set; }
