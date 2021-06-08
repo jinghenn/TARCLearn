@@ -203,6 +203,7 @@
     </Compile>
     <Compile Include="Controllers\ChaptersController.cs" />
     <Compile Include="Controllers\CoursesController.cs" />
+    <Compile Include="Controllers\DiscussionsController.cs" />
     <Compile Include="Controllers\MaterialsController.cs" />
     <Compile Include="Controllers\UploadController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
@@ -239,6 +240,7 @@
     </Compile>
     <Compile Include="Models\ChapterDto.cs" />
     <Compile Include="Models\CourseDto.cs" />
+    <Compile Include="Models\DiscussionThreadDto.cs" />
     <Compile Include="Models\MaterialDto.cs" />
     <Compile Include="Models\UserDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

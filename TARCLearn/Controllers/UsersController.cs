@@ -56,6 +56,7 @@ namespace TARCLearn.Controllers
                 Courses = u.Courses.Select(cid => new CourseDto()
                 {
                     courseId = cid.courseId,
+                    courseCode = cid.courseCode,
                     courseTitle = cid.courseTitle
                 })
             }).SingleOrDefaultAsync(c => c.userId == id);

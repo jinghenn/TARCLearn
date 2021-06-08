@@ -24,7 +24,7 @@ namespace TARCLearn
     
         public int chapterId { get; set; }
         public string chapterNo { get; set; }
-        public string courseId { get; set; }
+        public int courseId { get; set; }
         public string chapterTitle { get; set; }
     
         public virtual Course Course { get; set; }

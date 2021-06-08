@@ -18,6 +18,7 @@ namespace TARCLearn
         public User()
         {
             this.DiscussionMessages = new HashSet<DiscussionMessage>();
+            this.DiscussionThreads = new HashSet<DiscussionThread>();
             this.Courses = new HashSet<Course>();
         }
     
@@ -28,6 +29,8 @@ namespace TARCLearn
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DiscussionMessage> DiscussionMessages { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DiscussionThread> DiscussionThreads { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Course> Courses { get; set; }
     }

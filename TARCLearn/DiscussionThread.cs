@@ -20,11 +20,15 @@ namespace TARCLearn
             this.DiscussionMessages = new HashSet<DiscussionMessage>();
         }
     
-        public string threadId { get; set; }
+        public int threadId { get; set; }
+        public string threadTitle { get; set; }
+        public string threadDescription { get; set; }
         public int chapterId { get; set; }
+        public string userId { get; set; }
     
         public virtual Chapter Chapter { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DiscussionMessage> DiscussionMessages { get; set; }
+        public virtual User User { get; set; }
     }
 }
