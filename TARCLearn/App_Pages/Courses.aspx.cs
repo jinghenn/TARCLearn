@@ -23,18 +23,26 @@ namespace TARCLearn.App_Pages
                 courseCon.Open();
              
                 //select data to be bound
-                String strSelectCourse = "Select c.courseTitle AS courseTitle, c.courseId AS courseId from Course c, Enrolment e Where c.courseId = e.courseId and e.userId =@userId;";
+                String strSelectCourse = "Select c.courseTitle AS courseTitle, c.courseId AS courseId, c.courseCode AS courseCode from Course c, Enrolment e Where c.courseId = e.courseId and e.userId =@userId;";
                 SqlCommand cmdSelectCourse = new SqlCommand(strSelectCourse, courseCon);
                 cmdSelectCourse.Parameters.AddWithValue("@userId", Session["userId"].ToString());
 
                 courseRepeater.DataSource = cmdSelectCourse.ExecuteReader();
                 courseRepeater.DataBind();
 
-               
-                courseCon.Close();
+                
+
                 String userType = Session["userType"].ToString();
                 if (userType == "Lecturer")
                 {
+                    //select data to be bound for delete repeater
+                    String strDelCourse = "Select c.courseTitle AS courseTitle, c.courseId AS courseId, c.courseCode AS courseCode from Course c, Enrolment e Where c.courseId = e.courseId and e.userId =@userId;";
+                    SqlCommand cmdDelCourse = new SqlCommand(strDelCourse, courseCon);
+                    cmdDelCourse.Parameters.AddWithValue("@userId", Session["userId"].ToString());
+
+                    rptDeleteCourse.DataSource = cmdDelCourse.ExecuteReader();
+                    rptDeleteCourse.DataBind(); 
+
                     SqlCommand cmd = new SqlCommand("SELECT * FROM [dbo].[Course]", courseCon);
                     SqlDataAdapter sda = new SqlDataAdapter(cmd);
                     DataTable dt = new DataTable();
@@ -49,6 +57,7 @@ namespace TARCLearn.App_Pages
                     btnDeleteEnrolCourse.Visible = false;
                     btnEnrolCourse.Visible = false;
                 }
+                courseCon.Close();
             }
 
         }
@@ -71,20 +80,6 @@ namespace TARCLearn.App_Pages
 
             if (rptDeleteCourse.Visible == false)
             {
-                string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
-                string providerConStr = new EntityConnectionStringBuilder(conStr).ProviderConnectionString;
-                SqlConnection courseCon = new SqlConnection(providerConStr);
-                courseCon.Open();
-
-                //select data to be bound
-                String strSelectCourse = "Select c.courseTitle AS courseTitle, c.courseId AS courseId from Course c, Enrolment e Where c.courseId = e.courseId and e.userId =@userId;";
-                SqlCommand cmdSelectCourse = new SqlCommand(strSelectCourse, courseCon);
-                cmdSelectCourse.Parameters.AddWithValue("@userId", Session["userId"].ToString());
-
-                rptDeleteCourse.DataSource = cmdSelectCourse.ExecuteReader();
-                rptDeleteCourse.DataBind();
-                courseCon.Close();
-
                 courseRepeater.Visible = false;
                 rptDeleteCourse.Visible = true;
             }

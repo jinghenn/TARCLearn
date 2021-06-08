@@ -13,11 +13,13 @@ namespace TARCLearn.App_Pages
 {
     public partial class readingMaterial : System.Web.UI.Page
     {
-        Boolean isDel = false;
+        String isDel;
+        
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
+                lblTittle.Text = Convert.ToString(isDel);
                 string chapterId = Request.QueryString["chapterId"];
                 string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
                 string providerConStr = new EntityConnectionStringBuilder(conStr).ProviderConnectionString;
@@ -83,18 +85,26 @@ namespace TARCLearn.App_Pages
 
                 materialCon.Close();
             }
+            
         }
 
         protected void btnLecture_Click(object sender, EventArgs e)
         {
-            if(rptLect.Visible == true && isDel == false)
+            if ((isDel == null))
             {
+                isDel = "false";
+           
+            }
+            if (rptLect.Visible == true && isDel == "false")
+            {
+                lblTittle.Text = Convert.ToString(isDel);
                 rptLect.Visible = false;
             }
-            else if(rptLect.Visible == false && isDel == false)
+            else if(rptLect.Visible == false && isDel == "false")
             {
+                lblTittle.Text = Convert.ToString(isDel);
                 rptLect.Visible = true;
-            }else if (isDel == true) 
+            }else if (isDel == "true") 
             {
                 rptDelLect.Visible = true;
             }
@@ -102,15 +112,15 @@ namespace TARCLearn.App_Pages
 
         protected void btnPractical_Click(object sender, EventArgs e)
         {
-            if (rptPrac.Visible == true && isDel == false)
+            if (rptPrac.Visible == true && isDel == "false")
             {
                 rptPrac.Visible = false;
             }
-            else if (rptPrac.Visible == false && isDel == false)
+            else if (rptPrac.Visible == false && isDel == "false")
             {
                 rptPrac.Visible = true;
             }
-            else if (isDel == true)
+            else if (isDel == "true")
             {
                 rptDelPrac.Visible = true;
             }
@@ -118,15 +128,15 @@ namespace TARCLearn.App_Pages
 
         protected void btnTutorial_Click(object sender, EventArgs e)
         {
-            if (rptTut.Visible == true && isDel == false)
+            if (rptTut.Visible == true && isDel == "false")
             {
                 rptTut.Visible = false;
             }
-            else if (rptTut.Visible == false && isDel == false)
+            else if (rptTut.Visible == false && isDel == "false")
             {
                 rptTut.Visible = true;
             }
-            else if (isDel == true)
+            else if (isDel == "true")
             {
                 rptDelTut.Visible = true;
             }
@@ -134,15 +144,15 @@ namespace TARCLearn.App_Pages
 
         protected void btnOther_Click(object sender, EventArgs e)
         {
-            if(rptOth.Visible == true && isDel == false)
+            if(rptOth.Visible == true && isDel == "false")
             {
                 rptOth.Visible = false;
             }
-            else if (rptOth.Visible == false && isDel == false)
+            else if (rptOth.Visible == false && isDel == "false")
             {
                 rptOth.Visible = true;
             }
-            else if (isDel == true)
+            else if (isDel == "true")
             {
                 rptDelOth.Visible = true;
             }
@@ -161,9 +171,16 @@ namespace TARCLearn.App_Pages
 
         protected void btnDeleteRM_Click(object sender, ImageClickEventArgs e)
         {
-            if(isDel == false)
+            lblTittle.Text = Convert.ToString(isDel);
+            if ((isDel == null))
             {
-                isDel = true;
+                isDel = "false";
+
+            }
+            if (isDel == "false")
+            {
+                isDel = "true";
+                lblTittle.Text = Convert.ToString(isDel);
                 if (rptLect.Visible == true)
                 {
                     rptLect.Visible = false;
@@ -184,10 +201,12 @@ namespace TARCLearn.App_Pages
                     rptOth.Visible = false;
                     rptDelOth.Visible = true;
                 }
+
             }
             else
             {
-                isDel = false;
+                isDel = "false";
+                lblTittle.Text = Convert.ToString(isDel);
                 if (rptDelLect.Visible == true)
                 {
                     rptDelLect.Visible = false;

@@ -79,7 +79,7 @@
         <asp:Repeater ID="courseRepeater" runat="server" OnItemCommand="courseRepeater_ItemCommand" >
             <ItemTemplate>
                 <asp:Button CommandName="selectCourse" CommandArgument='<%# Eval("courseId")%>' 
-                    Text= '<%# (Eval("courseId")) + " " + (Eval("courseTitle")) %>' 
+                    Text= '<%# (Eval("courseCode")) + " " + (Eval("courseTitle")) %>' 
                     runat="server" ID="btnCourse" CssClass="button1"  />
             
             </ItemTemplate>
@@ -88,7 +88,7 @@
         <asp:Repeater ID="rptDeleteCourse" runat="server"  Visible="False" OnItemCommand="rptDeleteCourse_ItemCommand">
             <ItemTemplate>
                 <div class="label1">
-                    <asp:Label ID="lblCourse" runat="server"  Text= '<%# (Eval("courseId")) + " " + (Eval("courseTitle")) %>'/>                 
+                    <asp:Label ID="lblCourse" runat="server"  Text= '<%# (Eval("courseCode")) + " " + (Eval("courseTitle")) %>'/>                 
                     <asp:ImageButton CommandName="deleteCourse" CommandArgument='<%# Eval("courseId")%>'
                         ID="ImageButton2" CssClass="rightButton" runat="server" ImageUrl="~/images/delete2_icon.png"  OnClientClick='return confirm("Are you sure you want to delete this item?");'/> 
                 </div>
