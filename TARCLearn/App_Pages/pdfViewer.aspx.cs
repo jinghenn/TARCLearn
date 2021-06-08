@@ -21,7 +21,7 @@ namespace TARCLearn.App_Pages
             materialCon.Open();
 
             //select data to be bound
-            String strSelectMaterial = "Select materialUrl as MaterialUrl from Material Where materialId=@materialId;";
+            String strSelectMaterial = "Select materialName as materialName from Material Where materialId=@materialId;";
             SqlCommand cmdSelectCourse = new SqlCommand(strSelectMaterial, materialCon);
             cmdSelectCourse.Parameters.AddWithValue("@materialId", materialId);
             viewPDFRepeater.DataSource = cmdSelectCourse.ExecuteReader();
