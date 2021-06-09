@@ -13,13 +13,17 @@ namespace TARCLearn.App_Pages
 {
     public partial class readingMaterial : System.Web.UI.Page
     {
-        String isDel;
+        
         
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
-                lblTittle.Text = Convert.ToString(isDel);
+                if (Session["isDel"] == null)
+                {
+                    Session["isDel"] = "false";
+                }
+
                 string chapterId = Request.QueryString["chapterId"];
                 string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
                 string providerConStr = new EntityConnectionStringBuilder(conStr).ProviderConnectionString;
@@ -90,28 +94,30 @@ namespace TARCLearn.App_Pages
 
         protected void btnLecture_Click(object sender, EventArgs e)
         {
-            if ((isDel == null))
-            {
-                isDel = "false";
-           
-            }
+            String isDel = Session["isDel"].ToString();
+            
             if (rptLect.Visible == true && isDel == "false")
-            {
-                lblTittle.Text = Convert.ToString(isDel);
+            {            
                 rptLect.Visible = false;
             }
             else if(rptLect.Visible == false && isDel == "false")
             {
-                lblTittle.Text = Convert.ToString(isDel);
                 rptLect.Visible = true;
-            }else if (isDel == "true") 
+            }
+            else if (rptDelLect.Visible == false && isDel == "true") 
             {
                 rptDelLect.Visible = true;
+            }
+            else if (rptDelLect.Visible == true && isDel == "true")
+            {
+                rptDelLect.Visible = false;
             }
         }
 
         protected void btnPractical_Click(object sender, EventArgs e)
         {
+            String isDel = Session["isDel"].ToString();
+
             if (rptPrac.Visible == true && isDel == "false")
             {
                 rptPrac.Visible = false;
@@ -120,14 +126,21 @@ namespace TARCLearn.App_Pages
             {
                 rptPrac.Visible = true;
             }
-            else if (isDel == "true")
+            else if (rptDelPrac.Visible == false && isDel == "true")
             {
                 rptDelPrac.Visible = true;
             }
+            else if (rptDelPrac.Visible == true && isDel == "true")
+            {
+                rptDelPrac.Visible = false;
+            }
+           
         }
 
         protected void btnTutorial_Click(object sender, EventArgs e)
         {
+            String isDel = Session["isDel"].ToString();
+
             if (rptTut.Visible == true && isDel == "false")
             {
                 rptTut.Visible = false;
@@ -136,15 +149,21 @@ namespace TARCLearn.App_Pages
             {
                 rptTut.Visible = true;
             }
-            else if (isDel == "true")
+            else if (rptDelTut.Visible == false && isDel == "true")
             {
                 rptDelTut.Visible = true;
+            }
+            else if (rptDelTut.Visible == true && isDel == "true")
+            {
+                rptDelTut.Visible = false;
             }
         }
 
         protected void btnOther_Click(object sender, EventArgs e)
         {
-            if(rptOth.Visible == true && isDel == "false")
+            String isDel = Session["isDel"].ToString();
+
+            if (rptOth.Visible == true && isDel == "false")
             {
                 rptOth.Visible = false;
             }
@@ -152,9 +171,13 @@ namespace TARCLearn.App_Pages
             {
                 rptOth.Visible = true;
             }
-            else if (isDel == "true")
+            else if (rptDelOth.Visible == false && isDel == "true")
             {
                 rptDelOth.Visible = true;
+            }
+            else if (rptDelOth.Visible == true && isDel == "true")
+            {
+                rptDelOth.Visible = false;
             }
         }
 
@@ -171,16 +194,11 @@ namespace TARCLearn.App_Pages
 
         protected void btnDeleteRM_Click(object sender, ImageClickEventArgs e)
         {
-            lblTittle.Text = Convert.ToString(isDel);
-            if ((isDel == null))
-            {
-                isDel = "false";
-
-            }
+            String isDel = Session["isDel"].ToString();
+          
             if (isDel == "false")
             {
-                isDel = "true";
-                lblTittle.Text = Convert.ToString(isDel);
+                Session["isDel"] = "true";
                 if (rptLect.Visible == true)
                 {
                     rptLect.Visible = false;
@@ -201,29 +219,35 @@ namespace TARCLearn.App_Pages
                     rptOth.Visible = false;
                     rptDelOth.Visible = true;
                 }
+               
 
             }
             else
             {
-                isDel = "false";
-                lblTittle.Text = Convert.ToString(isDel);
+                Session["isDel"] = "false";
                 if (rptDelLect.Visible == true)
                 {
                     rptDelLect.Visible = false;
+                    rptLect.Visible = true;
                 }
                 if (rptDelPrac.Visible == true)
                 {
                     rptDelPrac.Visible = false;
+                    rptPrac.Visible = true;
                 }
                 if (rptDelTut.Visible == true)
                 {
                     rptDelTut.Visible = false;
+                    rptDelTut.Visible = true;
                 }
                 if (rptDelOth.Visible == true)
                 {
                     rptDelOth.Visible = false;
+                    rptOth.Visible = true;
                 }
-                                    
+                
+                
+
             }
         }
                 
@@ -232,40 +256,128 @@ namespace TARCLearn.App_Pages
         
 
         protected void rptDeleteRM_ItemCommand(object source, RepeaterCommandEventArgs e)
-        {
+        {            
+            //get materialId 
             String materialId = e.CommandArgument.ToString();
+
             string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
             string providerConStr = new EntityConnectionStringBuilder(conStr).ProviderConnectionString;
             SqlConnection rmCon = new SqlConnection(providerConStr);
             rmCon.Open();
+
+            //get materialTitle
+            SqlCommand cmdGetRmTitle = new SqlCommand("Select materialName from [dbo].[Material] where materialId=@materialId;", rmCon);
+            cmdGetRmTitle.Parameters.AddWithValue("@materialId", materialId);
+            String materialName = Convert.ToString(cmdGetRmTitle.ExecuteScalar());
+
             if (e.CommandName == "deleteRM")
-            {
-                String strDelRm = "DELETE FROM Material WHERE materialId=@materialId;";
-                SqlCommand cmdDelRm = new SqlCommand(strDelRm, rmCon);
-                cmdDelRm.Parameters.AddWithValue("@materialId", materialId);
-                cmdDelRm.ExecuteNonQuery();
-
-                SqlCommand cmdGetRmTitle = new SqlCommand("Select materialTitle from [dbo].[Material] where materialId=@materialId;", rmCon);
-                cmdGetRmTitle.Parameters.AddWithValue("@materialId", materialId);
-                String materialTitle = Convert.ToString(cmdGetRmTitle.ExecuteScalar());
-
-                rmCon.Close();
-
-                string file_name = materialTitle;
-                string path = Server.MapPath("../ReadingMaterials/" + file_name);
-                FileInfo file = new FileInfo(path);
+            {                              
+                string file_name = "~/ReadingMaterials/" + materialName;
+                string strPath = Server.MapPath(file_name);
+                FileInfo file = new FileInfo(strPath);
                 if (file.Exists)//check file exsit or not  
                 {
-                    file.Delete();
-                   
-                }
-                
+                    System.IO.File.Delete(strPath);
+                    String strDelRm = "DELETE FROM Material WHERE materialId=@materialId;";
+                    SqlCommand cmdDelRm = new SqlCommand(strDelRm, rmCon);
+                    cmdDelRm.Parameters.AddWithValue("@materialId", materialId);
+                    cmdDelRm.ExecuteNonQuery();
 
+                    rmCon.Close();
+                    string chapterId = Request.QueryString["chapterId"];
+                    String url = "readingMaterial.aspx?chapterId=" + chapterId;
+                    
+
+                    System.Text.StringBuilder javaScript = new System.Text.StringBuilder();
+                    string scriptKey = "SuccessMessage";
+
+                    javaScript.Append("var userConfirmation = window.confirm('" + "Successfully deleted." + "');\n");
+                    javaScript.Append("window.location='"+ url +"';");
+
+                    ClientScript.RegisterStartupScript(this.GetType(), scriptKey, javaScript.ToString(), true);
+
+                }
+                else
+                {
+                    System.Text.StringBuilder javaScript = new System.Text.StringBuilder();
+                    string scriptKey = "ErrorMessage";
+
+                    javaScript.Append("var userConfirmation = window.confirm('" + "File Does Not Exist." + "');\n");
+                    
+
+                    ClientScript.RegisterStartupScript(this.GetType(), scriptKey, javaScript.ToString(), true);
+
+                }
+            }
+            
+        }
+
+        protected void addNewMaterialFormSubmitClicked(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                string description;
                 string chapterId = Request.QueryString["chapterId"];
-                String url = "readingMaterial.aspx?chapterId=" + chapterId;
-                Response.Redirect(url);
+                string filepath = "../ReadingMaterials/" + file.FileName;
+
+                if (file.HasFile && file.PostedFile != null)
+                {
+                    // Get the name of the file to upload.
+                    string fileName = Server.HtmlEncode(file.FileName);
+
+                    // Get the extension of the uploaded file.
+                    string extension = System.IO.Path.GetExtension(fileName);
+
+                    if (extension == ".pdf")
+                    {
+                        string imagepath = Server.MapPath("~/ReadingMaterials/" + file.FileName);
+                        file.PostedFile.SaveAs(imagepath);
+
+                        if (formDescription.Text != null)
+                        {
+                            description = formDescription.Text;
+                        }
+                        else
+                        {
+                            description = null;
+                        }
+
+
+                        string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
+                        string providerConStr = new EntityConnectionStringBuilder(conStr).ProviderConnectionString;
+                        SqlConnection materialCon = new SqlConnection(providerConStr);
+                        materialCon.Open();
+
+                        String getIndex = "SELECT COUNT(index) FROM [dbo].[Material] WHERE @chapterId = chapterId; ";
+                        SqlCommand cmdGetIndex = new SqlCommand(getIndex, materialCon);
+                        cmdGetIndex.Parameters.AddWithValue("@chapterId", chapterId);
+                        int newIndex = Convert.ToInt32(cmdGetIndex.ExecuteScalar()) + 1;
+
+                        String addMaterial = "INSERT INTO [dbo].[Material] VALUES(@index,@materialTitle,,@materialDescription,@materialName,@isVideo,@mode,@chapterId);";
+                        SqlCommand cmdAddMaterial = new SqlCommand(addMaterial, materialCon);
+
+                        cmdAddMaterial.Parameters.AddWithValue("@index", newIndex);
+                        cmdAddMaterial.Parameters.AddWithValue("@materialTitle", formTitle.Text);
+                        cmdAddMaterial.Parameters.AddWithValue("@materialDescription", description);
+                        cmdAddMaterial.Parameters.AddWithValue("@materialName", file.FileName);
+                        cmdAddMaterial.Parameters.AddWithValue("@isVideo", Convert.ToBoolean(formMaterialType.SelectedValue));
+                        cmdAddMaterial.Parameters.AddWithValue("@mode", formMaterialMode.SelectedValue);
+                        cmdAddMaterial.Parameters.AddWithValue("@chapterId", chapterId);
+
+                        cmdAddMaterial.ExecuteNonQuery();
+                        materialCon.Close();
+
+                        Response.Redirect("Courses.aspx");
+
+
+
+
+                    }
 
             }
+
+
+
         }
     }
 
