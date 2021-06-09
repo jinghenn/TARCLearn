@@ -13,8 +13,8 @@ namespace TARCLearn.App_Pages
 {
     public partial class readingMaterial : System.Web.UI.Page
     {
-        
-        
+
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -31,7 +31,7 @@ namespace TARCLearn.App_Pages
                 materialCon.Open();
 
                 //select data to be bound
-                String strSelectLect = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = 'false' AND mode = 'LECTURE';";
+                String strSelectLect = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = 'False' AND mode = 'LECTURE';";
                 SqlCommand cmdSelectLect = new SqlCommand(strSelectLect, materialCon);
                 cmdSelectLect.Parameters.AddWithValue("@chapterId", chapterId);
 
@@ -89,22 +89,22 @@ namespace TARCLearn.App_Pages
 
                 materialCon.Close();
             }
-            
+
         }
 
         protected void btnLecture_Click(object sender, EventArgs e)
         {
             String isDel = Session["isDel"].ToString();
-            
+
             if (rptLect.Visible == true && isDel == "false")
-            {            
+            {
                 rptLect.Visible = false;
             }
-            else if(rptLect.Visible == false && isDel == "false")
+            else if (rptLect.Visible == false && isDel == "false")
             {
                 rptLect.Visible = true;
             }
-            else if (rptDelLect.Visible == false && isDel == "true") 
+            else if (rptDelLect.Visible == false && isDel == "true")
             {
                 rptDelLect.Visible = true;
             }
@@ -134,7 +134,7 @@ namespace TARCLearn.App_Pages
             {
                 rptDelPrac.Visible = false;
             }
-           
+
         }
 
         protected void btnTutorial_Click(object sender, EventArgs e)
@@ -195,7 +195,7 @@ namespace TARCLearn.App_Pages
         protected void btnDeleteRM_Click(object sender, ImageClickEventArgs e)
         {
             String isDel = Session["isDel"].ToString();
-          
+
             if (isDel == "false")
             {
                 Session["isDel"] = "true";
@@ -219,7 +219,7 @@ namespace TARCLearn.App_Pages
                     rptOth.Visible = false;
                     rptDelOth.Visible = true;
                 }
-               
+
 
             }
             else
@@ -245,18 +245,18 @@ namespace TARCLearn.App_Pages
                     rptDelOth.Visible = false;
                     rptOth.Visible = true;
                 }
-                
-                
+
+
 
             }
         }
-                
-            
 
-        
+
+
+
 
         protected void rptDeleteRM_ItemCommand(object source, RepeaterCommandEventArgs e)
-        {            
+        {
             //get materialId 
             String materialId = e.CommandArgument.ToString();
 
@@ -271,7 +271,7 @@ namespace TARCLearn.App_Pages
             String materialName = Convert.ToString(cmdGetRmTitle.ExecuteScalar());
 
             if (e.CommandName == "deleteRM")
-            {                              
+            {
                 string file_name = "~/ReadingMaterials/" + materialName;
                 string strPath = Server.MapPath(file_name);
                 FileInfo file = new FileInfo(strPath);
@@ -286,13 +286,13 @@ namespace TARCLearn.App_Pages
                     rmCon.Close();
                     string chapterId = Request.QueryString["chapterId"];
                     String url = "readingMaterial.aspx?chapterId=" + chapterId;
-                    
+
 
                     System.Text.StringBuilder javaScript = new System.Text.StringBuilder();
                     string scriptKey = "SuccessMessage";
 
                     javaScript.Append("var userConfirmation = window.confirm('" + "Successfully deleted." + "');\n");
-                    javaScript.Append("window.location='"+ url +"';");
+                    javaScript.Append("window.location='" + url + "';");
 
                     ClientScript.RegisterStartupScript(this.GetType(), scriptKey, javaScript.ToString(), true);
 
@@ -303,13 +303,13 @@ namespace TARCLearn.App_Pages
                     string scriptKey = "ErrorMessage";
 
                     javaScript.Append("var userConfirmation = window.confirm('" + "File Does Not Exist." + "');\n");
-                    
+
 
                     ClientScript.RegisterStartupScript(this.GetType(), scriptKey, javaScript.ToString(), true);
 
                 }
             }
-            
+
         }
 
         protected void addNewMaterialFormSubmitClicked(object sender, EventArgs e)
@@ -330,8 +330,8 @@ namespace TARCLearn.App_Pages
 
                     if (extension == ".pdf")
                     {
-                        string imagepath = Server.MapPath("~/ReadingMaterials/" + file.FileName);
-                        file.PostedFile.SaveAs(imagepath);
+                        string path = Server.MapPath("~/ReadingMaterials/" + file.FileName);
+                        file.PostedFile.SaveAs(path);
 
                         if (formDescription.Text != null)
                         {
@@ -348,12 +348,12 @@ namespace TARCLearn.App_Pages
                         SqlConnection materialCon = new SqlConnection(providerConStr);
                         materialCon.Open();
 
-                        String getIndex = "SELECT COUNT(index) FROM [dbo].[Material] WHERE @chapterId = chapterId; ";
+                        String getIndex = "SELECT COUNT(materialId) FROM [dbo].[Material] WHERE @chapterId = chapterId; ";
                         SqlCommand cmdGetIndex = new SqlCommand(getIndex, materialCon);
                         cmdGetIndex.Parameters.AddWithValue("@chapterId", chapterId);
                         int newIndex = Convert.ToInt32(cmdGetIndex.ExecuteScalar()) + 1;
 
-                        String addMaterial = "INSERT INTO [dbo].[Material] VALUES(@index,@materialTitle,,@materialDescription,@materialName,@isVideo,@mode,@chapterId);";
+                        String addMaterial = "INSERT INTO [dbo].[Material] VALUES(@index,@materialTitle,@materialDescription,@materialName,@isVideo,@mode,@chapterId);";
                         SqlCommand cmdAddMaterial = new SqlCommand(addMaterial, materialCon);
 
                         cmdAddMaterial.Parameters.AddWithValue("@index", newIndex);
@@ -366,19 +366,21 @@ namespace TARCLearn.App_Pages
 
                         cmdAddMaterial.ExecuteNonQuery();
                         materialCon.Close();
-
-                        Response.Redirect("Courses.aspx");
+                        
+                        String url = "readingMaterial.aspx?chapterId=" + chapterId;
+                        Response.Redirect(url);
 
 
 
 
                     }
+                }
 
             }
 
 
 
+
         }
     }
-
 }

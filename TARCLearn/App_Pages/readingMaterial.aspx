@@ -99,7 +99,7 @@
                         </div>  
 
                         <div class="row mb-3">
-                            <label for="formDescription" class="col-sm-3 col-form-label">Material Title</label>
+                            <label for="formDescription" class="col-sm-3 col-form-label">Material Description</label>
                             <div class="col-sm-9">
                                 <asp:TextBox ID="formDescription" CssClass="form-control" runat="server"></asp:TextBox>
                             </div>
