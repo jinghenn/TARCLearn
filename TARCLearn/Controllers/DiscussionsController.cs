@@ -32,7 +32,8 @@ namespace TARCLearn.Controllers
                     threadTitle = thread.threadTitle,
                     threadDescription = thread.threadDescription,
                     chapterId = thread.chapterId,
-                    userId = thread.userId
+                    userId = thread.userId,
+                    userName = db.Users.FirstOrDefault(u => u.userId == thread.userId).username
                 };
                 return Ok(dto);
             }
@@ -44,8 +45,8 @@ namespace TARCLearn.Controllers
 
         [HttpPut]
         [Route("api/discussions/{threadId}")]
-        [ResponseType(typeof(DiscussionThreadDetailDto))]
-        public async Task<IHttpActionResult> PutDiscussionThread(int threadId, [FromBody]DiscussionThreadDetailDto updatedThread)
+        [ResponseType(typeof(DiscussionAboutDto))]
+        public async Task<IHttpActionResult> PutDiscussionThread(int threadId, [FromBody]DiscussionAboutDto updatedThread)
         {
             try
             {
@@ -59,15 +60,7 @@ namespace TARCLearn.Controllers
                 thread.threadDescription = updatedThread.threadDescription;
                 await db.SaveChangesAsync();
 
-                var dto = new DiscussionThreadDetailDto
-                {
-                    threadId = thread.threadId,
-                    threadTitle = thread.threadTitle,
-                    threadDescription = thread.threadDescription,
-                    chapterId = thread.chapterId,
-                    userId = thread.userId
-                };
-                return Ok(dto);
+                return Ok(updatedThread);
             }
             catch (Exception e)
             {
@@ -91,6 +84,7 @@ namespace TARCLearn.Controllers
                     threadTitle = newThread.threadTitle,
                     threadDescription = newThread.threadDescription,
                     userId = newThread.userId,
+                    userName = db.Users.FirstOrDefault(u => u.userId == newThread.userId).username,
                     chapterId = newThread.chapterId
                 };
                 return CreatedAtRoute("DiscussionRoute", new { newThread.threadId }, dto);
@@ -116,13 +110,11 @@ namespace TARCLearn.Controllers
                 }
                 db.DiscussionThreads.Remove(thread);
                 await db.SaveChangesAsync();
-                var dto = new DiscussionThreadDetailDto()
+                var dto = new DiscussionAboutDto()
                 {
                     threadId = thread.threadId,
                     threadTitle = thread.threadTitle,
-                    threadDescription = thread.threadDescription,
-                    userId = thread.userId,
-                    chapterId = thread.chapterId
+                    threadDescription = thread.threadDescription
                 };
                 return Ok(dto);
             }

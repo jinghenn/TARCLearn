@@ -14,7 +14,7 @@ namespace TARCLearn
     
     public partial class DiscussionMessage
     {
-        public string messageId { get; set; }
+        public int messageId { get; set; }
         public string message { get; set; }
         public string userId { get; set; }
         public int threadId { get; set; }

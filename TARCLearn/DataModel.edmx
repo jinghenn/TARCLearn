@@ -36,7 +36,7 @@
           <Key>
             <PropertyRef Name="messageId" />
           </Key>
-          <Property Name="messageId" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="messageId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="message" Type="varchar(max)" Nullable="false" />
           <Property Name="userId" Type="varchar" MaxLength="7" Nullable="false" />
           <Property Name="threadId" Type="int" Nullable="false" />
@@ -166,7 +166,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_DiscussionThread_User">
-          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="User" Type="Self.User" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="DiscussionThread" Type="Self.DiscussionThread" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="User">
@@ -394,7 +396,7 @@
           <Key>
             <PropertyRef Name="messageId" />
           </Key>
-          <Property Name="messageId" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="messageId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="message" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="userId" Type="String" Nullable="false" MaxLength="7" FixedLength="false" Unicode="false" />
           <Property Name="threadId" Type="Int32" Nullable="false" />
@@ -557,7 +559,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_DiscussionThread_User">
-          <End Type="TARCLearnModel.User" Role="User" Multiplicity="1" />
+          <End Type="TARCLearnModel.User" Role="User" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Type="TARCLearnModel.DiscussionThread" Role="DiscussionThread" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="User">

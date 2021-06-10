@@ -20,5 +20,14 @@ namespace TARCLearn.Models
         public string threadDescription { get; set; }
         public int chapterId { get; set; }
         public string userId { get; set; }
+        public string userName { get; set; }
     }
+
+    public class DiscussionAboutDto
+    {
+        public int threadId { get; set; }
+        public string threadTitle { get; set; }
+        public string threadDescription { get; set; }
+    }
+
 }
