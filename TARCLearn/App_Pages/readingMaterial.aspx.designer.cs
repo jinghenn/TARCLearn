@@ -15,40 +15,67 @@ namespace TARCLearn.App_Pages
     {
 
         /// <summary>
-        /// formChpNo control.
+        /// formTitle control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox formChpNo;
+        protected global::System.Web.UI.WebControls.TextBox formTitle;
 
         /// <summary>
-        /// rfvChpNo control.
+        /// rfvTitle control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvChpNo;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvTitle;
 
         /// <summary>
-        /// formChpTitle control.
+        /// formDescription control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox formChpTitle;
+        protected global::System.Web.UI.WebControls.TextBox formDescription;
 
         /// <summary>
-        /// rfvChpTitle control.
+        /// formMaterialType control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvChpTitle;
+        protected global::System.Web.UI.WebControls.DropDownList formMaterialType;
+
+        /// <summary>
+        /// formMaterialMode control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList formMaterialMode;
+
+        /// <summary>
+        /// file control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.FileUpload file;
+
+        /// <summary>
+        /// CustomValidator1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CustomValidator CustomValidator1;
 
         /// <summary>
         /// lblTittle control.

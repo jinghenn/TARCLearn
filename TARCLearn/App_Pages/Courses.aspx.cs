@@ -122,10 +122,10 @@ namespace TARCLearn.App_Pages
                 SqlCommand cmdAddEnrolment = new SqlCommand(addEnrolment, courseCon);
 
                 cmdAddEnrolment.Parameters.AddWithValue("@userId", Session["userId"].ToString());
-                cmdAddEnrolment.Parameters.AddWithValue("@courseId", formddlCourse.SelectedValue);
+                cmdAddEnrolment.Parameters.AddWithValue("@courseId", courseEnrol);
                 cmdAddEnrolment.ExecuteNonQuery();
                 courseCon.Close();
-                courseRepeater.DataBind();
+                //courseRepeater.DataBind();
                 Response.Redirect("Courses.aspx");
 
             }
