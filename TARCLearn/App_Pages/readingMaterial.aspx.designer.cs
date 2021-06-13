@@ -42,15 +42,6 @@ namespace TARCLearn.App_Pages
         protected global::System.Web.UI.WebControls.TextBox formDescription;
 
         /// <summary>
-        /// formMaterialType control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList formMaterialType;
-
-        /// <summary>
         /// formMaterialMode control.
         /// </summary>
         /// <remarks>

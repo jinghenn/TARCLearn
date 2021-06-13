@@ -27,14 +27,14 @@
         .rightButton{
               float: right;
               margin-right:30px;
-              height:15px;
-              width:15px;
+             
               
         }
       
       
    </style>
-     
+
+  
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server" >
 
@@ -69,11 +69,9 @@
 
     <div class="main main-raised" >
         <div class="label1">
-            <asp:Label ID="lblTittle" runat="server" Font-Bold="true" Font-Size="Large">Courses</asp:Label>                   
-            <asp:ImageButton ID="btnDeleteEnrolCourse" CssClass="rightButton" runat="server" ImageUrl="~/images/delete_icon.png" OnClick="btnDelete_Click" /> 
-            <asp:ImageButton ID="btnEnrolCourse" CssClass="rightButton" runat="server" ImageUrl="~/images/add_icon.png"  data-toggle="modal" data-target="#modalForm" OnClientClick="return false;" />
-        
-        
+            <asp:Label ID="lblTittle" runat="server" Font-Bold="true" Font-Size="Large">Courses</asp:Label> 
+            <asp:ImageButton ID="btnDeleteEnrolCourse" CssClass="rightButton" Height="15px" Width="15px" runat="server" ImageUrl="~/images/more_icon.png" OnClick="btnDelete_Click" /> 
+            <asp:ImageButton ID="btnEnrolCourse" CssClass="rightButton" Height="15px" Width="15px" runat="server" ImageUrl="~/images/add_icon.png"  data-toggle="modal" data-target="#modalForm" OnClientClick="return false;" />        
         </div>
     
         <asp:Repeater ID="courseRepeater" runat="server" OnItemCommand="courseRepeater_ItemCommand" >
@@ -87,10 +85,25 @@
 
         <asp:Repeater ID="rptDeleteCourse" runat="server"  Visible="False" OnItemCommand="rptDeleteCourse_ItemCommand">
             <ItemTemplate>
-                <div class="label1">
-                    <asp:Label ID="lblCourse" runat="server"  Text= '<%# (Eval("courseCode")) + " " + (Eval("courseTitle")) %>'/>                 
-                    <asp:ImageButton CommandName="deleteCourse" CommandArgument='<%# Eval("courseId")%>'
-                        ID="ImageButton2" CssClass="rightButton" runat="server" ImageUrl="~/images/delete2_icon.png"  OnClientClick='return confirm("Are you sure you want to delete this item?");'/> 
+                <div class="label1 ">
+                    <div>
+                        <asp:TextBox ID="txtCourseCode" runat="server" Text='<%#Eval("courseCode") %>' Enabled="false" BorderStyle="None" BackColor="Transparent" AutoPostBack="False"></asp:TextBox>
+
+                        <asp:TextBox ID="txtCourseTitle" runat="server" style="width: 700px;" Text='<%# Eval("courseTitle") %>' Enabled="false" BorderStyle="None" BackColor="Transparent"  ></asp:TextBox>
+                    
+                        <div class=" rightButton " style="padding-bottom:20px;" role="group">
+                            <asp:LinkButton ID="btnEdit" CommandName="edit"  CssClass="btn btn-outline-info" runat="server" CausesValidation="false">Edit</asp:LinkButton>
+                            <asp:LinkButton ID="btnSave" CommandName="save" CommandArgument='<%# Eval("courseId")%>' CssClass="btn btn-outline-success " runat="server"  Visible="False" ValidationGroup="Edit">Save</asp:LinkButton>
+                            <asp:LinkButton ID="btnCancel" CommandName="cancel"  CssClass="btn btn-outline-danger " runat="server"  Visible="False" CausesValidation="false">Cancel</asp:LinkButton>
+                            <asp:LinkButton ID="btnDelete" CommandName="delete" CommandArgument='<%# Eval("courseId")%>' CssClass="btn btn-danger" runat="server"  Visible="False" CausesValidation="false" OnClientClick='return confirm("Are you sure you want to delete this item?");'>Delete</asp:LinkButton>
+                        </div> 
+                    </div>
+                    <div>
+                        <asp:RequiredFieldValidator ValidationGroup="Edit" ForeColor="Red" Display="Dynamic" ID="rfvtxtCourseCode" runat="server" ErrorMessage=" - Course Code Cannot Be Blank" ControlToValidate="txtCourseCode" ></asp:RequiredFieldValidator>
+                    </div>
+                    <div>
+                        <asp:RequiredFieldValidator ValidationGroup="Edit" ForeColor="Red" Display="Dynamic" ID="rfvtxtCourseTitle" runat="server" ErrorMessage=" - Course Title Cannot Be Blank" ControlToValidate="txtCourseTitle" ></asp:RequiredFieldValidator>
+                    </div>
                 </div>
             
             </ItemTemplate>

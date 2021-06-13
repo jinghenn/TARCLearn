@@ -8,6 +8,7 @@ using System.Data.SqlClient;
 using System.Configuration;
 using System.Data.Entity.Core.EntityClient;
 using System.Data;
+using System.Drawing;
 
 namespace TARCLearn.App_Pages
 {
@@ -92,11 +93,39 @@ namespace TARCLearn.App_Pages
         protected void rptDeleteCourse_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
             String courseId = e.CommandArgument.ToString();
+            TextBox txtCourseCode = (TextBox)e.Item.FindControl("txtCourseCode");
+            TextBox txtCourseTitle = (TextBox)e.Item.FindControl("txtCourseTitle");
+
+            LinkButton btnEdit = (LinkButton)e.Item.FindControl("btnEdit");
+            LinkButton btnSave = (LinkButton)e.Item.FindControl("btnSave");
+            LinkButton btnCancel = (LinkButton)e.Item.FindControl("btnCancel");
+            LinkButton btnDel = (LinkButton)e.Item.FindControl("btnDelete");
+
+           
             string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
             string providerConStr = new EntityConnectionStringBuilder(conStr).ProviderConnectionString;
             SqlConnection courseCon = new SqlConnection(providerConStr);
             courseCon.Open();
-            if (e.CommandName == "deleteCourse")
+           
+            
+            if (e.CommandName == "edit")
+            {        
+                txtCourseCode.Enabled = true;
+                txtCourseCode.BorderStyle = BorderStyle.Inset;
+                txtCourseCode.BackColor = Color.White;
+
+                txtCourseTitle.Enabled = true;
+                txtCourseTitle.BorderStyle = BorderStyle.Inset;
+                txtCourseTitle.BackColor = Color.White;
+
+                btnEdit.Visible = false;
+                btnSave.Visible = true;
+                btnCancel.Visible = true;
+                btnDel.Visible = true;
+                
+
+            }
+            if(e.CommandName == "delete")
             {
                 String strDelCourse = "DELETE FROM Enrolment WHERE courseId=@courseId ";
                 SqlCommand cmdDelCourse = new SqlCommand(strDelCourse, courseCon);
@@ -104,29 +133,130 @@ namespace TARCLearn.App_Pages
                 cmdDelCourse.ExecuteNonQuery();
                 courseCon.Close();
                 Response.Redirect("Courses.aspx");
+            }
+            if (e.CommandName == "save")
+            {
+                if (Page.IsValid)
+                {
+
+                    txtCourseCode.Enabled = true;
+                    txtCourseCode.BorderStyle = BorderStyle.Inset;
+                    txtCourseCode.BackColor = Color.White;
+
+                    txtCourseTitle.Enabled = true;
+                    txtCourseTitle.BorderStyle = BorderStyle.Inset;
+                    txtCourseTitle.BackColor = Color.White;
+
+
+                    btnEdit.Visible = true;
+                    btnCancel.Visible = false;
+                    btnDel.Visible = false;
+                    btnSave.Visible = false;
+
+                    SqlCommand cmdSelectCourseCode = new SqlCommand("Select * from [dbo].[Course] where courseCode=@courseCode", courseCon);
+                    cmdSelectCourseCode.Parameters.AddWithValue("@courseCode", txtCourseCode.Text);
+                    SqlDataReader dtrCourseCode = cmdSelectCourseCode.ExecuteReader();
+
+                    SqlCommand cmdSelectCourseTitle = new SqlCommand("Select * from [dbo].[Course] where courseTitle=@courseTitle", courseCon);                   
+                    cmdSelectCourseTitle.Parameters.AddWithValue("@courseTitle", txtCourseTitle.Text);
+                    SqlDataReader dtrCourseTitle = cmdSelectCourseTitle.ExecuteReader();
+
+                    if (!dtrCourseCode.HasRows && !dtrCourseTitle.HasRows)
+                    {
+                        String editCourse = "UPDATE [dbo].[Course] SET courseCode = @newCourseCode, courseTitle = @newCourseTitle WHERE courseId = @courseId";
+                        SqlCommand cmdEditCourse = new SqlCommand(editCourse, courseCon);
+                        cmdEditCourse.Parameters.AddWithValue("@newCourseCode", txtCourseCode.Text);
+                        cmdEditCourse.Parameters.AddWithValue("@newCourseTitle", txtCourseTitle.Text);
+                        cmdEditCourse.Parameters.AddWithValue("@courseId", courseId);
+                        cmdEditCourse.ExecuteNonQuery();
+                        Response.Redirect("Courses.aspx");
+                    }
+                    else if(dtrCourseCode.HasRows && dtrCourseTitle.HasRows)
+                    {
+                        Response.Write("<script>alert('Both Entered Course Code and Course Title Already Exists.')</script>");                       
+
+                    }else if (dtrCourseCode.HasRows)
+                    {
+                        Response.Write("<script>alert('Entered Course Code Already Exists.')</script>");                       
+
+                    }else if (dtrCourseTitle.HasRows)
+                    {
+                        Response.Write("<script>alert('Entered Course Title Already Exists.')</script>");
+                        
+                    }
+
+
+
+                }
+               
+            }
+            if (e.CommandName == "cancel")
+            {           
+
+                txtCourseCode.Enabled = false;
+                txtCourseCode.BorderStyle = BorderStyle.None;
+                txtCourseCode.BackColor = Color.Transparent;
+
+                txtCourseTitle.Enabled = false;
+                txtCourseTitle.BorderStyle = BorderStyle.None;
+                txtCourseTitle.BackColor = Color.Transparent;
+
+
+                btnEdit.Visible = true;
+                btnCancel.Visible = false;
+                btnDel.Visible = false;
+                btnSave.Visible = false;
+
+                String strDelCourse = "Select c.courseTitle AS courseTitle, c.courseId AS courseId, c.courseCode AS courseCode from Course c, Enrolment e Where c.courseId = e.courseId and e.userId =@userId;";
+                SqlCommand cmdDelCourse = new SqlCommand(strDelCourse, courseCon);
+                cmdDelCourse.Parameters.AddWithValue("@userId", Session["userId"].ToString());
+
+                rptDeleteCourse.DataSource = cmdDelCourse.ExecuteReader();
+                rptDeleteCourse.DataBind();
 
             }
+            
         }
 
         protected void enrolCourseFormSubmitClicked(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
+                
                 string courseEnrol = formddlCourse.SelectedValue;
 
                 string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
                 string providerConStr = new EntityConnectionStringBuilder(conStr).ProviderConnectionString;
                 SqlConnection courseCon = new SqlConnection(providerConStr);
                 courseCon.Open();
-                String addEnrolment = "INSERT INTO [dbo].[Enrolment] VALUES(@userId,@courseId);";
-                SqlCommand cmdAddEnrolment = new SqlCommand(addEnrolment, courseCon);
 
-                cmdAddEnrolment.Parameters.AddWithValue("@userId", Session["userId"].ToString());
-                cmdAddEnrolment.Parameters.AddWithValue("@courseId", courseEnrol);
-                cmdAddEnrolment.ExecuteNonQuery();
-                courseCon.Close();
-                //courseRepeater.DataBind();
-                Response.Redirect("Courses.aspx");
+                SqlCommand cmdSelectCourse = new SqlCommand("Select * from [dbo].[Enrolment] where userId=@userId and courseId=@courseId", courseCon);
+                cmdSelectCourse.Parameters.AddWithValue("@userId", Session["userId"].ToString());
+                cmdSelectCourse.Parameters.AddWithValue("@courseId", courseEnrol);
+                SqlDataReader dtrCourse = cmdSelectCourse.ExecuteReader();
+
+                if (!dtrCourse.HasRows)
+                {
+                    String addEnrolment = "INSERT INTO [dbo].[Enrolment] VALUES(@userId,@courseId);";
+                    SqlCommand cmdAddEnrolment = new SqlCommand(addEnrolment, courseCon);
+
+                    cmdAddEnrolment.Parameters.AddWithValue("@userId", Session["userId"].ToString());
+                    cmdAddEnrolment.Parameters.AddWithValue("@courseId", courseEnrol);
+                    cmdAddEnrolment.ExecuteNonQuery();
+                    courseCon.Close();
+                    //courseRepeater.DataBind();
+                    Response.Redirect("Courses.aspx");
+                }
+                else
+                {
+                    Response.Write("<script>alert('Selected Course Already Enrolled.')</script>");
+                    
+                }
+
+                    
+
+
+                    
 
             }
             
@@ -134,6 +264,9 @@ namespace TARCLearn.App_Pages
             
         }
 
+      
+
+      
 
     }
     

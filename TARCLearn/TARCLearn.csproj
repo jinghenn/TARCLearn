@@ -265,8 +265,6 @@
     <Content Include="App_Pages\TARCLearn.Master" />
     <None Include="packages.config" />
     <None Include="Properties\PublishProfiles\IISProfile.pubxml" />
-    <Content Include="ReadingMaterials\Chap1-The_nature_of_AI.pdf" />
-    <Content Include="ReadingMaterials\TEST.pdf" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -275,6 +273,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="ReadingMaterials\" />
     <Folder Include="videos\" />
   </ItemGroup>
   <ItemGroup>

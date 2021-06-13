@@ -8,6 +8,7 @@ using System.Data.SqlClient;
 using System.Configuration;
 using System.Data.Entity.Core.EntityClient;
 using System.IO;
+using System.Drawing;
 
 namespace TARCLearn.App_Pages
 {
@@ -251,28 +252,136 @@ namespace TARCLearn.App_Pages
             }
         }
 
+        public void saveFuction(SqlConnection materialCon, string materialTitle, string materialId, string materialFileName)
+        {
+           
+
+            SqlCommand cmdSelectMaterialTitle = new SqlCommand("Select * from [dbo].[Material] where materialTitle=@materialTitle", materialCon);
+            cmdSelectMaterialTitle.Parameters.AddWithValue("@materialTitle", materialTitle);
+            SqlDataReader dtrMaterialTitle = cmdSelectMaterialTitle.ExecuteReader();
+
+          
+
+            if (!dtrMaterialTitle.HasRows )
+            {
+                string newFileName = "~/ReadingMaterials/" + materialTitle + ".pdf";
+                string newMaterialTitle = Server.MapPath(newFileName);
+
+                string oldFileName = "~/ReadingMaterials/" + materialFileName;
+                string oldMaterialTitle = Server.MapPath(oldFileName);
+
+                System.IO.File.Move(oldMaterialTitle, newMaterialTitle);
+
+                String editMaterial = "UPDATE [dbo].[Material] SET materialTitle=@materialTitle, materialName=@materialName WHERE materialId = @materialId";
+                SqlCommand cmdEditMaterial = new SqlCommand(editMaterial, materialCon);
+                cmdEditMaterial.Parameters.AddWithValue("@materialTitle", materialTitle);
+                cmdEditMaterial.Parameters.AddWithValue("@materialName", materialTitle + ".pdf");
+                cmdEditMaterial.Parameters.AddWithValue("@materialId", materialId);               
+                cmdEditMaterial.ExecuteNonQuery();
+
+                materialCon.Close();
+               
+                String chapterId = Request.QueryString["chapterId"];
+                String url = "readingMaterial.aspx?chapterId=" + chapterId;
+                Response.Redirect(url);
+            }            
+            else
+            {
+                Response.Write("<script>alert('Entered Material Title Already Exists.')</script>");
+
+            }
+        }
+
+        public void cancelFunction(TextBox txt, LinkButton btnEdit, LinkButton btnCancel, LinkButton btnDel, LinkButton btnSave)
+        {           
+            txt.Enabled = false;
+            txt.BorderStyle = BorderStyle.None;
+            txt.BackColor = Color.Transparent;
+
+            btnEdit.Visible = true;
+            btnCancel.Visible = false;
+            btnDel.Visible = false;
+            btnSave.Visible = false;
+
+            
+        }
 
 
-
-
-        protected void rptDeleteRM_ItemCommand(object source, RepeaterCommandEventArgs e)
+        protected void rptEditRM_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
             //get materialId 
             String materialId = e.CommandArgument.ToString();
+            string chapterId = Request.QueryString["chapterId"];
+            LinkButton btnEdit = (LinkButton)e.Item.FindControl("btnEdit");
+            LinkButton btnSave = (LinkButton)e.Item.FindControl("btnSave");
+            LinkButton btnCancel = (LinkButton)e.Item.FindControl("btnCancel");
+            LinkButton btnDel = (LinkButton)e.Item.FindControl("btnDelete");
 
             string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
             string providerConStr = new EntityConnectionStringBuilder(conStr).ProviderConnectionString;
             SqlConnection rmCon = new SqlConnection(providerConStr);
             rmCon.Open();
 
-            //get materialTitle
+            //get materialFileName
             SqlCommand cmdGetRmTitle = new SqlCommand("Select materialName from [dbo].[Material] where materialId=@materialId;", rmCon);
             cmdGetRmTitle.Parameters.AddWithValue("@materialId", materialId);
-            String materialName = Convert.ToString(cmdGetRmTitle.ExecuteScalar());
+            String materialFileName = Convert.ToString(cmdGetRmTitle.ExecuteScalar());
 
-            if (e.CommandName == "deleteRM")
+            if (e.CommandName == "editLec")
             {
-                string file_name = "~/ReadingMaterials/" + materialName;
+                TextBox txtLec = (TextBox)e.Item.FindControl("txtLec");
+                txtLec.Enabled = true;
+                txtLec.BorderStyle = BorderStyle.Inset;
+                txtLec.BackColor = Color.White;
+
+                btnEdit.Visible = false;
+                btnSave.Visible = true;
+                btnCancel.Visible = true;
+                btnDel.Visible = true;
+
+            }
+            if (e.CommandName == "editPrac")
+            {
+                TextBox txtPrac = (TextBox)e.Item.FindControl("txtPrac");
+                txtPrac.Enabled = true;
+                txtPrac.BorderStyle = BorderStyle.Inset;
+                txtPrac.BackColor = Color.White;
+
+                btnEdit.Visible = false;
+                btnSave.Visible = true;
+                btnCancel.Visible = true;
+                btnDel.Visible = true;
+
+            }
+            if (e.CommandName == "editTut")
+            {
+                TextBox txtTut = (TextBox)e.Item.FindControl("txtTut");
+                txtTut.Enabled = true;
+                txtTut.BorderStyle = BorderStyle.Inset;
+                txtTut.BackColor = Color.White;
+
+                btnEdit.Visible = false;
+                btnSave.Visible = true;
+                btnCancel.Visible = true;
+                btnDel.Visible = true;
+
+            }
+            if (e.CommandName == "editOth")
+            {
+                TextBox txtOth = (TextBox)e.Item.FindControl("txtOth");
+                txtOth.Enabled = true;
+                txtOth.BorderStyle = BorderStyle.Inset;
+                txtOth.BackColor = Color.White;
+
+                btnEdit.Visible = false;
+                btnSave.Visible = true;
+                btnCancel.Visible = true;
+                btnDel.Visible = true;
+
+            }
+            if (e.CommandName == "delete")
+            {
+                string file_name = "~/ReadingMaterials/" + materialFileName;
                 string strPath = Server.MapPath(file_name);
                 FileInfo file = new FileInfo(strPath);
                 if (file.Exists)//check file exsit or not  
@@ -284,7 +393,7 @@ namespace TARCLearn.App_Pages
                     cmdDelRm.ExecuteNonQuery();
 
                     rmCon.Close();
-                    string chapterId = Request.QueryString["chapterId"];
+                    
                     String url = "readingMaterial.aspx?chapterId=" + chapterId;
 
 
@@ -299,81 +408,223 @@ namespace TARCLearn.App_Pages
                 }
                 else
                 {
-                    System.Text.StringBuilder javaScript = new System.Text.StringBuilder();
-                    string scriptKey = "ErrorMessage";
+                    Response.Write("<script>alert('File Does Not Exist.')</script>");
 
-                    javaScript.Append("var userConfirmation = window.confirm('" + "File Does Not Exist." + "');\n");
-
-
-                    ClientScript.RegisterStartupScript(this.GetType(), scriptKey, javaScript.ToString(), true);
 
                 }
             }
+            if (e.CommandName == "saveLec")
+            {
+                if (Page.IsValid)
+                {
+                    TextBox txtLec = (TextBox)e.Item.FindControl("txtLec");
+                    txtLec.Enabled = true;
+                    txtLec.BorderStyle = BorderStyle.Inset;
+                    txtLec.BackColor = Color.White;
 
+                    btnEdit.Visible = true;
+                    btnCancel.Visible = false;
+                    btnDel.Visible = false;
+                    btnSave.Visible = false;
+
+                    saveFuction(rmCon, txtLec.Text, materialId, materialFileName);
+                }
+            }
+            if (e.CommandName == "savePrac")
+            {
+                if (Page.IsValid)
+                {
+                    TextBox txtPrac = (TextBox)e.Item.FindControl("txtPrac");
+                    txtPrac.Enabled = true;
+                    txtPrac.BorderStyle = BorderStyle.Inset;
+                    txtPrac.BackColor = Color.White;
+
+                    btnEdit.Visible = true;
+                    btnCancel.Visible = false;
+                    btnDel.Visible = false;
+                    btnSave.Visible = false;
+
+                    saveFuction(rmCon, txtPrac.Text, materialId, materialFileName);
+                }
+            }
+            if (e.CommandName == "saveTut")
+            {
+                if (Page.IsValid)
+                {
+                    TextBox txtTut = (TextBox)e.Item.FindControl("txtTut");
+                    txtTut.Enabled = true;
+                    txtTut.BorderStyle = BorderStyle.Inset;
+                    txtTut.BackColor = Color.White;
+
+                    btnEdit.Visible = true;
+                    btnCancel.Visible = false;
+                    btnDel.Visible = false;
+                    btnSave.Visible = false;
+
+                    saveFuction(rmCon, txtTut.Text, materialId, materialFileName);
+                }
+            }
+            if (e.CommandName == "saveOth")
+            {
+                if (Page.IsValid)
+                {
+                    TextBox txtOth = (TextBox)e.Item.FindControl("txtOth");
+                    txtOth.Enabled = true;
+                    txtOth.BorderStyle = BorderStyle.Inset;
+                    txtOth.BackColor = Color.White;
+
+                    btnEdit.Visible = true;
+                    btnCancel.Visible = false;
+                    btnDel.Visible = false;
+                    btnSave.Visible = false;
+
+                    saveFuction(rmCon, txtOth.Text, materialId, materialFileName);
+                }
+            }
+            if (e.CommandName == "cancelLec")
+            {
+                TextBox txtLec = (TextBox)e.Item.FindControl("txtLec");
+                cancelFunction(txtLec, btnEdit, btnCancel, btnDel, btnSave);
+
+                String strDelLect = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = 'false' AND mode = 'LECTURE';";
+                SqlCommand cmdDelLect = new SqlCommand(strDelLect, rmCon);
+                cmdDelLect.Parameters.AddWithValue("@chapterId", chapterId);
+
+                rptDelLect.DataSource = cmdDelLect.ExecuteReader();
+                rptDelLect.DataBind();
+
+            }
+            if (e.CommandName == "cancelPrac")
+            {
+                TextBox txtPrac = (TextBox)e.Item.FindControl("txtPrac");
+                cancelFunction(txtPrac, btnEdit, btnCancel, btnDel, btnSave);
+
+                String strDelLect = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = 'false' AND mode = 'PRACTICAL';";
+                SqlCommand cmdDelLect = new SqlCommand(strDelLect, rmCon);
+                cmdDelLect.Parameters.AddWithValue("@chapterId", chapterId);
+
+                rptDelPrac.DataSource = cmdDelLect.ExecuteReader();
+                rptDelPrac.DataBind();
+
+            }
+            if (e.CommandName == "cancelTut")
+            {
+                TextBox txtTut = (TextBox)e.Item.FindControl("txtTut");
+                cancelFunction(txtTut, btnEdit, btnCancel, btnDel, btnSave);
+
+                String strDelLect = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = 'false' AND mode = 'TUTORIAL';";
+                SqlCommand cmdDelLect = new SqlCommand(strDelLect, rmCon);
+                cmdDelLect.Parameters.AddWithValue("@chapterId", chapterId);
+
+                rptDelTut.DataSource = cmdDelLect.ExecuteReader();
+                rptDelTut.DataBind();
+
+            }
+            if (e.CommandName == "cancelOth")
+            {
+                TextBox txtOth = (TextBox)e.Item.FindControl("txtOth");
+                cancelFunction(txtOth, btnEdit, btnCancel, btnDel, btnSave);
+
+                String strDelLect = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = 'false' AND mode = 'OTHER';";
+                SqlCommand cmdDelLect = new SqlCommand(strDelLect, rmCon);
+                cmdDelLect.Parameters.AddWithValue("@chapterId", chapterId);
+
+                rptDelOth.DataSource = cmdDelLect.ExecuteReader();
+                rptDelOth.DataBind();
+
+            }
         }
 
         protected void addNewMaterialFormSubmitClicked(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
+
                 string description;
                 string chapterId = Request.QueryString["chapterId"];
                 string filepath = "../ReadingMaterials/" + file.FileName;
 
-                if (file.HasFile && file.PostedFile != null)
+                
+                string strPath = Server.MapPath(filepath);
+                FileInfo fileInfo = new FileInfo(strPath);
+
+
+
+                string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
+                string providerConStr = new EntityConnectionStringBuilder(conStr).ProviderConnectionString;
+                SqlConnection materialCon = new SqlConnection(providerConStr);
+                materialCon.Open();
+
+                SqlCommand cmdSelectMaterialTitle = new SqlCommand("Select * from [dbo].[Material] where materialTitle=@materialTitle", materialCon);
+                cmdSelectMaterialTitle.Parameters.AddWithValue("@materialTitle", formTitle.Text);
+                SqlDataReader dtrMaterialTitle = cmdSelectMaterialTitle.ExecuteReader();
+
+                if (!dtrMaterialTitle.HasRows && !fileInfo.Exists)                   
                 {
-                    // Get the name of the file to upload.
-                    string fileName = Server.HtmlEncode(file.FileName);
-
-                    // Get the extension of the uploaded file.
-                    string extension = System.IO.Path.GetExtension(fileName);
-
-                    if (extension == ".pdf")
+                    if (file.HasFile && file.PostedFile != null)
                     {
-                        string path = Server.MapPath("~/ReadingMaterials/" + file.FileName);
-                        file.PostedFile.SaveAs(path);
+                        // Get the name of the file to upload.
+                        string fileName = Server.HtmlEncode(file.FileName);
 
-                        if (formDescription.Text != null)
+                        // Get the extension of the uploaded file.
+                        string extension = System.IO.Path.GetExtension(fileName);
+
+                        if (extension == ".pdf")
                         {
-                            description = formDescription.Text;
+                            string path = Server.MapPath("~/ReadingMaterials/" + file.FileName);
+                            file.PostedFile.SaveAs(path);
+
+                            if (formDescription.Text != null)
+                            {
+                                description = formDescription.Text;
+                            }
+                            else
+                            {
+                                description = null;
+                            }
+
+
+                            
+
+                            String getIndex = "SELECT COUNT(materialId) FROM [dbo].[Material] WHERE @chapterId = chapterId; ";
+                            SqlCommand cmdGetIndex = new SqlCommand(getIndex, materialCon);
+                            cmdGetIndex.Parameters.AddWithValue("@chapterId", chapterId);
+                            int newIndex = Convert.ToInt32(cmdGetIndex.ExecuteScalar()) + 1;
+
+                            String addMaterial = "INSERT INTO [dbo].[Material] VALUES(@index,@materialTitle,@materialDescription,@materialName,@isVideo,@mode,@chapterId);";
+                            SqlCommand cmdAddMaterial = new SqlCommand(addMaterial, materialCon);
+
+                            cmdAddMaterial.Parameters.AddWithValue("@index", newIndex);
+                            cmdAddMaterial.Parameters.AddWithValue("@materialTitle", formTitle.Text);
+                            cmdAddMaterial.Parameters.AddWithValue("@materialDescription", description);
+                            cmdAddMaterial.Parameters.AddWithValue("@materialName", file.FileName);
+                            cmdAddMaterial.Parameters.AddWithValue("@isVideo", false);
+                            cmdAddMaterial.Parameters.AddWithValue("@mode", formMaterialMode.SelectedValue);
+                            cmdAddMaterial.Parameters.AddWithValue("@chapterId", chapterId);
+
+                            cmdAddMaterial.ExecuteNonQuery();
+                            materialCon.Close();
+
+                            String url = "readingMaterial.aspx?chapterId=" + chapterId;
+                            Response.Redirect(url);
+
+
+
+
                         }
-                        else
-                        {
-                            description = null;
-                        }
-
-
-                        string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
-                        string providerConStr = new EntityConnectionStringBuilder(conStr).ProviderConnectionString;
-                        SqlConnection materialCon = new SqlConnection(providerConStr);
-                        materialCon.Open();
-
-                        String getIndex = "SELECT COUNT(materialId) FROM [dbo].[Material] WHERE @chapterId = chapterId; ";
-                        SqlCommand cmdGetIndex = new SqlCommand(getIndex, materialCon);
-                        cmdGetIndex.Parameters.AddWithValue("@chapterId", chapterId);
-                        int newIndex = Convert.ToInt32(cmdGetIndex.ExecuteScalar()) + 1;
-
-                        String addMaterial = "INSERT INTO [dbo].[Material] VALUES(@index,@materialTitle,@materialDescription,@materialName,@isVideo,@mode,@chapterId);";
-                        SqlCommand cmdAddMaterial = new SqlCommand(addMaterial, materialCon);
-
-                        cmdAddMaterial.Parameters.AddWithValue("@index", newIndex);
-                        cmdAddMaterial.Parameters.AddWithValue("@materialTitle", formTitle.Text);
-                        cmdAddMaterial.Parameters.AddWithValue("@materialDescription", description);
-                        cmdAddMaterial.Parameters.AddWithValue("@materialName", file.FileName);
-                        cmdAddMaterial.Parameters.AddWithValue("@isVideo", Convert.ToBoolean(formMaterialType.SelectedValue));
-                        cmdAddMaterial.Parameters.AddWithValue("@mode", formMaterialMode.SelectedValue);
-                        cmdAddMaterial.Parameters.AddWithValue("@chapterId", chapterId);
-
-                        cmdAddMaterial.ExecuteNonQuery();
-                        materialCon.Close();
-                        
-                        String url = "readingMaterial.aspx?chapterId=" + chapterId;
-                        Response.Redirect(url);
-
-
-
-
                     }
+                }
+                else if (dtrMaterialTitle.HasRows && fileInfo.Exists)
+                {
+                    Response.Write("<script>alert('Both Entered Title And Uploaded File Already Exists.')</script>");
+                }
+                else if (dtrMaterialTitle.HasRows)
+                {
+                    Response.Write("<script>alert('Entered Title Already Exists.')</script>");
+                }
+                else
+                {
+                    Response.Write("<script>alert('Uploaded File Already Exists.')</script>");
                 }
 
             }
