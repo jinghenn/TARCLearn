@@ -14,77 +14,93 @@ namespace TARCLearn.App_Pages
 {
     public partial class readingMaterial : System.Web.UI.Page
     {
-
+        Boolean isVideo;
 
         protected void Page_Load(object sender, EventArgs e)
         {
+           
             if (!IsPostBack)
             {
+                string chapterId = Request.QueryString["chapterId"];
+                string materialType = Request.QueryString["materialType"];
                 if (Session["isDel"] == null)
                 {
                     Session["isDel"] = "false";
                 }
 
-                string chapterId = Request.QueryString["chapterId"];
+                
+                if (materialType == "video")
+                {
+                    isVideo = true;
+                    lblTittle.Text = "Video";
+                    lblSupport.Text = "Supported file extensions : .mp4";
+                }
+                else
+                {
+                    isVideo = false;
+                    lblSupport.Text = "Supported file extensions : .pdf";
+                }
+                
+                
                 string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
                 string providerConStr = new EntityConnectionStringBuilder(conStr).ProviderConnectionString;
                 SqlConnection materialCon = new SqlConnection(providerConStr);
                 materialCon.Open();
 
                 //select data to be bound
-                String strSelectLect = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = 'False' AND mode = 'LECTURE';";
+                String strSelectLect = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = @isVideo AND mode = 'LECTURE';";
                 SqlCommand cmdSelectLect = new SqlCommand(strSelectLect, materialCon);
                 cmdSelectLect.Parameters.AddWithValue("@chapterId", chapterId);
-
+                cmdSelectLect.Parameters.AddWithValue("@isVideo", isVideo);
                 rptLect.DataSource = cmdSelectLect.ExecuteReader();
                 rptLect.DataBind();
 
-                String strDelLect = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = 'false' AND mode = 'LECTURE';";
+                String strDelLect = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = @isVideo AND mode = 'LECTURE';";
                 SqlCommand cmdDelLect = new SqlCommand(strDelLect, materialCon);
                 cmdDelLect.Parameters.AddWithValue("@chapterId", chapterId);
-
+                cmdDelLect.Parameters.AddWithValue("@isVideo", isVideo);
                 rptDelLect.DataSource = cmdDelLect.ExecuteReader();
                 rptDelLect.DataBind();
 
-                String strSelectTut = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = 'false' AND mode = 'TUTORIAL';";
+                String strSelectTut = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = @isVideo AND mode = 'TUTORIAL';";
                 SqlCommand cmdSelectTut = new SqlCommand(strSelectTut, materialCon);
                 cmdSelectTut.Parameters.AddWithValue("@chapterId", chapterId);
-
+                cmdSelectTut.Parameters.AddWithValue("@isVideo", isVideo);
                 rptTut.DataSource = cmdSelectTut.ExecuteReader();
                 rptTut.DataBind();
 
-                String strDelTut = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = 'false' AND mode = 'TUTORIAL';";
+                String strDelTut = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = @isVideo AND mode = 'TUTORIAL';";
                 SqlCommand cmdDelTut = new SqlCommand(strDelTut, materialCon);
                 cmdDelTut.Parameters.AddWithValue("@chapterId", chapterId);
-
+                cmdDelTut.Parameters.AddWithValue("@isVideo", isVideo);
                 rptDelTut.DataSource = cmdDelTut.ExecuteReader();
                 rptDelTut.DataBind();
 
-                String strSelectPrac = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = 'false' AND mode = 'PRACTICAL';";
+                String strSelectPrac = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = @isVideo AND mode = 'PRACTICAL';";
                 SqlCommand cmdSelectPrac = new SqlCommand(strSelectPrac, materialCon);
                 cmdSelectPrac.Parameters.AddWithValue("@chapterId", chapterId);
-
+                cmdSelectPrac.Parameters.AddWithValue("@isVideo", isVideo);
                 rptPrac.DataSource = cmdSelectPrac.ExecuteReader();
                 rptPrac.DataBind();
 
-                String strDelPrac = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = 'false' AND mode = 'PRACTICAL';";
+                String strDelPrac = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = @isVideo AND mode = 'PRACTICAL';";
                 SqlCommand cmdDelPrac = new SqlCommand(strDelPrac, materialCon);
                 cmdDelPrac.Parameters.AddWithValue("@chapterId", chapterId);
-
+                cmdDelPrac.Parameters.AddWithValue("@isVideo", isVideo);
                 rptDelPrac.DataSource = cmdDelPrac.ExecuteReader();
                 rptDelPrac.DataBind();
 
-                String strSelectOth = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = 'false' AND mode = 'OTHER';";
+                String strSelectOth = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = @isVideo AND mode = 'OTHER';";
                 SqlCommand cmdSelectOth = new SqlCommand(strSelectOth, materialCon);
                 cmdSelectOth.Parameters.AddWithValue("@chapterId", chapterId);
-
+                cmdSelectOth.Parameters.AddWithValue("@isVideo", isVideo);
                 rptOth.DataSource = cmdSelectOth.ExecuteReader();
                 rptOth.DataBind();
 
-                String strDelOth = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = 'false' AND mode = 'OTHER';";
+                String strDelOth = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = @isVideo AND mode = 'OTHER';";
                 SqlCommand cmdDelOth = new SqlCommand(strDelOth, materialCon);
                 cmdDelOth.Parameters.AddWithValue("@chapterId", chapterId);
-
+                cmdDelOth.Parameters.AddWithValue("@isVideo", isVideo);
                 rptDelOth.DataSource = cmdDelOth.ExecuteReader();
                 rptDelOth.DataBind();
 
@@ -184,10 +200,30 @@ namespace TARCLearn.App_Pages
 
         protected void rmRepeater_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
+            string materialType = Request.QueryString["materialType"];
+
+            if (materialType == "video")
+            {
+                isVideo = true;
+
+            }
+            else
+            {
+                isVideo = false;
+            }
             if (e.CommandName == "selectRM")
             {
                 String materialId = e.CommandArgument.ToString();
-                String url = "pdfViewer.aspx?materialId=" + materialId;
+                String url;
+                if (isVideo)
+                {
+                    url = "videoViewer.aspx?materialId=" + materialId;
+                }
+                else
+                {
+                    url = "pdfViewer.aspx?materialId=" + materialId;
+                }
+                 
                 Response.Redirect(url);
 
             }
@@ -264,10 +300,20 @@ namespace TARCLearn.App_Pages
 
             if (!dtrMaterialTitle.HasRows )
             {
-                string newFileName = "~/ReadingMaterials/" + materialTitle + ".pdf";
-                string newMaterialTitle = Server.MapPath(newFileName);
-
-                string oldFileName = "~/ReadingMaterials/" + materialFileName;
+                string newFileName;
+                string oldFileName;
+                if (isVideo)
+                {
+                     newFileName = "~/videos/" + materialTitle + ".mp4";
+                     oldFileName = "~/videos/" + materialFileName;
+                }
+                else
+                {
+                    newFileName = "~/ReadingMaterials/" + materialTitle + ".pdf";
+                    oldFileName = "~/ReadingMaterials/" + materialFileName;
+                }
+                 
+                string newMaterialTitle = Server.MapPath(newFileName);              
                 string oldMaterialTitle = Server.MapPath(oldFileName);
 
                 System.IO.File.Move(oldMaterialTitle, newMaterialTitle);
@@ -281,8 +327,9 @@ namespace TARCLearn.App_Pages
 
                 materialCon.Close();
                
-                String chapterId = Request.QueryString["chapterId"];
-                String url = "readingMaterial.aspx?chapterId=" + chapterId;
+                string chapterId = Request.QueryString["chapterId"];
+                string materialType = Request.QueryString["materialType"];
+                string url = "readingMaterial.aspx?chapterId=" + chapterId + "&materialType=" + materialType;
                 Response.Redirect(url);
             }            
             else
@@ -310,8 +357,19 @@ namespace TARCLearn.App_Pages
         protected void rptEditRM_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
             //get materialId 
-            String materialId = e.CommandArgument.ToString();
+            string materialId = e.CommandArgument.ToString();
             string chapterId = Request.QueryString["chapterId"];
+            string materialType = Request.QueryString["materialType"];
+
+            if (materialType == "video")
+            {
+                isVideo = true;
+
+            }
+            else
+            {
+                isVideo = false;
+            }
             LinkButton btnEdit = (LinkButton)e.Item.FindControl("btnEdit");
             LinkButton btnSave = (LinkButton)e.Item.FindControl("btnSave");
             LinkButton btnCancel = (LinkButton)e.Item.FindControl("btnCancel");
@@ -381,7 +439,19 @@ namespace TARCLearn.App_Pages
             }
             if (e.CommandName == "delete")
             {
-                string file_name = "~/ReadingMaterials/" + materialFileName;
+                string file_name;
+
+                if (isVideo)
+                {
+                    file_name = "~/videos/" + materialFileName;
+                    
+                }
+                else
+                {
+                    file_name = "~/ReadingMaterials/" + materialFileName;
+                    
+                }
+
                 string strPath = Server.MapPath(file_name);
                 FileInfo file = new FileInfo(strPath);
                 if (file.Exists)//check file exsit or not  
@@ -393,17 +463,11 @@ namespace TARCLearn.App_Pages
                     cmdDelRm.ExecuteNonQuery();
 
                     rmCon.Close();
-                    
-                    String url = "readingMaterial.aspx?chapterId=" + chapterId;
 
-
-                    System.Text.StringBuilder javaScript = new System.Text.StringBuilder();
-                    string scriptKey = "SuccessMessage";
-
-                    javaScript.Append("var userConfirmation = window.confirm('" + "Successfully deleted." + "');\n");
-                    javaScript.Append("window.location='" + url + "';");
-
-                    ClientScript.RegisterStartupScript(this.GetType(), scriptKey, javaScript.ToString(), true);
+                    Response.Write("<script>alert('Successfully deleted.')</script>");
+                                        
+                    string url = "readingMaterial.aspx?chapterId=" + chapterId + "&materialType=" + materialType;
+                    Response.Redirect(url);
 
                 }
                 else
@@ -486,10 +550,10 @@ namespace TARCLearn.App_Pages
                 TextBox txtLec = (TextBox)e.Item.FindControl("txtLec");
                 cancelFunction(txtLec, btnEdit, btnCancel, btnDel, btnSave);
 
-                String strDelLect = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = 'false' AND mode = 'LECTURE';";
+                String strDelLect = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = @isVideo AND mode = 'LECTURE';";
                 SqlCommand cmdDelLect = new SqlCommand(strDelLect, rmCon);
                 cmdDelLect.Parameters.AddWithValue("@chapterId", chapterId);
-
+                cmdDelLect.Parameters.AddWithValue("@isVideo", isVideo);
                 rptDelLect.DataSource = cmdDelLect.ExecuteReader();
                 rptDelLect.DataBind();
 
@@ -499,10 +563,10 @@ namespace TARCLearn.App_Pages
                 TextBox txtPrac = (TextBox)e.Item.FindControl("txtPrac");
                 cancelFunction(txtPrac, btnEdit, btnCancel, btnDel, btnSave);
 
-                String strDelLect = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = 'false' AND mode = 'PRACTICAL';";
+                String strDelLect = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = @isVideo AND mode = 'PRACTICAL';";
                 SqlCommand cmdDelLect = new SqlCommand(strDelLect, rmCon);
                 cmdDelLect.Parameters.AddWithValue("@chapterId", chapterId);
-
+                cmdDelLect.Parameters.AddWithValue("@isVideo", isVideo);
                 rptDelPrac.DataSource = cmdDelLect.ExecuteReader();
                 rptDelPrac.DataBind();
 
@@ -512,10 +576,10 @@ namespace TARCLearn.App_Pages
                 TextBox txtTut = (TextBox)e.Item.FindControl("txtTut");
                 cancelFunction(txtTut, btnEdit, btnCancel, btnDel, btnSave);
 
-                String strDelLect = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = 'false' AND mode = 'TUTORIAL';";
+                String strDelLect = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = @isVideo AND mode = 'TUTORIAL';";
                 SqlCommand cmdDelLect = new SqlCommand(strDelLect, rmCon);
                 cmdDelLect.Parameters.AddWithValue("@chapterId", chapterId);
-
+                cmdDelLect.Parameters.AddWithValue("@isVideo", isVideo);
                 rptDelTut.DataSource = cmdDelLect.ExecuteReader();
                 rptDelTut.DataBind();
 
@@ -525,10 +589,10 @@ namespace TARCLearn.App_Pages
                 TextBox txtOth = (TextBox)e.Item.FindControl("txtOth");
                 cancelFunction(txtOth, btnEdit, btnCancel, btnDel, btnSave);
 
-                String strDelLect = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = 'false' AND mode = 'OTHER';";
+                String strDelLect = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = @isVideo AND mode = 'OTHER';";
                 SqlCommand cmdDelLect = new SqlCommand(strDelLect, rmCon);
                 cmdDelLect.Parameters.AddWithValue("@chapterId", chapterId);
-
+                cmdDelLect.Parameters.AddWithValue("@isVideo", isVideo);
                 rptDelOth.DataSource = cmdDelLect.ExecuteReader();
                 rptDelOth.DataBind();
 
@@ -539,11 +603,30 @@ namespace TARCLearn.App_Pages
         {
             if (Page.IsValid)
             {
+                string materialType = Request.QueryString["materialType"];              
 
+                if (materialType == "video")
+                {
+                    isVideo = true;
+                   
+                }
+                else
+                {
+                    isVideo = false;                    
+                }
                 string description;
                 string chapterId = Request.QueryString["chapterId"];
-                string filepath = "../ReadingMaterials/" + file.FileName;
+                string filepath;
+                if (isVideo)
+                {
+                    filepath = "../videos/" + file.FileName;
 
+                }
+                else
+                {
+                    filepath = "../ReadingMaterials/" + file.FileName;
+
+                }                
                 
                 string strPath = Server.MapPath(filepath);
                 FileInfo fileInfo = new FileInfo(strPath);
@@ -555,8 +638,9 @@ namespace TARCLearn.App_Pages
                 SqlConnection materialCon = new SqlConnection(providerConStr);
                 materialCon.Open();
 
-                SqlCommand cmdSelectMaterialTitle = new SqlCommand("Select * from [dbo].[Material] where materialTitle=@materialTitle", materialCon);
+                SqlCommand cmdSelectMaterialTitle = new SqlCommand("Select * from [dbo].[Material] where materialTitle=@materialTitle AND isVideo = @isVideo", materialCon);
                 cmdSelectMaterialTitle.Parameters.AddWithValue("@materialTitle", formTitle.Text);
+                cmdSelectMaterialTitle.Parameters.AddWithValue("@isVideo", isVideo);
                 SqlDataReader dtrMaterialTitle = cmdSelectMaterialTitle.ExecuteReader();
 
                 if (!dtrMaterialTitle.HasRows && !fileInfo.Exists)                   
@@ -574,44 +658,41 @@ namespace TARCLearn.App_Pages
                             string path = Server.MapPath("~/ReadingMaterials/" + file.FileName);
                             file.PostedFile.SaveAs(path);
 
-                            if (formDescription.Text != null)
-                            {
-                                description = formDescription.Text;
-                            }
-                            else
-                            {
-                                description = null;
-                            }
-
-
-                            
-
-                            String getIndex = "SELECT COUNT(materialId) FROM [dbo].[Material] WHERE @chapterId = chapterId; ";
-                            SqlCommand cmdGetIndex = new SqlCommand(getIndex, materialCon);
-                            cmdGetIndex.Parameters.AddWithValue("@chapterId", chapterId);
-                            int newIndex = Convert.ToInt32(cmdGetIndex.ExecuteScalar()) + 1;
-
-                            String addMaterial = "INSERT INTO [dbo].[Material] VALUES(@index,@materialTitle,@materialDescription,@materialName,@isVideo,@mode,@chapterId);";
-                            SqlCommand cmdAddMaterial = new SqlCommand(addMaterial, materialCon);
-
-                            cmdAddMaterial.Parameters.AddWithValue("@index", newIndex);
-                            cmdAddMaterial.Parameters.AddWithValue("@materialTitle", formTitle.Text);
-                            cmdAddMaterial.Parameters.AddWithValue("@materialDescription", description);
-                            cmdAddMaterial.Parameters.AddWithValue("@materialName", file.FileName);
-                            cmdAddMaterial.Parameters.AddWithValue("@isVideo", false);
-                            cmdAddMaterial.Parameters.AddWithValue("@mode", formMaterialMode.SelectedValue);
-                            cmdAddMaterial.Parameters.AddWithValue("@chapterId", chapterId);
-
-                            cmdAddMaterial.ExecuteNonQuery();
-                            materialCon.Close();
-
-                            String url = "readingMaterial.aspx?chapterId=" + chapterId;
-                            Response.Redirect(url);
-
-
-
-
+                        }else
+                        {
+                            string path = Server.MapPath("~/videos/" + file.FileName);
+                            file.PostedFile.SaveAs(path);
                         }
+                        if (formDescription.Text != null)
+                        {
+                            description = formDescription.Text;
+                        }
+                        else
+                        {
+                            description = null;
+                        }
+                        String getIndex = "SELECT COUNT(materialId) FROM [dbo].[Material] WHERE @chapterId = chapterId AND @isVideo = isVideo; ";
+                        SqlCommand cmdGetIndex = new SqlCommand(getIndex, materialCon);
+                        cmdGetIndex.Parameters.AddWithValue("@chapterId", chapterId);
+                        cmdGetIndex.Parameters.AddWithValue("@isVideo", isVideo);
+                        int newIndex = Convert.ToInt32(cmdGetIndex.ExecuteScalar()) + 1;
+
+                        String addMaterial = "INSERT INTO [dbo].[Material] VALUES(@index,@materialTitle,@materialDescription,@materialName,@isVideo,@mode,@chapterId);";
+                        SqlCommand cmdAddMaterial = new SqlCommand(addMaterial, materialCon);
+
+                        cmdAddMaterial.Parameters.AddWithValue("@index", newIndex);
+                        cmdAddMaterial.Parameters.AddWithValue("@materialTitle", formTitle.Text);
+                        cmdAddMaterial.Parameters.AddWithValue("@materialDescription", description);
+                        cmdAddMaterial.Parameters.AddWithValue("@materialName", file.FileName);
+                        cmdAddMaterial.Parameters.AddWithValue("@isVideo", isVideo);
+                        cmdAddMaterial.Parameters.AddWithValue("@mode", formMaterialMode.SelectedValue);
+                        cmdAddMaterial.Parameters.AddWithValue("@chapterId", chapterId);
+
+                        cmdAddMaterial.ExecuteNonQuery();
+                        materialCon.Close();
+                       
+                        string url = "readingMaterial.aspx?chapterId=" + chapterId + "&materialType=" + materialType;
+                        Response.Redirect(url);
                     }
                 }
                 else if (dtrMaterialTitle.HasRows && fileInfo.Exists)

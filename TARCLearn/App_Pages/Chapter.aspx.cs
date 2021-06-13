@@ -79,14 +79,16 @@ namespace TARCLearn.App_Pages
             }if(e.CommandName == "selectRM")
             {
                 String chapterId = e.CommandArgument.ToString();
-                String url = "readingMaterial.aspx?chapterId=" + chapterId;
+                String url = "readingMaterial.aspx?chapterId=" + chapterId + "&materialType=readingMaterial";
                 Response.Redirect(url);
                
             }
             if (e.CommandName == "selectVideo")
             {
-               
-                Response.Redirect("videoViewer.aspx");
+
+                String chapterId = e.CommandArgument.ToString();
+                String url = "readingMaterial.aspx?chapterId=" + chapterId + "&materialType=video";
+                Response.Redirect(url);
 
             }
         }

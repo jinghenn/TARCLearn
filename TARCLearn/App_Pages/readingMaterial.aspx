@@ -67,8 +67,16 @@
     <script>
         function UploadFileCheck(source, arguments) { //client validation
             var sFile = arguments.Value;
-            arguments.IsValid =
-                (sFile.endsWith('.pdf'));
+            const params = new URLSearchParams(window.location.search);
+            var materialType = params.get('materialType').toString();
+            if (materialType == "video") {
+                arguments.IsValid =
+                    (sFile.endsWith('.mp4'));
+
+            } else {
+                arguments.IsValid =
+                    (sFile.endsWith('.pdf'));
+            }
         }
 
         
@@ -98,8 +106,7 @@
                             <div class="col-sm-9">
                                 <asp:TextBox ID="formDescription" CssClass="form-control" runat="server"></asp:TextBox>
                             </div>
-                        </div>                     
-                        
+                        </div>                                                                  
 
                         <div class="row mb-3">
                             <label for="formMaterialMode" class="col-sm-3 col-form-label">Material Category</label>
@@ -116,9 +123,9 @@
                          <div class="row mb-3">
                             <label for="file" class="form-label">Upload your file here</label>
                             <asp:FileUpload ID="file" runat="server" CssClass="form-control" />
-                            <asp:CustomValidator ValidationGroup="Add Form" ForeColor="Red" ID="CustomValidator1" ControlToValidate="file" runat="server" SetFocusOnError="true" Display="Dynamic" ErrorMessage="Invalid: File Type. (allowed types: pdf) " ClientValidationFunction="UploadFileCheck"></asp:CustomValidator>
+                            <asp:CustomValidator ValidationGroup="Add Form" ForeColor="Red" ID="CustomValidator1" ControlToValidate="file" runat="server" SetFocusOnError="true" Display="Dynamic" ErrorMessage="Invalid: File Type." ClientValidationFunction="UploadFileCheck"></asp:CustomValidator>
                             <div id="uploadHelp" class="form-text">
-                                Supported file extensions : .pdf 
+                                <asp:Label ID="lblSupport" runat="server" ></asp:Label>                                
                             </div>
                         </div>
 
