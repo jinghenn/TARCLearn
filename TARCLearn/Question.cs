@@ -20,7 +20,7 @@ namespace TARCLearn
             this.Choices = new HashSet<Choice>();
         }
     
-        public string questionId { get; set; }
+        public int questionId { get; set; }
         public string questionText { get; set; }
         public int quizId { get; set; }
     

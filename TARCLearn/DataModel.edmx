@@ -18,10 +18,10 @@
           <Key>
             <PropertyRef Name="choiceId" />
           </Key>
-          <Property Name="choiceId" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="choiceId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="choiceText" Type="varchar" MaxLength="500" Nullable="false" />
           <Property Name="isAnswer" Type="bit" Nullable="false" />
-          <Property Name="questionId" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="questionId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Course">
           <Key>
@@ -76,7 +76,7 @@
           <Key>
             <PropertyRef Name="questionId" />
           </Key>
-          <Property Name="questionId" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="questionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="questionText" Type="varchar" MaxLength="500" Nullable="false" />
           <Property Name="quizId" Type="int" Nullable="false" />
         </EntityType>
@@ -375,10 +375,10 @@
           <Key>
             <PropertyRef Name="choiceId" />
           </Key>
-          <Property Name="choiceId" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="choiceId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="choiceText" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="isAnswer" Type="Boolean" Nullable="false" />
-          <Property Name="questionId" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="questionId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Question" Relationship="TARCLearnModel.FK_Choices_Question" FromRole="Choice" ToRole="Question" />
         </EntityType>
         <EntityType Name="Course">
@@ -434,7 +434,7 @@
           <Key>
             <PropertyRef Name="questionId" />
           </Key>
-          <Property Name="questionId" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="questionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="questionText" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="quizId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Choices" Relationship="TARCLearnModel.FK_Choices_Question" FromRole="Question" ToRole="Choice" />

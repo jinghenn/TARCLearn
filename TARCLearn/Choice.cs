@@ -14,10 +14,10 @@ namespace TARCLearn
     
     public partial class Choice
     {
-        public string choiceId { get; set; }
+        public int choiceId { get; set; }
         public string choiceText { get; set; }
         public bool isAnswer { get; set; }
-        public string questionId { get; set; }
+        public int questionId { get; set; }
     
         public virtual Question Question { get; set; }
     }
