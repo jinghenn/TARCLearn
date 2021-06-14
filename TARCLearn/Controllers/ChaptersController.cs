@@ -211,7 +211,7 @@ namespace TARCLearn.Controllers
                     {
                         threadId = d.threadId,
                         threadTitle = d.threadTitle,
-                        userName = db.Users.FirstOrDefault(u => u.userId == d.userId).username,
+                        userName = d.User.username
                     })
 
                 }).SingleOrDefaultAsync(chap => chap.chapterId == chapterId);
