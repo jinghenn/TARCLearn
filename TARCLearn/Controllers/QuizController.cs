@@ -14,6 +14,7 @@ namespace TARCLearn.Controllers
     public class QuizController : ApiController
     {
         [HttpGet]
+        [Route("api/quiz/{quizId}")]
         [ResponseType(typeof(IEnumerable<QuestionDto>))]
         public async Task<IHttpActionResult> GetQuizQuestions(int quizId)
         {
@@ -35,7 +36,8 @@ namespace TARCLearn.Controllers
                         choices = qn.Choices.Select(c => new ChoiceDto 
                         { 
                             choiceId = c.choiceId,
-                            choiceText = c.choiceText
+                            choiceText = c.choiceText,
+                            isAnswer = c.isAnswer
                         })
                     })
 
