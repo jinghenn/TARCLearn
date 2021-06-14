@@ -48,10 +48,9 @@
          .rightButton{
               float: right;
               margin-right:30px;
-              height:15px;
-              width:15px;
               
-        }
+              
+         }
     </style>
      
 </asp:Content>
@@ -97,8 +96,8 @@
 
         <div class="label1">
             <asp:Label ID="lblTittle" runat="server" Font-Bold="true" Font-Size="Large">Chapter</asp:Label>
-             <asp:ImageButton ID="btnDeleteChapter" CssClass="rightButton" runat="server" ImageUrl="~/images/delete_icon.png" OnClick="btnDeleteChapter_Click"  /> 
-             <asp:ImageButton ID="btnAddChapter" CssClass="rightButton" runat="server" ImageUrl="~/images/add_icon.png"  data-toggle="modal" data-target="#modalForm" OnClientClick="return false;" />
+             <asp:ImageButton ID="btnDeleteChapter" CssClass="rightButton" runat="server" ImageUrl="~/images/more_icon.png" Height="15px" Width="15px" OnClick="btnDeleteChapter_Click"  /> 
+             <asp:ImageButton ID="btnAddChapter" CssClass="rightButton" runat="server" ImageUrl="~/images/add_icon.png"  data-toggle="modal" data-target="#modalForm" Height="15px" Width="15px" OnClientClick="return false;" />
         </div>
 
         <asp:Repeater ID="chpRepeater" runat="server" OnItemCommand="chapterRepeater_ItemCommand" >
@@ -113,11 +112,30 @@
 
         <asp:Repeater ID="rptDeleteChapter" runat="server"  Visible="False" OnItemCommand="rptDeleteChapter_ItemCommand" >
                 <ItemTemplate>
+
                     <div class="label1">
-                        <asp:Label ID="lblChapter" runat="server"  Text= '<%# "Chapter " + (Eval("chpNo")) + " " + (Eval("chpTitle")) %>' />                
-                        <asp:ImageButton CommandName="deleteChapter" CommandArgument='<%# Eval("chpId")%>'
-                            ID="ImageButton2" CssClass="rightButton" runat="server" ImageUrl="~/images/delete2_icon.png"  OnClientClick='return confirm("Are you sure you want to delete this item?");'/> 
-                    </div>           
+                                       
+                        
+                    <div>
+                        <asp:Label ID="lblChapter" runat="server"  Text= "Chapter "/> 
+                        <asp:TextBox ID="txtChapterNo" runat="server" Text='<%#Eval("chpNo") %>' Enabled="false" BorderStyle="None" BackColor="Transparent" AutoPostBack="False"></asp:TextBox>
+
+                        <asp:TextBox ID="txtChapterTitle" runat="server" style="width: 700px;" Text='<%# Eval("chpTitle") %>' Enabled="false" BorderStyle="None" BackColor="Transparent"  ></asp:TextBox>
+                    
+                        <div class=" rightButton " style="padding-bottom:20px;" role="group">
+                            <asp:LinkButton ID="btnEdit" CommandName="edit"  CssClass="btn btn-outline-info" runat="server" CausesValidation="false">Edit</asp:LinkButton>
+                            <asp:LinkButton ID="btnSave" CommandName="save" CommandArgument='<%# Eval("chpId")%>' CssClass="btn btn-outline-success " runat="server"  Visible="False" ValidationGroup="Edit">Save</asp:LinkButton>
+                            <asp:LinkButton ID="btnCancel" CommandName="cancel" CommandArgument='<%# Eval("chpId")%>' CssClass="btn btn-outline-danger " runat="server"  Visible="False" CausesValidation="false">Cancel</asp:LinkButton>
+                            <asp:LinkButton ID="btnDelete" CommandName="delete" CommandArgument='<%# Eval("chpId")%>' CssClass="btn btn-danger" runat="server"  Visible="False" CausesValidation="false" OnClientClick='return confirm("Are you sure you want to delete this item?");'>Delete</asp:LinkButton>
+                        </div> 
+                    </div>
+                    <div>
+                        <asp:RequiredFieldValidator ValidationGroup="Edit" ForeColor="Red" Display="Dynamic" ID="rfvtxtChapterNo" runat="server" ErrorMessage=" - Chapter No Cannot Be Blank" ControlToValidate="txtChapterNo" ></asp:RequiredFieldValidator>
+                    </div>
+                    <div>
+                        <asp:RequiredFieldValidator ValidationGroup="Edit" ForeColor="Red" Display="Dynamic" ID="rfvtxtChapterTitle" runat="server" ErrorMessage=" - Chapter Title Cannot Be Blank" ControlToValidate="txtChapterTitle" ></asp:RequiredFieldValidator>
+                    </div>
+                    </div>
                 </ItemTemplate>
         </asp:Repeater>
 

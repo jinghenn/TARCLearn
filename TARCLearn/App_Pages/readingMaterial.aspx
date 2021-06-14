@@ -46,7 +46,7 @@
         .deleteRpt{
             background-color: #f5f3f0;
             width:calc(100% - 15px); 
-            height:70px; 
+            height:90px; 
             border-width:0px; 
             padding:23px 0 0 40px;  
             margin-left:15px;
@@ -57,25 +57,28 @@
         .rightButton{
               float: right;
               margin-right:30px;
-              height:15px;
-              width:15px;
-              background-color: #f5f3f0;
+             
+              
               
         }
 
    </style>
 
     <script>
-        function UploadPUploadFileCheckDFCheck(source, arguments) { //client validation
+        function UploadFileCheck(source, arguments) { //client validation
             var sFile = arguments.Value;
-            if (formMaterialType.SelectedValue == "False") {
-                arguments.IsValid =
-                    (sFile.endsWith('.pdf'));
-            } else if (formMaterialType.SelectedValue == "True") {
+            const params = new URLSearchParams(window.location.search);
+            var materialType = params.get('materialType').toString();
+            if (materialType == "video") {
                 arguments.IsValid =
                     (sFile.endsWith('.mp4'));
+
+            } else {
+                arguments.IsValid =
+                    (sFile.endsWith('.pdf'));
             }
         }
+
         
     </script>
  
@@ -103,20 +106,10 @@
                             <div class="col-sm-9">
                                 <asp:TextBox ID="formDescription" CssClass="form-control" runat="server"></asp:TextBox>
                             </div>
-                        </div>  
-                        
-                        <div class="row mb-3">
-                            <label for="formMaterialType" class="col-sm-3 col-form-label">Art Category</label>
-                            <div class="col-sm-9">
-                                <asp:DropDownList ID="formMaterialType" CssClass="form-select" runat="server">                                
-                                    <asp:ListItem Value="True">Video</asp:ListItem>
-                                    <asp:ListItem Value="False">Reading Material</asp:ListItem>
-                                </asp:DropDownList>
-                            </div>
-                        </div>
+                        </div>                                                                  
 
                         <div class="row mb-3">
-                            <label for="formMaterialMode" class="col-sm-3 col-form-label">Art Category</label>
+                            <label for="formMaterialMode" class="col-sm-3 col-form-label">Material Category</label>
                             <div class="col-sm-9">
                                 <asp:DropDownList ID="formMaterialMode" CssClass="form-select" runat="server">                                
                                     <asp:ListItem Value="Lecture">Lecture</asp:ListItem>
@@ -130,9 +123,9 @@
                          <div class="row mb-3">
                             <label for="file" class="form-label">Upload your file here</label>
                             <asp:FileUpload ID="file" runat="server" CssClass="form-control" />
-                            <asp:CustomValidator ValidationGroup="Add Form" ForeColor="Red" ID="CustomValidator1" ControlToValidate="file" runat="server" SetFocusOnError="true" Display="Dynamic" ErrorMessage="Invalid: File Type " ClientValidationFunction="UploadFileCheck"></asp:CustomValidator>
+                            <asp:CustomValidator ValidationGroup="Add Form" ForeColor="Red" ID="CustomValidator1" ControlToValidate="file" runat="server" SetFocusOnError="true" Display="Dynamic" ErrorMessage="Invalid: File Type." ClientValidationFunction="UploadFileCheck"></asp:CustomValidator>
                             <div id="uploadHelp" class="form-text">
-                                Supported file extensions : .pdf for Reading Material and .mp4 for video
+                                <asp:Label ID="lblSupport" runat="server" ></asp:Label>                                
                             </div>
                         </div>
 
@@ -150,8 +143,8 @@
 <%-- title   --%>
       <div class="label1">
          <asp:Label ID="lblTittle" runat="server" Font-Bold="true" Font-Size="Large">Reading Material</asp:Label>   
-         <asp:ImageButton ID="btnDeleteRM" CssClass="rightButton" runat="server" ImageUrl="~/images/delete_icon.png" OnClick="btnDeleteRM_Click"   /> 
-         <asp:ImageButton ID="btnAddRM" CssClass="rightButton" runat="server" ImageUrl="~/images/add_icon.png"  data-toggle="modal" data-target="#modalForm" OnClientClick="return false;" />
+         <asp:ImageButton ID="btnDeleteRM" CssClass="rightButton" runat="server" ImageUrl="~/images/more_icon.png"  Height="15px" Width="15px" OnClick="btnDeleteRM_Click"   /> 
+         <asp:ImageButton ID="btnAddRM" CssClass="rightButton" runat="server" ImageUrl="~/images/add_icon.png"   Height="15px" Width="15px" data-toggle="modal" data-target="#modalForm" OnClientClick="return false;" />
       </div>
        
 
@@ -167,14 +160,26 @@
         </ItemTemplate>
       </asp:Repeater>
 
-      <%-- delete repeater  --%>
-      <asp:Repeater ID="rptDelLect" runat="server"  Visible="False" OnItemCommand="rptDeleteRM_ItemCommand" >
-        <ItemTemplate>
-           <div class="deleteRpt">
-               <asp:Label ID="lblLec" runat="server"  Text= '<%# Eval("materialTitle")%>' CssClass="label2" />                
-               <asp:ImageButton CommandName="deleteRM" CommandArgument='<%# Eval("materialId")%>'
-                            ID="ImageButton2" CssClass="rightButton " runat="server" ImageUrl="~/images/delete2_icon.png"  OnClientClick='return confirm("Are you sure you want to delete this item?");'/> 
-           </div>           
+      <%-- Edit repeater  --%>
+      <asp:Repeater ID="rptDelLect" runat="server"  Visible="False" OnItemCommand="rptEditRM_ItemCommand" >
+        <ItemTemplate>           
+            <div class="deleteRpt">                                                              
+                    <div>
+                        <asp:TextBox ID="txtLec" runat="server" style="width: 700px;" Text='<%# Eval("materialTitle") %>' Enabled="false" BorderStyle="None" BackColor="Transparent"  ></asp:TextBox>
+                    
+                        <div class=" rightButton " style="padding-bottom:20px;" role="group">
+                            <asp:LinkButton ID="btnEdit" CommandName="editLec"  CssClass="btn btn-outline-info" runat="server" CausesValidation="false">Edit</asp:LinkButton>
+                            <asp:LinkButton ID="btnSave" CommandName="saveLec" CommandArgument='<%# Eval("materialId")%>' CssClass="btn btn-outline-success " runat="server"  Visible="False" ValidationGroup="Edit">Save</asp:LinkButton>
+                            <asp:LinkButton ID="btnCancel" CommandName="cancelLec"  CssClass="btn btn-outline-danger " runat="server"  Visible="False" CausesValidation="false">Cancel</asp:LinkButton>
+                            <asp:LinkButton ID="btnDelete" CommandName="delete" CommandArgument='<%# Eval("materialId")%>' CssClass="btn btn-danger" runat="server"  Visible="False" CausesValidation="false" OnClientClick='return confirm("Are you sure you want to delete this item?");'>Delete</asp:LinkButton>
+                        </div> 
+                    </div>
+                    <div>
+                        <asp:RequiredFieldValidator ValidationGroup="Edit" ForeColor="Red" Display="Dynamic" ID="rfvtxtLec" runat="server" ErrorMessage=" - Material Title Cannot Be Blank" ControlToValidate="txtLec" ></asp:RequiredFieldValidator>
+                    </div>
+                   
+            </div>
+
         </ItemTemplate>
       </asp:Repeater>
 
@@ -190,13 +195,23 @@
         </ItemTemplate>
     </asp:Repeater>
     
-    <%-- delete repeater  --%>
-    <asp:Repeater ID="rptDelPrac" runat="server"  Visible="False" OnItemCommand="rptDeleteRM_ItemCommand" >
+    <%-- Edit repeater  --%>
+    <asp:Repeater ID="rptDelPrac" runat="server"  Visible="False" OnItemCommand="rptEditRM_ItemCommand" >
         <ItemTemplate>
            <div class="deleteRpt">
-               <asp:Label ID="lblPrac" runat="server"  Text= '<%# Eval("materialTitle")%>' CssClass="label2" />                
-               <asp:ImageButton CommandName="deleteRM" CommandArgument='<%# Eval("materialId")%>'
-                            ID="ImageButton2" CssClass="rightButton" runat="server" ImageUrl="~/images/delete2_icon.png"  OnClientClick='return confirm("Are you sure you want to delete this item?");'/> 
+               <div>
+                        <asp:TextBox ID="txtPrac" runat="server" style="width: 700px;" Text='<%# Eval("materialTitle") %>' Enabled="false" BorderStyle="None" BackColor="Transparent"  ></asp:TextBox>
+                    
+                 <div class=" rightButton " style="padding-bottom:20px;" role="group">
+                     <asp:LinkButton ID="btnEdit" CommandName="editPrac"  CssClass="btn btn-outline-info" runat="server" CausesValidation="false">Edit</asp:LinkButton>
+                     <asp:LinkButton ID="btnSave" CommandName="savePrac" CommandArgument='<%# Eval("materialId")%>' CssClass="btn btn-outline-success " runat="server"  Visible="False" ValidationGroup="Edit">Save</asp:LinkButton>
+                     <asp:LinkButton ID="btnCancel" CommandName="cancelPrac"  CssClass="btn btn-outline-danger " runat="server"  Visible="False" CausesValidation="false">Cancel</asp:LinkButton>
+                     <asp:LinkButton ID="btnDelete" CommandName="delete" CommandArgument='<%# Eval("materialId")%>' CssClass="btn btn-danger" runat="server"  Visible="False" CausesValidation="false" OnClientClick='return confirm("Are you sure you want to delete this item?");'>Delete</asp:LinkButton>
+                  </div> 
+                </div>
+                <div>
+                    <asp:RequiredFieldValidator ValidationGroup="Edit" ForeColor="Red" Display="Dynamic" ID="rfvtxtPrac" runat="server" ErrorMessage=" - Material Title Cannot Be Blank" ControlToValidate="txtPrac" ></asp:RequiredFieldValidator>
+                </div>
            </div>           
         </ItemTemplate>
       </asp:Repeater>
@@ -213,13 +228,22 @@
         </ItemTemplate>
     </asp:Repeater>
 
-    <%-- delete repeater  --%>
-    <asp:Repeater ID="rptDelTut" runat="server"  Visible="False" OnItemCommand="rptDeleteRM_ItemCommand" >
+    <%-- Edit repeater  --%>
+    <asp:Repeater ID="rptDelTut" runat="server"  Visible="False" OnItemCommand="rptEditRM_ItemCommand" >
         <ItemTemplate>
            <div class="deleteRpt">
-               <asp:Label ID="lblTut" runat="server"  Text= '<%# Eval("materialTitle")%>' CssClass="label2"/>                
-               <asp:ImageButton CommandName="deleteRM" CommandArgument='<%# Eval("materialId")%>'
-                            ID="ImageButton2" CssClass="rightButton" runat="server" ImageUrl="~/images/delete2_icon.png"  OnClientClick='return confirm("Are you sure you want to delete this item?");'/> 
+               <div>
+                 <asp:TextBox ID="txtTut" runat="server" style="width: 700px;" Text='<%# Eval("materialTitle") %>' Enabled="false" BorderStyle="None" BackColor="Transparent"  ></asp:TextBox>
+                 <div class=" rightButton " style="padding-bottom:20px;" role="group">
+                     <asp:LinkButton ID="btnEdit" CommandName="editTut"  CssClass="btn btn-outline-info" runat="server" CausesValidation="false">Edit</asp:LinkButton>
+                     <asp:LinkButton ID="btnSave" CommandName="saveTut" CommandArgument='<%# Eval("materialId")%>' CssClass="btn btn-outline-success " runat="server"  Visible="False" ValidationGroup="Edit">Save</asp:LinkButton>
+                     <asp:LinkButton ID="btnCancel" CommandName="cancelTut"  CssClass="btn btn-outline-danger " runat="server"  Visible="False" CausesValidation="false">Cancel</asp:LinkButton>
+                     <asp:LinkButton ID="btnDelete" CommandName="delete" CommandArgument='<%# Eval("materialId")%>' CssClass="btn btn-danger" runat="server"  Visible="False" CausesValidation="false" OnClientClick='return confirm("Are you sure you want to delete this item?");'>Delete</asp:LinkButton>
+                  </div> 
+                </div>
+                <div>
+                    <asp:RequiredFieldValidator ValidationGroup="Edit" ForeColor="Red" Display="Dynamic" ID="rfvtxtTut" runat="server" ErrorMessage=" - Material Title Cannot Be Blank" ControlToValidate="txtTut" ></asp:RequiredFieldValidator>
+                </div>                                           
            </div>           
         </ItemTemplate>
       </asp:Repeater>
@@ -236,14 +260,23 @@
         </ItemTemplate>
     </asp:Repeater> 
 
-<%-- delete repeater  --%>
-    <asp:Repeater ID="rptDelOth" runat="server"  Visible="False" OnItemCommand="rptDeleteRM_ItemCommand" >
+<%-- Edit repeater  --%>
+    <asp:Repeater ID="rptDelOth" runat="server"  Visible="False" OnItemCommand="rptEditRM_ItemCommand" >
         <ItemTemplate>
-           <div class="label2">
-               <asp:Label ID="lblOth" runat="server"  Text= '<%# Eval("materialTitle")%>' />                
-               <asp:ImageButton CommandName="deleteRM" CommandArgument='<%# Eval("materialId")%>'
-                            ID="ImageButton2" CssClass="rightButton" runat="server" ImageUrl="~/images/delete2_icon.png"  OnClientClick='return confirm("Are you sure you want to delete this item?");'/> 
-           </div>           
+           <div class="deleteRpt">
+               <div>
+                 <asp:TextBox ID="txtOth" runat="server" style="width: 700px;" Text='<%# Eval("materialTitle") %>' Enabled="false" BorderStyle="None" BackColor="Transparent"  ></asp:TextBox>
+                 <div class=" rightButton " style="padding-bottom:20px;" role="group">
+                     <asp:LinkButton ID="btnEdit" CommandName="editOth"  CssClass="btn btn-outline-info" runat="server" CausesValidation="false">Edit</asp:LinkButton>
+                     <asp:LinkButton ID="btnSave" CommandName="saveOth" CommandArgument='<%# Eval("materialId")%>' CssClass="btn btn-outline-success " runat="server"  Visible="False" ValidationGroup="Edit">Save</asp:LinkButton>
+                     <asp:LinkButton ID="btnCancel" CommandName="cancelOth"  CssClass="btn btn-outline-danger " runat="server"  Visible="False" CausesValidation="false">Cancel</asp:LinkButton>
+                     <asp:LinkButton ID="btnDelete" CommandName="delete" CommandArgument='<%# Eval("materialId")%>' CssClass="btn btn-danger" runat="server"  Visible="False" CausesValidation="false" OnClientClick='return confirm("Are you sure you want to delete this item?");'>Delete</asp:LinkButton>
+                  </div> 
+                </div>
+                <div>
+                    <asp:RequiredFieldValidator ValidationGroup="Edit" ForeColor="Red" Display="Dynamic" ID="rfvtxtOth" runat="server" ErrorMessage=" - Material Title Cannot Be Blank" ControlToValidate="txtOth" ></asp:RequiredFieldValidator>
+                </div>                                           
+           </div>                   
         </ItemTemplate>
       </asp:Repeater>
    </div>
