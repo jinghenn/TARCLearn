@@ -15,7 +15,7 @@ namespace TARCLearn
     public partial class Choice
     {
         public string choiceId { get; set; }
-        public string choice1 { get; set; }
+        public string choiceText { get; set; }
         public bool isAnswer { get; set; }
         public string questionId { get; set; }
     

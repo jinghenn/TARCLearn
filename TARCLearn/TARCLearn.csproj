@@ -244,6 +244,7 @@
     <Compile Include="Models\DiscussionThreadDto.cs" />
     <Compile Include="Models\MaterialDto.cs" />
     <Compile Include="Models\MessageDto.cs" />
+    <Compile Include="Models\QuizDto.cs" />
     <Compile Include="Models\UserDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Question.cs">

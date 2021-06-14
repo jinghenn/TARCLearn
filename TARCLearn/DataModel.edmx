@@ -19,7 +19,7 @@
             <PropertyRef Name="choiceId" />
           </Key>
           <Property Name="choiceId" Type="varchar" MaxLength="10" Nullable="false" />
-          <Property Name="choice" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="choiceText" Type="varchar" MaxLength="500" Nullable="false" />
           <Property Name="isAnswer" Type="bit" Nullable="false" />
           <Property Name="questionId" Type="varchar" MaxLength="10" Nullable="false" />
         </EntityType>
@@ -77,14 +77,14 @@
             <PropertyRef Name="questionId" />
           </Key>
           <Property Name="questionId" Type="varchar" MaxLength="10" Nullable="false" />
-          <Property Name="question" Type="varchar" MaxLength="500" Nullable="false" />
-          <Property Name="quizId" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="questionText" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="quizId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Quiz">
           <Key>
             <PropertyRef Name="quizId" />
           </Key>
-          <Property Name="quizId" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="quizId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="quizTitle" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="chapterId" Type="int" Nullable="false" />
         </EntityType>
@@ -376,7 +376,7 @@
             <PropertyRef Name="choiceId" />
           </Key>
           <Property Name="choiceId" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="choice1" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="choiceText" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="isAnswer" Type="Boolean" Nullable="false" />
           <Property Name="questionId" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Question" Relationship="TARCLearnModel.FK_Choices_Question" FromRole="Choice" ToRole="Question" />
@@ -435,8 +435,8 @@
             <PropertyRef Name="questionId" />
           </Key>
           <Property Name="questionId" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="question1" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="quizId" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="questionText" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="quizId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Choices" Relationship="TARCLearnModel.FK_Choices_Question" FromRole="Question" ToRole="Choice" />
           <NavigationProperty Name="Quiz" Relationship="TARCLearnModel.FK_Question_Quiz" FromRole="Question" ToRole="Quiz" />
         </EntityType>
@@ -444,7 +444,7 @@
           <Key>
             <PropertyRef Name="quizId" />
           </Key>
-          <Property Name="quizId" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="quizId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="quizTitle" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="chapterId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Chapter" Relationship="TARCLearnModel.FK_Quiz_chapter" FromRole="Quiz" ToRole="Chapter" />
@@ -611,7 +611,7 @@
               <MappingFragment StoreEntitySet="Choices">
                 <ScalarProperty Name="questionId" ColumnName="questionId" />
                 <ScalarProperty Name="isAnswer" ColumnName="isAnswer" />
-                <ScalarProperty Name="choice1" ColumnName="choice" />
+                <ScalarProperty Name="choiceText" ColumnName="choiceText" />
                 <ScalarProperty Name="choiceId" ColumnName="choiceId" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -665,7 +665,7 @@
             <EntityTypeMapping TypeName="TARCLearnModel.Question">
               <MappingFragment StoreEntitySet="Question">
                 <ScalarProperty Name="quizId" ColumnName="quizId" />
-                <ScalarProperty Name="question1" ColumnName="question" />
+                <ScalarProperty Name="questionText" ColumnName="questionText" />
                 <ScalarProperty Name="questionId" ColumnName="questionId" />
               </MappingFragment>
             </EntityTypeMapping>
