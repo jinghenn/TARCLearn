@@ -13,6 +13,7 @@ namespace TARCLearn.Models
     public class QuizQuestionsDto
     {
         public int quizId { get; set; }
+        public string quizTitle { get; set; }
         public IEnumerable<QuestionDto> questions { get; set; }
     }
 }
