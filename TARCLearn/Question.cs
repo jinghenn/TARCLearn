@@ -20,9 +20,9 @@ namespace TARCLearn
             this.Choices = new HashSet<Choice>();
         }
     
-        public string questionId { get; set; }
-        public string question1 { get; set; }
-        public string quizId { get; set; }
+        public int questionId { get; set; }
+        public string questionText { get; set; }
+        public int quizId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Choice> Choices { get; set; }

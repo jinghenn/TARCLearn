@@ -30,4 +30,10 @@ namespace TARCLearn.Models
         public string threadDescription { get; set; }
     }
 
+    public class DiscussionMessagesDto
+    {
+        public int threadId { get; set; }
+        public IEnumerable<MessageDetailDto> Messages { get; set; }
+    }
+
 }

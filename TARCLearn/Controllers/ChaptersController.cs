@@ -211,7 +211,7 @@ namespace TARCLearn.Controllers
                     {
                         threadId = d.threadId,
                         threadTitle = d.threadTitle,
-                        userName = db.Users.FirstOrDefault(u => u.userId == d.userId).username,
+                        userName = d.User.username
                     })
 
                 }).SingleOrDefaultAsync(chap => chap.chapterId == chapterId);
@@ -220,6 +220,36 @@ namespace TARCLearn.Controllers
                     return Content(HttpStatusCode.NotFound, "Chapter: " + chapterId + " not found");
                 }
                 return Ok(chapter.discussionThreads);
+            }
+            catch (Exception e)
+            {
+                return Content(HttpStatusCode.BadRequest, e);
+            }
+        }
+
+        [HttpGet]
+        [Route("api/chapters/{chapterId}/quiz")]
+        [ResponseType(typeof(IEnumerable<DiscussionThreadDetailDto>))]
+        public async Task<IHttpActionResult> GetChapterQuizzes(int chapterId)
+        {
+            try
+            {
+                TARCLearnEntities db = new TARCLearnEntities();
+                var chapter = await db.Chapters.Include(chap => chap.Quizs).Select(qs => new ChapterQuizzes()
+                {
+                    chapterId = qs.chapterId,
+                    quizzes = qs.Quizs.Select(q => new QuizDto()
+                    {
+                        quizId = q.quizId,
+                        quizTitle = q.quizTitle,
+                    })
+
+                }).SingleOrDefaultAsync(chap => chap.chapterId == chapterId);
+                if (chapter == null)
+                {
+                    return Content(HttpStatusCode.NotFound, "Chapter: " + chapterId + " not found");
+                }
+                return Ok(chapter.quizzes);
             }
             catch (Exception e)
             {

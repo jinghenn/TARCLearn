@@ -123,5 +123,37 @@ namespace TARCLearn.Controllers
                 return Content(HttpStatusCode.BadRequest, e);
             }
         }
+
+        [HttpGet]
+        [Route("api/discussions/{threadId}/messages")]
+        [ResponseType(typeof(IEnumerable<MessageDetailDto>))]
+        public async Task<IHttpActionResult> GetDiscussionMessages(int threadId)
+        {
+            try
+            {
+                TARCLearnEntities db = new TARCLearnEntities();
+                var thread = await db.DiscussionThreads.Include(t => t.DiscussionMessages).Select(t => new DiscussionMessagesDto
+                {
+                    threadId = t.threadId,
+                    Messages = t.DiscussionMessages.Select(d => new MessageDetailDto
+                    {
+                        messageId = d.messageId,
+                        message = d.message,
+                        userId = d.userId,
+                        userName = d.User.username
+                    })
+
+                }).SingleOrDefaultAsync(t => t.threadId == threadId);
+                if(thread == null)
+                {
+                    return Content(HttpStatusCode.NotFound, "Thread not found");
+                }
+                return Ok(thread.Messages);
+            }
+            catch(Exception e)
+            {
+                return Content(HttpStatusCode.BadRequest, e);
+            }
+        }
     }
 }
