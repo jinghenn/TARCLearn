@@ -85,13 +85,13 @@
 
         <asp:Repeater ID="rptDeleteCourse" runat="server"  Visible="False" OnItemCommand="rptDeleteCourse_ItemCommand">
             <ItemTemplate>
-                <div class="label1 ">
+                <div style="padding:12.5px 0 12.5px 30px; height: 70px;">
                     <div>
                         <asp:TextBox ID="txtCourseCode" runat="server" Text='<%#Eval("courseCode") %>' Enabled="false" BorderStyle="None" BackColor="Transparent" AutoPostBack="False"></asp:TextBox>
 
                         <asp:TextBox ID="txtCourseTitle" runat="server" style="width: 700px;" Text='<%# Eval("courseTitle") %>' Enabled="false" BorderStyle="None" BackColor="Transparent"  ></asp:TextBox>
                     
-                        <div class=" rightButton " style="padding-bottom:20px;" role="group">
+                        <div class=" rightButton"  role="group">
                             <asp:LinkButton ID="btnEdit" CommandName="edit"  CssClass="btn btn-outline-info" runat="server" CausesValidation="false">Edit</asp:LinkButton>
                             <asp:LinkButton ID="btnSave" CommandName="save" CommandArgument='<%# Eval("courseId")%>' CssClass="btn btn-outline-success " runat="server"  Visible="False" ValidationGroup="Edit">Save</asp:LinkButton>
                             <asp:LinkButton ID="btnCancel" CommandName="cancel"  CssClass="btn btn-outline-danger " runat="server"  Visible="False" CausesValidation="false">Cancel</asp:LinkButton>

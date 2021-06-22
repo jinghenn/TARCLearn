@@ -110,9 +110,12 @@
       <DependentUpon>TARCLearn.mdf</DependentUpon>
     </Content>
     <Content Include="App_Pages\Chapter.aspx" />
+    <Content Include="App_Pages\Discussion.aspx" />
+    <Content Include="App_Pages\DiscussionThread.aspx" />
     <Content Include="App_Pages\Login.aspx" />
     <Content Include="App_Pages\Courses.aspx" />
     <Content Include="App_Pages\pdfViewer.aspx" />
+    <Content Include="App_Pages\question.aspx" />
     <Content Include="App_Pages\readingMaterial.aspx" />
     <Content Include="App_Pages\Users.aspx" />
     <Content Include="App_Pages\videoViewer.aspx" />
@@ -145,6 +148,20 @@
     <Compile Include="App_Pages\Chapter.aspx.designer.cs">
       <DependentUpon>Chapter.aspx</DependentUpon>
     </Compile>
+    <Compile Include="App_Pages\Discussion.aspx.cs">
+      <DependentUpon>Discussion.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="App_Pages\Discussion.aspx.designer.cs">
+      <DependentUpon>Discussion.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="App_Pages\DiscussionThread.aspx.cs">
+      <DependentUpon>DiscussionThread.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="App_Pages\DiscussionThread.aspx.designer.cs">
+      <DependentUpon>DiscussionThread.aspx</DependentUpon>
+    </Compile>
     <Compile Include="App_Pages\Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -165,6 +182,13 @@
     </Compile>
     <Compile Include="App_Pages\pdfViewer.aspx.designer.cs">
       <DependentUpon>pdfViewer.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="App_Pages\question.aspx.cs">
+      <DependentUpon>question.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="App_Pages\question.aspx.designer.cs">
+      <DependentUpon>question.aspx</DependentUpon>
     </Compile>
     <Compile Include="App_Pages\readingMaterial.aspx.cs">
       <DependentUpon>readingMaterial.aspx</DependentUpon>

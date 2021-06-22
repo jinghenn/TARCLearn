@@ -91,6 +91,22 @@ namespace TARCLearn.App_Pages
                 Response.Redirect(url);
 
             }
+            if (e.CommandName == "selectDis")
+            {
+
+                String chapterId = e.CommandArgument.ToString();
+                String url = "Discussion.aspx?chapterId=" + chapterId;
+                Response.Redirect(url);
+
+            }
+            if (e.CommandName == "selectQuiz")
+            {
+
+                String chapterId = e.CommandArgument.ToString();
+                String url = "question.aspx?quizId=1";
+                Response.Redirect(url);
+
+            }
         }
 
         protected void btnDeleteChapter_Click(object sender, ImageClickEventArgs e)

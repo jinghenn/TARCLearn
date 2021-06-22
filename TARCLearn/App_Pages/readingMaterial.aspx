@@ -46,9 +46,9 @@
         .deleteRpt{
             background-color: #f5f3f0;
             width:calc(100% - 15px); 
-            height:90px; 
+            height:70px; 
             border-width:0px; 
-            padding:23px 0 0 40px;  
+            padding:12.5px 0 12.5px 30px;  
             margin-left:15px;
         }
         .label2{            
@@ -167,7 +167,7 @@
                     <div>
                         <asp:TextBox ID="txtLec" runat="server" style="width: 700px;" Text='<%# Eval("materialTitle") %>' Enabled="false" BorderStyle="None" BackColor="Transparent"  ></asp:TextBox>
                     
-                        <div class=" rightButton " style="padding-bottom:20px;" role="group">
+                        <div class=" rightButton " role="group">
                             <asp:LinkButton ID="btnEdit" CommandName="editLec"  CssClass="btn btn-outline-info" runat="server" CausesValidation="false">Edit</asp:LinkButton>
                             <asp:LinkButton ID="btnSave" CommandName="saveLec" CommandArgument='<%# Eval("materialId")%>' CssClass="btn btn-outline-success " runat="server"  Visible="False" ValidationGroup="Edit">Save</asp:LinkButton>
                             <asp:LinkButton ID="btnCancel" CommandName="cancelLec"  CssClass="btn btn-outline-danger " runat="server"  Visible="False" CausesValidation="false">Cancel</asp:LinkButton>
@@ -202,7 +202,7 @@
                <div>
                         <asp:TextBox ID="txtPrac" runat="server" style="width: 700px;" Text='<%# Eval("materialTitle") %>' Enabled="false" BorderStyle="None" BackColor="Transparent"  ></asp:TextBox>
                     
-                 <div class=" rightButton " style="padding-bottom:20px;" role="group">
+                 <div class=" rightButton " role="group">
                      <asp:LinkButton ID="btnEdit" CommandName="editPrac"  CssClass="btn btn-outline-info" runat="server" CausesValidation="false">Edit</asp:LinkButton>
                      <asp:LinkButton ID="btnSave" CommandName="savePrac" CommandArgument='<%# Eval("materialId")%>' CssClass="btn btn-outline-success " runat="server"  Visible="False" ValidationGroup="Edit">Save</asp:LinkButton>
                      <asp:LinkButton ID="btnCancel" CommandName="cancelPrac"  CssClass="btn btn-outline-danger " runat="server"  Visible="False" CausesValidation="false">Cancel</asp:LinkButton>
@@ -234,7 +234,7 @@
            <div class="deleteRpt">
                <div>
                  <asp:TextBox ID="txtTut" runat="server" style="width: 700px;" Text='<%# Eval("materialTitle") %>' Enabled="false" BorderStyle="None" BackColor="Transparent"  ></asp:TextBox>
-                 <div class=" rightButton " style="padding-bottom:20px;" role="group">
+                 <div class=" rightButton " role="group">
                      <asp:LinkButton ID="btnEdit" CommandName="editTut"  CssClass="btn btn-outline-info" runat="server" CausesValidation="false">Edit</asp:LinkButton>
                      <asp:LinkButton ID="btnSave" CommandName="saveTut" CommandArgument='<%# Eval("materialId")%>' CssClass="btn btn-outline-success " runat="server"  Visible="False" ValidationGroup="Edit">Save</asp:LinkButton>
                      <asp:LinkButton ID="btnCancel" CommandName="cancelTut"  CssClass="btn btn-outline-danger " runat="server"  Visible="False" CausesValidation="false">Cancel</asp:LinkButton>
