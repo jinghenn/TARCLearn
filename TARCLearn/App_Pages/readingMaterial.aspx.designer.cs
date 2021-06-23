@@ -87,22 +87,22 @@ namespace TARCLearn.App_Pages
         protected global::System.Web.UI.WebControls.Label lblTittle;
 
         /// <summary>
-        /// btnDeleteRM control.
+        /// btnMore control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ImageButton btnDeleteRM;
+        protected global::System.Web.UI.WebControls.ImageButton btnMore;
 
         /// <summary>
-        /// btnAddRM control.
+        /// btnAdd control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ImageButton btnAddRM;
+        protected global::System.Web.UI.WebControls.ImageButton btnAdd;
 
         /// <summary>
         /// btnLecture control.

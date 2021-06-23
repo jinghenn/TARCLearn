@@ -47,6 +47,12 @@ namespace TARCLearn.App_Pages
 
                 quizCon.Close();
 
+                string userType = Session["userType"].ToString();
+                if (userType == "Student")
+                {
+                    btnMore.Visible = false;
+                    btnAddQues.Visible = false;
+                }
 
             }
 

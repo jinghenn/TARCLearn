@@ -32,24 +32,32 @@ namespace TARCLearn.App_Pages
                 chpRepeater.DataSource = cmdSelectChapter.ExecuteReader();
                 chpRepeater.DataBind();
 
-                //select data to be bound
-                String strSelectEditChp = "Select chapterTitle AS chpTitle, chapterId AS chpId, chapterNo AS chpNo from Chapter Where courseId=@courseId;";
-                SqlCommand cmdSelectEditChapter = new SqlCommand(strSelectEditChp, chpCon);
-                cmdSelectEditChapter.Parameters.AddWithValue("@courseId", courseId);
+                string userType = Session["userType"].ToString();
+                if (userType == "Lecturer")
+                {
+                    //select data to be bound
+                    String strSelectEditChp = "Select chapterTitle AS chpTitle, chapterId AS chpId, chapterNo AS chpNo from Chapter Where courseId=@courseId;";
+                    SqlCommand cmdSelectEditChapter = new SqlCommand(strSelectEditChp, chpCon);
+                    cmdSelectEditChapter.Parameters.AddWithValue("@courseId", courseId);
 
-                rptDeleteChapter.DataSource = cmdSelectEditChapter.ExecuteReader();
-                rptDeleteChapter.DataBind();
+                    rptDeleteChapter.DataSource = cmdSelectEditChapter.ExecuteReader();
+                    rptDeleteChapter.DataBind();
+
+
+                }
+                else
+                {
+                    btnMore.Visible = false;
+                    btnAdd.Visible = false;
+                }
+
+                
 
                 chpCon.Close();
 
                 
             }
-            String userType = Session["userType"].ToString();
-            if (userType == "Student")
-            {
-                btnDeleteChapter.Visible = false;
-                btnAddChapter.Visible = false;
-            }
+            
         }
 
         protected void chapterRepeater_ItemCommand(object source, RepeaterCommandEventArgs e)

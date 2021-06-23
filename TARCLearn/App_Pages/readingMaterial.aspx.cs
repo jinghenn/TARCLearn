@@ -55,12 +55,7 @@ namespace TARCLearn.App_Pages
                 rptLect.DataSource = cmdSelectLect.ExecuteReader();
                 rptLect.DataBind();
 
-                String strDelLect = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = @isVideo AND mode = 'LECTURE';";
-                SqlCommand cmdDelLect = new SqlCommand(strDelLect, materialCon);
-                cmdDelLect.Parameters.AddWithValue("@chapterId", chapterId);
-                cmdDelLect.Parameters.AddWithValue("@isVideo", isVideo);
-                rptDelLect.DataSource = cmdDelLect.ExecuteReader();
-                rptDelLect.DataBind();
+                
 
                 String strSelectTut = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = @isVideo AND mode = 'TUTORIAL';";
                 SqlCommand cmdSelectTut = new SqlCommand(strSelectTut, materialCon);
@@ -69,12 +64,7 @@ namespace TARCLearn.App_Pages
                 rptTut.DataSource = cmdSelectTut.ExecuteReader();
                 rptTut.DataBind();
 
-                String strDelTut = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = @isVideo AND mode = 'TUTORIAL';";
-                SqlCommand cmdDelTut = new SqlCommand(strDelTut, materialCon);
-                cmdDelTut.Parameters.AddWithValue("@chapterId", chapterId);
-                cmdDelTut.Parameters.AddWithValue("@isVideo", isVideo);
-                rptDelTut.DataSource = cmdDelTut.ExecuteReader();
-                rptDelTut.DataBind();
+                
 
                 String strSelectPrac = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = @isVideo AND mode = 'PRACTICAL';";
                 SqlCommand cmdSelectPrac = new SqlCommand(strSelectPrac, materialCon);
@@ -83,12 +73,7 @@ namespace TARCLearn.App_Pages
                 rptPrac.DataSource = cmdSelectPrac.ExecuteReader();
                 rptPrac.DataBind();
 
-                String strDelPrac = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = @isVideo AND mode = 'PRACTICAL';";
-                SqlCommand cmdDelPrac = new SqlCommand(strDelPrac, materialCon);
-                cmdDelPrac.Parameters.AddWithValue("@chapterId", chapterId);
-                cmdDelPrac.Parameters.AddWithValue("@isVideo", isVideo);
-                rptDelPrac.DataSource = cmdDelPrac.ExecuteReader();
-                rptDelPrac.DataBind();
+                
 
                 String strSelectOth = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = @isVideo AND mode = 'OTHER';";
                 SqlCommand cmdSelectOth = new SqlCommand(strSelectOth, materialCon);
@@ -97,12 +82,43 @@ namespace TARCLearn.App_Pages
                 rptOth.DataSource = cmdSelectOth.ExecuteReader();
                 rptOth.DataBind();
 
-                String strDelOth = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = @isVideo AND mode = 'OTHER';";
-                SqlCommand cmdDelOth = new SqlCommand(strDelOth, materialCon);
-                cmdDelOth.Parameters.AddWithValue("@chapterId", chapterId);
-                cmdDelOth.Parameters.AddWithValue("@isVideo", isVideo);
-                rptDelOth.DataSource = cmdDelOth.ExecuteReader();
-                rptDelOth.DataBind();
+                string userType = Session["userType"].ToString();
+                if (userType == "Lecturer")
+                {
+
+                    String strDelLect = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = @isVideo AND mode = 'LECTURE';";
+                    SqlCommand cmdDelLect = new SqlCommand(strDelLect, materialCon);
+                    cmdDelLect.Parameters.AddWithValue("@chapterId", chapterId);
+                    cmdDelLect.Parameters.AddWithValue("@isVideo", isVideo);
+                    rptDelLect.DataSource = cmdDelLect.ExecuteReader();
+                    rptDelLect.DataBind();
+
+                    String strDelTut = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = @isVideo AND mode = 'TUTORIAL';";
+                    SqlCommand cmdDelTut = new SqlCommand(strDelTut, materialCon);
+                    cmdDelTut.Parameters.AddWithValue("@chapterId", chapterId);
+                    cmdDelTut.Parameters.AddWithValue("@isVideo", isVideo);
+                    rptDelTut.DataSource = cmdDelTut.ExecuteReader();
+                    rptDelTut.DataBind();
+
+                    String strDelPrac = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = @isVideo AND mode = 'PRACTICAL';";
+                    SqlCommand cmdDelPrac = new SqlCommand(strDelPrac, materialCon);
+                    cmdDelPrac.Parameters.AddWithValue("@chapterId", chapterId);
+                    cmdDelPrac.Parameters.AddWithValue("@isVideo", isVideo);
+                    rptDelPrac.DataSource = cmdDelPrac.ExecuteReader();
+                    rptDelPrac.DataBind();
+
+                    String strDelOth = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = @isVideo AND mode = 'OTHER';";
+                    SqlCommand cmdDelOth = new SqlCommand(strDelOth, materialCon);
+                    cmdDelOth.Parameters.AddWithValue("@chapterId", chapterId);
+                    cmdDelOth.Parameters.AddWithValue("@isVideo", isVideo);
+                    rptDelOth.DataSource = cmdDelOth.ExecuteReader();
+                    rptDelOth.DataBind();
+                }
+                else
+                {
+                    btnMore.Visible = false;
+                    btnAdd.Visible = false;
+                }
 
                 materialCon.Close();
             }

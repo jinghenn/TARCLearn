@@ -143,8 +143,8 @@
 <%-- title   --%>
       <div class="label1">
          <asp:Label ID="lblTittle" runat="server" Font-Bold="true" Font-Size="Large">Reading Material</asp:Label>   
-         <asp:ImageButton ID="btnDeleteRM" CssClass="rightButton" runat="server" ImageUrl="~/images/more_icon.png"  Height="15px" Width="15px" OnClick="btnDeleteRM_Click"   /> 
-         <asp:ImageButton ID="btnAddRM" CssClass="rightButton" runat="server" ImageUrl="~/images/add_icon.png"   Height="15px" Width="15px" data-toggle="modal" data-target="#modalForm" OnClientClick="return false;" />
+         <asp:ImageButton ID="btnMore" CssClass="rightButton" runat="server" ImageUrl="~/images/more_icon.png"  Height="15px" Width="15px" OnClick="btnDeleteRM_Click"   /> 
+         <asp:ImageButton ID="btnAdd" CssClass="rightButton" runat="server" ImageUrl="~/images/add_icon.png"   Height="15px" Width="15px" data-toggle="modal" data-target="#modalForm" OnClientClick="return false;" />
       </div>
        
 

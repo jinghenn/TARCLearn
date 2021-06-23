@@ -50,6 +50,7 @@ namespace TARCLearn.App_Pages
                     cmdSelectEditDis.Parameters.AddWithValue("@userId", userId);
                     rptEditDiscussion.DataSource = cmdSelectEditDis.ExecuteReader();
                     rptEditDiscussion.DataBind();
+                    
                 }
 
 

@@ -96,8 +96,8 @@
 
         <div class="label1">
             <asp:Label ID="lblTittle" runat="server" Font-Bold="true" Font-Size="Large">Chapter</asp:Label>
-             <asp:ImageButton ID="btnDeleteChapter" CssClass="rightButton" runat="server" ImageUrl="~/images/more_icon.png" Height="15px" Width="15px" OnClick="btnDeleteChapter_Click"  /> 
-             <asp:ImageButton ID="btnAddChapter" CssClass="rightButton" runat="server" ImageUrl="~/images/add_icon.png"  data-toggle="modal" data-target="#modalForm" Height="15px" Width="15px" OnClientClick="return false;" />
+             <asp:ImageButton ID="btnMore" CssClass="rightButton" runat="server" ImageUrl="~/images/more_icon.png" Height="15px" Width="15px" OnClick="btnDeleteChapter_Click"  /> 
+             <asp:ImageButton ID="btnAdd" CssClass="rightButton" runat="server" ImageUrl="~/images/add_icon.png"  data-toggle="modal" data-target="#modalForm" Height="15px" Width="15px" OnClientClick="return false;" />
         </div>
 
         <asp:Repeater ID="chpRepeater" runat="server" OnItemCommand="chapterRepeater_ItemCommand" >
