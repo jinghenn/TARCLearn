@@ -169,6 +169,7 @@ namespace TARCLearn.App_Pages
                         cmdEditCourse.Parameters.AddWithValue("@newCourseTitle", txtCourseTitle.Text);
                         cmdEditCourse.Parameters.AddWithValue("@courseId", courseId);
                         cmdEditCourse.ExecuteNonQuery();
+                        courseCon.Close();
                         Response.Redirect("Courses.aspx");
                     }
                     else if(dtrCourseCode.HasRows && dtrCourseTitle.HasRows)

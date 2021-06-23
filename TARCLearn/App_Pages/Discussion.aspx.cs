@@ -117,9 +117,11 @@ namespace TARCLearn.App_Pages
         protected void courseRepeater_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
             String threadId = e.CommandArgument.ToString();
+            string chapterId = Request.QueryString["chapterId"];
             if (e.CommandName == "selectDiscussion")
             {
-                String url = "DiscussionThread.aspx?threadId=" + threadId;
+                
+                String url = "DiscussionThread.aspx?threadId=" + threadId + "&chapterId="+ chapterId;
                 Response.Redirect(url);
 
             }

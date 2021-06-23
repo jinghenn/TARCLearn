@@ -112,7 +112,8 @@ namespace TARCLearn.App_Pages
                 cmdDel.Parameters.AddWithValue("@messageId", messageId);
                 cmdDel.ExecuteNonQuery();
                 threadCon.Close();
-                String url = "DiscussionThread.aspx?threadId=" + threadId;
+                string chapterId = Request.QueryString["chapterId"];
+                String url = "DiscussionThread.aspx?threadId=" + threadId + "&chapterId=" + chapterId;
                 Response.Redirect(url);
             }
             if (e.CommandName == "save")
@@ -136,9 +137,10 @@ namespace TARCLearn.App_Pages
                     cmdEditMsg.Parameters.AddWithValue("@messageId", messageId);
                     cmdEditMsg.ExecuteNonQuery();
 
-                    String url = "DiscussionThread.aspx?threadId=" + threadId;
+                    string chapterId = Request.QueryString["chapterId"];
+                    String url = "DiscussionThread.aspx?threadId=" + threadId + "&chapterId=" + chapterId;
                     Response.Redirect(url);
-                    
+
 
 
 
@@ -188,13 +190,108 @@ namespace TARCLearn.App_Pages
                 cmdInsert.ExecuteNonQuery();
                 threadCon.Close();
 
-                String url = "DiscussionThread.aspx?threadId=" + Request.QueryString["threadId"];
+                string chapterId = Request.QueryString["chapterId"];
+                String url = "DiscussionThread.aspx?threadId=" + Request.QueryString["threadId"] + "&chapterId=" + chapterId;
                 Response.Redirect(url);
-            }else
+            }
+            else
             {
                 Page.ClientScript.RegisterStartupScript(this.GetType(), "CallMyFunction", "showContent();", true);
 
             }
+        }
+
+        protected void btnEdit_Click(object sender, EventArgs e)
+        {
+            txtTitle.Enabled = true;
+            txtTitle.BorderStyle = BorderStyle.Inset;
+            txtTitle.BackColor = Color.White;
+
+            txtDesc.Enabled = true;
+            txtDesc.BorderStyle = BorderStyle.Inset;
+            txtDesc.BackColor = Color.White;
+
+            btnEdit.Visible = false;
+            btnSave.Visible = true;
+            btnCancel.Visible = true;
+            btnDel.Visible = true;
+        }
+
+        protected void btnSave_Click(object sender, EventArgs e)
+        {
+            string threadId = Request.QueryString["threadId"];
+            txtTitle.Enabled = false;
+            txtTitle.BorderStyle = BorderStyle.None;
+            txtTitle.BackColor = Color.Transparent;
+
+            txtDesc.Enabled = false;
+            txtDesc.BorderStyle = BorderStyle.None;
+            txtDesc.BackColor = Color.Transparent;
+
+            btnEdit.Visible = true;
+            btnSave.Visible = false;
+            btnCancel.Visible = false;
+            btnDel.Visible = false;
+
+            string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
+            string providerConStr = new EntityConnectionStringBuilder(conStr).ProviderConnectionString;
+            SqlConnection threadCon = new SqlConnection(providerConStr);
+            threadCon.Open();
+
+            String edit = "UPDATE [dbo].[DiscussionThread] SET threadTitle = @threadTitle, threadDescription = @threadDescription WHERE threadId=@threadId";
+            SqlCommand cmdEdit = new SqlCommand(edit, threadCon);
+            cmdEdit.Parameters.AddWithValue("@threadTitle", txtTitle.Text);
+            cmdEdit.Parameters.AddWithValue("@threadDescription", txtDesc.Text);
+            cmdEdit.Parameters.AddWithValue("@threadId", threadId);
+            cmdEdit.ExecuteNonQuery();
+            threadCon.Close();
+
+
+            string chapterId = Request.QueryString["chapterId"];
+            String url = "DiscussionThread.aspx?threadId=" + threadId + "&chapterId=" + chapterId;
+            Response.Redirect(url);
+        }
+
+        protected void btnCancel_Click(object sender, EventArgs e)
+        {
+            string threadId = Request.QueryString["threadId"];
+            txtTitle.Enabled = false;
+            txtTitle.BorderStyle = BorderStyle.None;
+            txtTitle.BackColor = Color.Transparent;
+
+            txtDesc.Enabled = false;
+            txtDesc.BorderStyle = BorderStyle.None;
+            txtDesc.BackColor = Color.Transparent;
+
+            btnEdit.Visible = true;
+            btnSave.Visible = false;
+            btnCancel.Visible = false;
+            btnDel.Visible = false;
+
+            string chapterId = Request.QueryString["chapterId"];
+            String url = "DiscussionThread.aspx?threadId=" + threadId + "&chapterId=" + chapterId;
+            Response.Redirect(url);
+        }
+
+        protected void btnDel_Click(object sender, EventArgs e)
+        {
+            string threadId = Request.QueryString["threadId"];
+            string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
+            string providerConStr = new EntityConnectionStringBuilder(conStr).ProviderConnectionString;
+            SqlConnection threadCon = new SqlConnection(providerConStr);
+            threadCon.Open();
+
+           
+
+            String strDel = "DELETE FROM DiscussionThread WHERE threadId=@threadId ";
+            SqlCommand cmdDel = new SqlCommand(strDel, threadCon);
+            cmdDel.Parameters.AddWithValue("@threadId", threadId);
+            cmdDel.ExecuteNonQuery();
+            threadCon.Close();
+
+            string chapterId = Request.QueryString["chapterId"];         
+            string url = "Discussion.aspx?chapterId=" + chapterId;
+            Response.Redirect(url);
         }
     }
 }

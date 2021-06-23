@@ -103,8 +103,9 @@ namespace TARCLearn.App_Pages
             {
 
                 String chapterId = e.CommandArgument.ToString();
-                String url = "question.aspx?quizId=1";
+                String url = "quiz.aspx?chapterId=" + chapterId;
                 Response.Redirect(url);
+                
 
             }
         }

@@ -114,13 +114,13 @@ namespace TARCLearn.App_Pages
         protected global::System.Web.UI.WebControls.Button btnDN;
 
         /// <summary>
-        /// btnMS control.
+        /// btnManage control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnMS;
+        protected global::System.Web.UI.WebControls.Button btnManage;
 
         /// <summary>
         /// ContentPlaceHolder1 control.

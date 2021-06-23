@@ -114,8 +114,10 @@
     <Content Include="App_Pages\DiscussionThread.aspx" />
     <Content Include="App_Pages\Login.aspx" />
     <Content Include="App_Pages\Courses.aspx" />
+    <Content Include="App_Pages\manage.aspx" />
     <Content Include="App_Pages\pdfViewer.aspx" />
-    <Content Include="App_Pages\question.aspx" />
+    <Content Include="App_Pages\questionList.aspx" />
+    <Content Include="App_Pages\quiz.aspx" />
     <Content Include="App_Pages\readingMaterial.aspx" />
     <Content Include="App_Pages\Users.aspx" />
     <Content Include="App_Pages\videoViewer.aspx" />
@@ -176,6 +178,13 @@
     <Compile Include="App_Pages\Courses.aspx.designer.cs">
       <DependentUpon>Courses.aspx</DependentUpon>
     </Compile>
+    <Compile Include="App_Pages\manage.aspx.cs">
+      <DependentUpon>manage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="App_Pages\manage.aspx.designer.cs">
+      <DependentUpon>manage.aspx</DependentUpon>
+    </Compile>
     <Compile Include="App_Pages\pdfViewer.aspx.cs">
       <DependentUpon>pdfViewer.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -183,12 +192,19 @@
     <Compile Include="App_Pages\pdfViewer.aspx.designer.cs">
       <DependentUpon>pdfViewer.aspx</DependentUpon>
     </Compile>
-    <Compile Include="App_Pages\question.aspx.cs">
-      <DependentUpon>question.aspx</DependentUpon>
+    <Compile Include="App_Pages\questionList.aspx.cs">
+      <DependentUpon>questionList.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="App_Pages\question.aspx.designer.cs">
-      <DependentUpon>question.aspx</DependentUpon>
+    <Compile Include="App_Pages\questionList.aspx.designer.cs">
+      <DependentUpon>questionList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="App_Pages\quiz.aspx.cs">
+      <DependentUpon>quiz.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="App_Pages\quiz.aspx.designer.cs">
+      <DependentUpon>quiz.aspx</DependentUpon>
     </Compile>
     <Compile Include="App_Pages\readingMaterial.aspx.cs">
       <DependentUpon>readingMaterial.aspx</DependentUpon>

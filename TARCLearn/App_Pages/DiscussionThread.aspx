@@ -95,10 +95,16 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     
-    <div class="label2">      
-        <asp:TextBox ID="txtTitle" runat="server" Width="100%" Enabled="false" BorderStyle="None" BackColor="Transparent"  Font-Bold="True" Font-Size="XX-Large"  ></asp:TextBox>
+    <div class="label2"> 
+        <div class=" rightButton "  role="group">
+           <asp:LinkButton ID="btnEdit" CssClass="btn btn-outline-info" runat="server" CausesValidation="false" OnClick="btnEdit_Click">Edit</asp:LinkButton>
+           <asp:LinkButton ID="btnSave"  CssClass="btn btn-outline-success " runat="server"  Visible="False" ValidationGroup="Edit" OnClick="btnSave_Click">Save</asp:LinkButton>
+           <asp:LinkButton ID="btnCancel"  CssClass="btn btn-outline-danger " runat="server"  Visible="False" CausesValidation="false" OnClick="btnCancel_Click">Cancel</asp:LinkButton>
+           <asp:LinkButton ID="btnDel"  CssClass="btn btn-danger" runat="server"  Visible="False" CausesValidation="false" OnClientClick='return confirm("Are you sure you want to delete this item?");' OnClick="btnDel_Click">Delete</asp:LinkButton>
+        </div>
+        <asp:TextBox ID="txtTitle" runat="server" Width="70%" Enabled="false" BorderStyle="None" BackColor="Transparent"  Font-Bold="True" Font-Size="XX-Large"  ></asp:TextBox>
         <asp:TextBox ID="txtDesc" runat="server"  Width="100%" Enabled="false" BorderStyle="None" BackColor="Transparent" TextMode="MultiLine" Rows="5" ></asp:TextBox>
-
+        
     </div>
     <div style="padding-left:15px; width:100%;">
         <asp:Label ID="lblComment"  runat="server"  Text="Comments" Font-Bold="True" Font-Size="X-Large"></asp:Label>

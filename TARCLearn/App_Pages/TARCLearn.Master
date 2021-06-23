@@ -80,8 +80,8 @@
                                        </div>
                                  </asp:Panel>
                                  <asp:Button ID="btnCourses" runat="server" class=" button" Text="Courses" Width="280px" Height="70px" BorderWidth="0px" OnClick="btnCourses_Click" />
-                                 <asp:Button ID="btnDN" runat="server" class=" button" Text="Discussion Notification" Width="280px" Height="70px" BorderWidth="0px"/>
-                                 <asp:Button ID="btnMS" runat="server" class=" button" Text="Manage Students" Width="280px" Height="70px" BorderWidth="0px" />  
+                                 <asp:Button ID="btnDN" runat="server" class=" button" Text="Discussion Room" Width="280px" Height="70px" BorderWidth="0px"/>
+                                 <asp:Button ID="btnManage" runat="server" class=" button" Text="Manage" Width="280px" Height="70px" BorderWidth="0px" OnClick="btnManage_Click" />  
                             </asp:Panel>
                             
                         </td>

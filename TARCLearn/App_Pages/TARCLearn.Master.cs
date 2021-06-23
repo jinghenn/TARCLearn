@@ -20,13 +20,18 @@ namespace TARCLearn.App_Pages
             
             if (Session["usertype"].ToString() == "Student")
             {
-                btnMS.Visible = false;
+                btnManage.Visible = false;
             }
         }
 
         protected void btnCourses_Click(object sender, EventArgs e)
         {
             Response.Redirect("Courses.aspx");
+        }
+
+        protected void btnManage_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("manage.aspx");
         }
     }
 }
