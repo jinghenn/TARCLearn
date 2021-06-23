@@ -106,8 +106,15 @@ namespace TARCLearn.App_Pages
             string providerConStr = new EntityConnectionStringBuilder(conStr).ProviderConnectionString;
             SqlConnection courseCon = new SqlConnection(providerConStr);
             courseCon.Open();
-           
-            
+
+            SqlCommand cmdGetCourseCode = new SqlCommand("Select courseCode from [dbo].[Course] where courseId=@courseId", courseCon);
+            cmdGetCourseCode.Parameters.AddWithValue("@courseId", courseId);
+            String currentCourseCode = Convert.ToString(cmdGetCourseCode.ExecuteScalar());
+
+            SqlCommand cmdGetCourseTitle = new SqlCommand("Select courseTitle from [dbo].[Course] where courseId=@courseId", courseCon);
+            cmdGetCourseTitle.Parameters.AddWithValue("@courseId", courseId);
+            String currentCourseTitle = Convert.ToString(cmdGetCourseTitle.ExecuteScalar());
+
             if (e.CommandName == "edit")
             {        
                 txtCourseCode.Enabled = true;
@@ -172,18 +179,40 @@ namespace TARCLearn.App_Pages
                         courseCon.Close();
                         Response.Redirect("Courses.aspx");
                     }
-                    else if(dtrCourseCode.HasRows && dtrCourseTitle.HasRows)
+                    else if (dtrCourseCode.HasRows && dtrCourseTitle.HasRows)
                     {
-                        Response.Write("<script>alert('Both Entered Course Code and Course Title Already Exists.')</script>");                       
+                        Response.Write("<script>alert('Both Entered Course Code and Course Title Already Exists.')</script>");
 
-                    }else if (dtrCourseCode.HasRows)
+                    }
+                    else if(dtrCourseCode.HasRows && (txtCourseCode.Text == currentCourseCode) && !dtrCourseTitle.HasRows)
                     {
-                        Response.Write("<script>alert('Entered Course Code Already Exists.')</script>");                       
+                        String editCourse = "UPDATE [dbo].[Course] SET courseTitle = @newCourseTitle WHERE courseId = @courseId";
+                        SqlCommand cmdEditCourse = new SqlCommand(editCourse, courseCon);                        
+                        cmdEditCourse.Parameters.AddWithValue("@newCourseTitle", txtCourseTitle.Text);
+                        cmdEditCourse.Parameters.AddWithValue("@courseId", courseId);
+                        cmdEditCourse.ExecuteNonQuery();
+                        courseCon.Close();
+                        Response.Redirect("Courses.aspx");
+                    }
+                    else if (dtrCourseCode.HasRows && (txtCourseCode.Text != currentCourseCode) && !dtrCourseTitle.HasRows)
+                    {
+                        Response.Write("<script>alert('Entered Course Code Already Exists.')</script>");
 
-                    }else if (dtrCourseTitle.HasRows)
+                    }
+                    else if (!dtrCourseCode.HasRows && (txtCourseTitle.Text == currentCourseTitle) && dtrCourseTitle.HasRows)
+                    {
+                        String editCourse = "UPDATE [dbo].[Course] SET courseCode = @newCourseCode WHERE courseId = @courseId";
+                        SqlCommand cmdEditCourse = new SqlCommand(editCourse, courseCon);
+                        cmdEditCourse.Parameters.AddWithValue("@newCourseCode", txtCourseCode.Text);
+                        cmdEditCourse.Parameters.AddWithValue("@courseId", courseId);
+                        cmdEditCourse.ExecuteNonQuery();
+                        courseCon.Close();
+                        Response.Redirect("Courses.aspx");
+                    }
+                    else if (!dtrCourseCode.HasRows && (txtCourseTitle.Text != currentCourseTitle) && dtrCourseTitle.HasRows)
                     {
                         Response.Write("<script>alert('Entered Course Title Already Exists.')</script>");
-                        
+
                     }
 
 

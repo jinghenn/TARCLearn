@@ -149,6 +149,14 @@ namespace TARCLearn.App_Pages
             SqlConnection chpCon = new SqlConnection(providerConStr);
             chpCon.Open();
 
+            SqlCommand cmdGetChpNo = new SqlCommand("Select chapterNo from [dbo].[Chapter] where chapterId=@chapterId", chpCon);
+            cmdGetChpNo.Parameters.AddWithValue("@chapterId", chpId);            
+            String currentChpNo = Convert.ToString(cmdGetChpNo.ExecuteScalar());
+
+            SqlCommand cmdGetChpTitle = new SqlCommand("Select chapterTitle from [dbo].[Chapter] where chapterId=@chapterId", chpCon);
+            cmdGetChpTitle.Parameters.AddWithValue("@chapterId", chpId);
+            String currentChpTitle = Convert.ToString(cmdGetChpTitle.ExecuteScalar());
+
             if (e.CommandName == "edit")
             {
                 
@@ -207,6 +215,8 @@ namespace TARCLearn.App_Pages
                     cmdSelectChapterTitle.Parameters.AddWithValue("@chapterTitle", txtChapterTitle.Text);
                     SqlDataReader dtrChapterTitle = cmdSelectChapterTitle.ExecuteReader();
 
+                    
+
                     if (!dtrChapterNo.HasRows && !dtrChapterTitle.HasRows)
                     {
                         String editCourse = "UPDATE [dbo].[Chapter] SET chapterNo = @newChapterNo, chapterTitle = @newChapterTitle WHERE chapterId = @chapterId";
@@ -226,7 +236,7 @@ namespace TARCLearn.App_Pages
                         Response.Write("<script>alert('Both Entered Chapter No. and Chapter Title Already Exists.')</script>");                      
 
                     }
-                    else if (dtrChapterNo.HasRows && (txtChapterNo.Text == Session["currentChpNo"].ToString()) && !dtrChapterTitle.HasRows)
+                    else if (dtrChapterNo.HasRows && (txtChapterNo.Text == currentChpNo) && !dtrChapterTitle.HasRows)
                     {
                         String editCourse = "UPDATE [dbo].[Chapter] SET chapterTitle = @newChapterTitle WHERE chapterId = @chapterId";
                         SqlCommand cmdEditCourse = new SqlCommand(editCourse, chpCon);
@@ -239,12 +249,12 @@ namespace TARCLearn.App_Pages
                         String url = "Chapter.aspx?courseId=" + courseId;
                         Response.Redirect(url);
                     }
-                    else if (dtrChapterNo.HasRows && (txtChapterNo.Text != Session["currentChpNo"].ToString()) && !dtrChapterTitle.HasRows)
+                    else if (dtrChapterNo.HasRows && (txtChapterNo.Text != currentChpNo) && !dtrChapterTitle.HasRows)
                     {
                         Response.Write("<script>alert('Entered Chapter No. Already Exists.')</script>");
 
                     }
-                    else if (!dtrChapterNo.HasRows && (txtChapterTitle.Text == Session["currentChpTitle"].ToString()) && dtrChapterTitle.HasRows)
+                    else if (!dtrChapterNo.HasRows && (txtChapterTitle.Text == currentChpTitle) && dtrChapterTitle.HasRows)
                     {
                         String editCourse = "UPDATE [dbo].[Chapter] SET chapterNo = @newChapterNo WHERE chapterId = @chapterId";
                         SqlCommand cmdEditCourse = new SqlCommand(editCourse, chpCon);
@@ -257,7 +267,7 @@ namespace TARCLearn.App_Pages
                         String url = "Chapter.aspx?courseId=" + courseId;
                         Response.Redirect(url);
                     }
-                    else if (!dtrChapterNo.HasRows && (txtChapterTitle.Text != Session["currentChpTitle"].ToString()) && dtrChapterTitle.HasRows)
+                    else if (!dtrChapterNo.HasRows && (txtChapterTitle.Text != currentChpTitle) && dtrChapterTitle.HasRows)
                     {
                         Response.Write("<script>alert('Entered Chapter Title Already Exists.')</script>");
 
