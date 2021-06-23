@@ -69,8 +69,8 @@
             </div>
         </nav>
         
-        <table style="width:100%; height:100%;" >
-                    <tr>
+        <table style="width:100%; " >
+                    <tr >
                         <td class="size shadow ">                      
                            <asp:Panel ID="Panel1" runat="server" ScrollBars="Auto" HorizontalAlign="Left" style="min-height: 680px;">
                                 <asp:Panel ID="Panel2" runat="server"  HorizontalAlign="Left">
@@ -87,7 +87,7 @@
                             </asp:Panel>
                             
                         </td>
-                        <td><asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder></td>
+                        <td ><asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder></td>
                         
                     </tr>                 
                 </table>
