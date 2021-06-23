@@ -59,127 +59,7 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <div class="modal fade bd-example-modal-lg" id="createCourseForm">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Create New Course</h4>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-                    <div class="modal-body">
-
-                        
-                       <div class="row mb-3">
-                            <label for="formCourseCode" class="col-sm-3 col-form-label">Course Code</label>
-                            <div class="col-sm-9">
-                                <asp:TextBox ID="formCourseCode" CssClass="form-control" runat="server"></asp:TextBox>
-                                <asp:RequiredFieldValidator ValidationGroup="Create Course Form" ForeColor="Red" ID="rfvFormCourseCode" ControlToValidate="formCourseCode" runat="server" Display="Dynamic" ErrorMessage="Course Code Cannot Be Blank"></asp:RequiredFieldValidator>
-                            </div>
-                        </div>   
-
-                        <div class="row mb-3">
-                            <label for="formCourseTitle" class="col-sm-3 col-form-label">Course Title</label>
-                            <div class="col-sm-9">
-                                <asp:TextBox ID="formCourseTitle" CssClass="form-control" runat="server"></asp:TextBox>
-                                <asp:RequiredFieldValidator ValidationGroup="Create Course Form" ForeColor="Red" ID="rfvFormCourseTitle" ControlToValidate="formCourseTitle" runat="server" Display="Dynamic" ErrorMessage="Course Title Cannot Be Blank"></asp:RequiredFieldValidator>
-                            </div>
-                        </div> 
-
-                        <div class="row mb-3">
-                            <label for="formCourseDesc" class="col-sm-3 col-form-label">Course Description</label>
-                            <div class="col-sm-9">
-                                <asp:TextBox ID="formCourseDesc" CssClass="form-control" runat="server"></asp:TextBox>
-                            </div>
-                        </div>  
-
-                        <div class="row mb-3">
-                            <asp:Button CssClass="btn btn-success" runat="server" OnClick="createCourseFormSubmitClicked" ValidationGroup="Create Course Form" Text="Save" />
-                        </div>
-
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    <div class="modal fade bd-example-modal-lg" id="deleteCourseForm">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Delete Course</h4>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-                    <div class="modal-body">
-
-                        
-                        <div class="row mb-3">
-                            <label for="formlblCourse" class="col-sm-3 col-form-label">Course</label>
-                            <div class="col-sm-9">
-                                <asp:DropDownList ID="formddlCourse" CssClass="form-select" runat="server" ></asp:DropDownList>
-                                
-
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <asp:Button CssClass="btn btn-success" runat="server" OnClick="deleteCourseFormSubmitClicked"  Text="Save" />
-                        </div>
-
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-    <div class="modal fade bd-example-modal-lg" id="editCourseForm">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Edit Course</h4>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-                    <div class="modal-body">
-
-                        
-                        <div class="row mb-3">
-                            <label for="formddlEditCourse" class="col-sm-3 col-form-label">Course</label>
-                            <div class="col-sm-9">
-                                <asp:DropDownList ID="formddlEditCourse" CssClass="form-select" runat="server" ></asp:DropDownList>                                
-                            </div>
-                        </div>
-
-                         <div class="row mb-3">
-                            <label for="formEditCourseCode" class="col-sm-3 col-form-label">Course Code</label>
-                            <div class="col-sm-9">
-                                <asp:TextBox ID="formEditCourseCode" CssClass="form-control" runat="server"></asp:TextBox>
-                                <asp:RequiredFieldValidator ValidationGroup="Edit Course Form" ForeColor="Red" ID="rfvFormEditCourseCode" ControlToValidate="formEditCourseCode" runat="server" Display="Dynamic" ErrorMessage="Course Code Cannot Be Blank"></asp:RequiredFieldValidator>
-                            </div>
-                        </div>   
-
-                        <div class="row mb-3">
-                            <label for="formEditCourseTitle" class="col-sm-3 col-form-label">Course Title</label>
-                            <div class="col-sm-9">
-                                <asp:TextBox ID="formEditCourseTitle" CssClass="form-control" runat="server"></asp:TextBox>
-                                <asp:RequiredFieldValidator ValidationGroup="Edit Course Form" ForeColor="Red" ID="rfvFormEditCourseTitle" ControlToValidate="formEditCourseTitle" runat="server" Display="Dynamic" ErrorMessage="Course Title Cannot Be Blank"></asp:RequiredFieldValidator>
-                            </div>
-                        </div> 
-
-                        <div class="row mb-3">
-                            <label for="formEditCourseDesc" class="col-sm-3 col-form-label">Course Description</label>
-                            <div class="col-sm-9">
-                                <asp:TextBox ID="formEditCourseDesc" CssClass="form-control" runat="server"></asp:TextBox>
-                            </div>
-                        </div>  
-
-
-                        <div class="row mb-3">
-                            <asp:Button CssClass="btn btn-success" runat="server" OnClick="editCourseFormSubmitClicked"  ValidationGroup="Edit Course Form" Text="Save" />
-                        </div>
-
-                    </div>
-
-                </div>
-            </div>
-        </div>
+    
     <div class="modal fade bd-example-modal-lg" id="manageStudentForm">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -220,15 +100,9 @@
             <asp:Label ID="lblTittle" runat="server" Font-Bold="true" Font-Size="Large">Manage</asp:Label>
              
         </div>
-        <asp:Button ID="btnManageCourses" runat="server" Text="Manage Courses" CssClass="button1" OnClick="btnManageCourses_Click"/>
-        <asp:Button ID="btnCreateCourse"  Text= "Create Course"  CssClass="button2" runat="server" Visible="False" data-toggle="modal" data-target="#createCourseForm" OnClientClick="return false;"/>
-       
-        <asp:Button ID="btnEditCourse"  Text= "Edit Course"  CssClass="button2" runat="server" Visible="False" data-toggle="modal" data-target="#editCourseForm" OnClientClick="return false;"/>
-        <asp:Button ID="btnDeleteCourse" Text= "Delete Course"  CssClass="button2" runat="server" Visible="False" data-toggle="modal" data-target="#deleteCourseForm" OnClientClick="return false;"/>
-        
-        <asp:Button ID="btnManageStudent"  runat="server" Text= "Manage Student" CssClass="button1" OnClick="btnManageStudent_Click" />           
-        <asp:Button ID="btnEnrolStudent"  Text= "Enrol Student"  CssClass="button2" runat="server" Visible="False" OnClick="btnEnrolStudent_Click"/>
-        <asp:Button ID="btnDropStudent"  Text= "Drop Student"  CssClass="button2" runat="server" Visible="False" OnClick="btnDropStudent_Click"/>
+          
+        <asp:Button ID="btnEnrol"  Text= "Enrol"  CssClass="button1" runat="server"  OnClick="btnEnrol_Click"/>
+        <asp:Button ID="btnDrop"  Text= "Drop"  CssClass="button1" runat="server"  OnClick="btnDrop_Click"/>
         
     </div>
 </asp:Content>

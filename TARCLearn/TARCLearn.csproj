@@ -110,10 +110,10 @@
       <DependentUpon>TARCLearn.mdf</DependentUpon>
     </Content>
     <Content Include="App_Pages\Chapter.aspx" />
+    <Content Include="App_Pages\course.aspx" />
     <Content Include="App_Pages\Discussion.aspx" />
     <Content Include="App_Pages\DiscussionThread.aspx" />
     <Content Include="App_Pages\Login.aspx" />
-    <Content Include="App_Pages\Courses.aspx" />
     <Content Include="App_Pages\manage.aspx" />
     <Content Include="App_Pages\pdfViewer.aspx" />
     <Content Include="App_Pages\questionList.aspx" />
@@ -150,6 +150,13 @@
     <Compile Include="App_Pages\Chapter.aspx.designer.cs">
       <DependentUpon>Chapter.aspx</DependentUpon>
     </Compile>
+    <Compile Include="App_Pages\course.aspx.cs">
+      <DependentUpon>course.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="App_Pages\course.aspx.designer.cs">
+      <DependentUpon>course.aspx</DependentUpon>
+    </Compile>
     <Compile Include="App_Pages\Discussion.aspx.cs">
       <DependentUpon>Discussion.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -170,13 +177,6 @@
     </Compile>
     <Compile Include="App_Pages\Login.aspx.designer.cs">
       <DependentUpon>Login.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="App_Pages\Courses.aspx.cs">
-      <DependentUpon>Courses.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="App_Pages\Courses.aspx.designer.cs">
-      <DependentUpon>Courses.aspx</DependentUpon>
     </Compile>
     <Compile Include="App_Pages\manage.aspx.cs">
       <DependentUpon>manage.aspx</DependentUpon>

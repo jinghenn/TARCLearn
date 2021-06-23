@@ -26,7 +26,7 @@ namespace TARCLearn.App_Pages
 
         protected void btnCourses_Click(object sender, EventArgs e)
         {
-            Response.Redirect("Courses.aspx");
+            Response.Redirect("course.aspx");
         }
 
         protected void btnManage_Click(object sender, EventArgs e)
