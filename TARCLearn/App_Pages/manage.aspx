@@ -97,7 +97,7 @@
     <div class="main main-raised" >
 
         <div class="label1">
-            <asp:Label ID="lblTittle" runat="server" Font-Bold="true" Font-Size="Large">Manage</asp:Label>
+            <asp:Label ID="lblTittle" runat="server" Font-Bold="true" Font-Size="Large">Manage Enrolment</asp:Label>
              
         </div>
           

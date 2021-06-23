@@ -26,7 +26,7 @@
 					<span class="text2">
 						<br />
 						User ID
-						<asp:RequiredFieldValidator ID="rsfLUserId" runat="server" ControlToValidate="txtUserId" Display="Dynamic" ErrorMessage="User ID is required." Font-Size="8px" ForeColor="Red">*User ID is required.</asp:RequiredFieldValidator>
+						<asp:RequiredFieldValidator ID="rsfLUserId" runat="server" ControlToValidate="txtUserId" Display="Dynamic" ErrorMessage="User ID is required." Font-Size="10px" ForeColor="Red">*User ID is required.</asp:RequiredFieldValidator>
 					</span>
 					<div class="wrapInput1">
                         <asp:TextBox ID="txtUserId" runat="server" class="input" ></asp:TextBox>
@@ -34,8 +34,8 @@
 					
 					<span class="text2">
 						Password
+						<asp:RequiredFieldValidator ID="rsfLPassword" runat="server" ControlToValidate="txtPassword" Display="Dynamic" ErrorMessage="Password is required." Font-Size="10px" ForeColor="Red">*Password is required.</asp:RequiredFieldValidator>
 						</span>
-                    <asp:RequiredFieldValidator ID="rsfLPassword" runat="server" ControlToValidate="txtPassword" Display="Dynamic" ErrorMessage="Password is required." Font-Size="8px" ForeColor="Red">*Password is required.</asp:RequiredFieldValidator>
                 	<div class="wrapInput2">
 						<asp:TextBox ID="txtPassword" runat="server" class="input" TextMode="Password"></asp:TextBox>
 						
