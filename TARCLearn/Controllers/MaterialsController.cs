@@ -165,5 +165,38 @@ namespace TARCLearn.Controllers
             }
 
         }
+
+        [HttpGet]
+        [Route("api/materials/exist")]
+        public HttpResponseMessage isFileExist(int materialId)
+        {
+            try
+            {
+                TARCLearnEntities db = new TARCLearnEntities();
+                var material = db.Materials.FirstOrDefault(m => m.materialId == materialId);
+
+                if (material != null)
+                {
+                    var path = material.isVideo ? HttpContext.Current.Server.MapPath("~/videos") :
+                            HttpContext.Current.Server.MapPath("~/ReadingMaterials");
+                    var isExist = File.Exists(path + "\\" + material.materialName);
+                    if (isExist)
+                    {
+                        return Request.CreateResponse(HttpStatusCode.OK, true);
+                    }
+                    else
+                    {
+                        return Request.CreateResponse(HttpStatusCode.OK, false);
+                    }
+                }
+                else
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Material not found");
+                }
+            }catch(Exception e)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, e);
+            }
+        }
     }
 }
