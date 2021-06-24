@@ -25,7 +25,8 @@ namespace TARCLearn.Controllers
                 Users = c.Users.OrderBy(u => u.userId).Select(u => new UserDto()
                 {
                     userId = u.userId,
-                    username = u.username
+                    username = u.username,
+                    email = u.email
                 })
             }).SingleOrDefaultAsync(c => c.courseId == id);
             if (course == null)
@@ -62,7 +63,7 @@ namespace TARCLearn.Controllers
             try
             {
                 TARCLearnEntities entities = new TARCLearnEntities();
-                var course = await entities.Courses.FirstOrDefaultAsync(c => c.courseId == newCourse.courseId);
+                var course = entities.Courses.Where(c => c.courseCode == newCourse.courseCode);
                 if (course == null)
                 {
                     entities.Courses.Add(newCourse);
@@ -151,7 +152,8 @@ namespace TARCLearn.Controllers
                     Users = course.Users.Select(u => new UserDto()
                     {
                         userId = u.userId,
-                        username = u.username
+                        username = u.username,
+                        email = u.email
                     })
                 };
 

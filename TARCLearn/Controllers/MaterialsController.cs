@@ -85,7 +85,7 @@ namespace TARCLearn.Controllers
         [HttpDelete]
         [Route("api/materials/{materialId}")]
         [ResponseType(typeof(MaterialDetailDto))]
-        public async Task<IHttpActionResult> DeleteChapter(int materialId)
+        public async Task<IHttpActionResult> DeleteMaterial(int materialId)
         {
             try
             {
@@ -114,6 +114,9 @@ namespace TARCLearn.Controllers
                     var path = dto.isVideo ? HttpContext.Current.Server.MapPath("~/videos") :
                         HttpContext.Current.Server.MapPath("~/ReadingMaterials");
                     File.Delete(path + "\\" + dto.materialName);
+                }catch(FileNotFoundException e)
+                {
+                    return Ok(dto);
                 }catch(Exception e)
                 {
                     return Content(HttpStatusCode.InternalServerError, e);
