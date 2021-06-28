@@ -112,7 +112,7 @@
     <Content Include="App_Pages\Chapter.aspx" />
     <Content Include="App_Pages\course.aspx" />
     <Content Include="App_Pages\Discussion.aspx" />
-    <Content Include="App_Pages\DiscussionThread.aspx" />
+    <Content Include="App_Pages\discussionThreads.aspx" />
     <Content Include="App_Pages\Login.aspx" />
     <Content Include="App_Pages\manage.aspx" />
     <Content Include="App_Pages\pdfViewer.aspx" />
@@ -164,12 +164,12 @@
     <Compile Include="App_Pages\Discussion.aspx.designer.cs">
       <DependentUpon>Discussion.aspx</DependentUpon>
     </Compile>
-    <Compile Include="App_Pages\DiscussionThread.aspx.cs">
-      <DependentUpon>DiscussionThread.aspx</DependentUpon>
+    <Compile Include="App_Pages\discussionThreads.aspx.cs">
+      <DependentUpon>discussionThreads.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="App_Pages\DiscussionThread.aspx.designer.cs">
-      <DependentUpon>DiscussionThread.aspx</DependentUpon>
+    <Compile Include="App_Pages\discussionThreads.aspx.designer.cs">
+      <DependentUpon>discussionThreads.aspx</DependentUpon>
     </Compile>
     <Compile Include="App_Pages\Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>

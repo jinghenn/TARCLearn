@@ -50,7 +50,10 @@ namespace TARCLearn.App_Pages
                     cmdSelectEditDis.Parameters.AddWithValue("@userId", userId);
                     rptEditDiscussion.DataSource = cmdSelectEditDis.ExecuteReader();
                     rptEditDiscussion.DataBind();
-                    
+
+                    btnMore.Visible = false;
+                    btnAdd.Visible = false;
+
                 }
 
 
@@ -66,16 +69,8 @@ namespace TARCLearn.App_Pages
                 string chapterId = Request.QueryString["chapterId"];
                 string threadTitle = formDisTitle.Text;
                 string userId = Session["userId"].ToString();
-                string threadDescription;
-                if (formDisDesc.Text != null)
-                {
-                    threadDescription = formDisDesc.Text;
-                }
-                else
-                {
-                    threadDescription = null;
-                }
-                
+                string threadDescription = formDisDesc.Text;
+
 
                 string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
                 string providerConStr = new EntityConnectionStringBuilder(conStr).ProviderConnectionString;
@@ -122,7 +117,7 @@ namespace TARCLearn.App_Pages
             if (e.CommandName == "selectDiscussion")
             {
                 
-                String url = "DiscussionThread.aspx?threadId=" + threadId + "&chapterId="+ chapterId;
+                String url = "discussionThreads.aspx?threadId=" + threadId + "&chapterId="+ chapterId;
                 Response.Redirect(url);
 
             }

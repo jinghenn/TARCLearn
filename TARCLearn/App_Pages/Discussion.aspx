@@ -57,6 +57,7 @@
                             <label for="formDisDesc" class="col-sm-3 col-form-label">Discussion Description</label>
                             <div class="col-sm-9">
                                 <asp:TextBox ID="formDisDesc" CssClass="form-control" runat="server"></asp:TextBox>
+                                <asp:RequiredFieldValidator ValidationGroup="Add Form" ForeColor="Red" ID="rfvformDisDesc" ControlToValidate="formDisDesc" runat="server" Display="Dynamic" ErrorMessage="Discussion Description Cannot Be Blank"></asp:RequiredFieldValidator>
                             </div>
                         </div>  
 

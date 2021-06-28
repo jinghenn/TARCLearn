@@ -11,44 +11,62 @@ namespace TARCLearn.App_Pages
 {
 
 
-    public partial class DiscussionThread
+    public partial class discussionThreads
     {
 
         /// <summary>
-        /// btnEdit control.
+        /// formDisTitle control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton btnEdit;
+        protected global::System.Web.UI.WebControls.TextBox formDisTitle;
 
         /// <summary>
-        /// btnSave control.
+        /// rfvDisTitle control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton btnSave;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvDisTitle;
 
         /// <summary>
-        /// btnCancel control.
+        /// formDisDesc control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton btnCancel;
+        protected global::System.Web.UI.WebControls.TextBox formDisDesc;
 
         /// <summary>
-        /// btnDel control.
+        /// rfvformDisDesc control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton btnDel;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvformDisDesc;
+
+        /// <summary>
+        /// btnDeleteDT control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ImageButton btnDeleteDT;
+
+        /// <summary>
+        /// btnEditDT control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ImageButton btnEditDT;
 
         /// <summary>
         /// txtTitle control.
@@ -57,7 +75,7 @@ namespace TARCLearn.App_Pages
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtTitle;
+        protected global::System.Web.UI.WebControls.Label txtTitle;
 
         /// <summary>
         /// txtDesc control.
@@ -121,5 +139,14 @@ namespace TARCLearn.App_Pages
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button sendMessageButton;
+
+        /// <summary>
+        /// rfvtxtComment control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvtxtComment;
     }
 }
