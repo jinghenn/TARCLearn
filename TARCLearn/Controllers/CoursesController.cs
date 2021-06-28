@@ -186,7 +186,7 @@ namespace TARCLearn.Controllers
                 foreach (string email in emailList)
                 {
                     var currentUser = db.Users.Where(u => u.email == email).FirstOrDefault();
-                    if (currentUser == null)
+                    if (currentUser == null || course.Users.Any(u => u.Equals(currentUser)))
                     {
                         failFlag = true;
                         failedEmail.Add(email);
