@@ -87,7 +87,7 @@ namespace TARCLearn.App_Pages
             }if(e.CommandName == "selectRM")
             {
                 String chapterId = e.CommandArgument.ToString();
-                String url = "readingMaterial.aspx?chapterId=" + chapterId + "&materialType=readingMaterial";
+                String url = "material.aspx?chapterId=" + chapterId + "&materialType=readingMaterial";
                 Response.Redirect(url);
                
             }
@@ -95,7 +95,7 @@ namespace TARCLearn.App_Pages
             {
 
                 String chapterId = e.CommandArgument.ToString();
-                String url = "readingMaterial.aspx?chapterId=" + chapterId + "&materialType=video";
+                String url = "material.aspx?chapterId=" + chapterId + "&materialType=video";
                 Response.Redirect(url);
 
             }
@@ -139,10 +139,10 @@ namespace TARCLearn.App_Pages
             TextBox txtChapterNo = (TextBox)e.Item.FindControl("txtChapterNo");
             TextBox txtChapterTitle = (TextBox)e.Item.FindControl("txtChapterTitle");
 
-            LinkButton btnEdit = (LinkButton)e.Item.FindControl("btnEdit");
-            LinkButton btnSave = (LinkButton)e.Item.FindControl("btnSave");
-            LinkButton btnCancel = (LinkButton)e.Item.FindControl("btnCancel");
-            LinkButton btnDel = (LinkButton)e.Item.FindControl("btnDelete");
+            ImageButton btnEdit = (ImageButton)e.Item.FindControl("btnEdit");
+            ImageButton btnSave = (ImageButton)e.Item.FindControl("btnSave");
+            ImageButton btnCancel = (ImageButton)e.Item.FindControl("btnCancel");
+            ImageButton btnDel = (ImageButton)e.Item.FindControl("btnDelete");
 
             string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
             string providerConStr = new EntityConnectionStringBuilder(conStr).ProviderConnectionString;
@@ -171,7 +171,7 @@ namespace TARCLearn.App_Pages
                 btnEdit.Visible = false;
                 btnSave.Visible = true;
                 btnCancel.Visible = true;
-                btnDel.Visible = true;
+                btnDel.Visible = false;
 
             }
             if (e.CommandName == "delete")
@@ -204,7 +204,7 @@ namespace TARCLearn.App_Pages
 
                     btnEdit.Visible = true;
                     btnCancel.Visible = false;
-                    btnDel.Visible = false;
+                    btnDel.Visible = true;
                     btnSave.Visible = false;
 
                     SqlCommand cmdSelectChapterNo = new SqlCommand("Select * from [dbo].[Chapter] where chapterNo=@chapterNo", chpCon);
@@ -233,6 +233,7 @@ namespace TARCLearn.App_Pages
                     }
                     else if (dtrChapterNo.HasRows && dtrChapterTitle.HasRows)
                     {
+                        chpCon.Close();
                         Response.Write("<script>alert('Both Entered Chapter No. and Chapter Title Already Exists.')</script>");                      
 
                     }
@@ -251,6 +252,7 @@ namespace TARCLearn.App_Pages
                     }
                     else if (dtrChapterNo.HasRows && (txtChapterNo.Text != currentChpNo) && !dtrChapterTitle.HasRows)
                     {
+                        chpCon.Close();
                         Response.Write("<script>alert('Entered Chapter No. Already Exists.')</script>");
 
                     }
@@ -269,6 +271,7 @@ namespace TARCLearn.App_Pages
                     }
                     else if (!dtrChapterNo.HasRows && (txtChapterTitle.Text != currentChpTitle) && dtrChapterTitle.HasRows)
                     {
+                        chpCon.Close();
                         Response.Write("<script>alert('Entered Chapter Title Already Exists.')</script>");
 
                     }
@@ -280,28 +283,10 @@ namespace TARCLearn.App_Pages
             }
             if (e.CommandName == "cancel")
             {
+                chpCon.Close();
                 string courseId = Request.QueryString["courseId"];
-                txtChapterNo.Enabled = false;
-                txtChapterNo.BorderStyle = BorderStyle.None;
-                txtChapterNo.BackColor = Color.Transparent;
-
-                txtChapterTitle.Enabled = false;
-                txtChapterTitle.BorderStyle = BorderStyle.None;
-                txtChapterTitle.BackColor = Color.Transparent;
-
-
-                btnEdit.Visible = true;
-                btnCancel.Visible = false;
-                btnDel.Visible = false;
-                btnSave.Visible = false;
-
-                //select data to be bound
-                String strSelectEditChp = "Select chapterTitle AS chpTitle, chapterId AS chpId, chapterNo AS chpNo from Chapter Where courseId=@courseId;";
-                SqlCommand cmdSelectEditChapter = new SqlCommand(strSelectEditChp, chpCon);
-                cmdSelectEditChapter.Parameters.AddWithValue("@courseId", courseId);
-
-                rptDeleteChapter.DataSource = cmdSelectEditChapter.ExecuteReader();
-                rptDeleteChapter.DataBind();
+                String url = "Chapter.aspx?courseId=" + courseId;
+                Response.Redirect(url);
 
             }
         }

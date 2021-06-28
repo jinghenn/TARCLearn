@@ -118,7 +118,7 @@
     <Content Include="App_Pages\pdfViewer.aspx" />
     <Content Include="App_Pages\questionList.aspx" />
     <Content Include="App_Pages\quiz.aspx" />
-    <Content Include="App_Pages\readingMaterial.aspx" />
+    <Content Include="App_Pages\material.aspx" />
     <Content Include="App_Pages\Users.aspx" />
     <Content Include="App_Pages\videoViewer.aspx" />
     <Content Include="Css\cssLogin.css" />
@@ -206,12 +206,12 @@
     <Compile Include="App_Pages\quiz.aspx.designer.cs">
       <DependentUpon>quiz.aspx</DependentUpon>
     </Compile>
-    <Compile Include="App_Pages\readingMaterial.aspx.cs">
-      <DependentUpon>readingMaterial.aspx</DependentUpon>
+    <Compile Include="App_Pages\material.aspx.cs">
+      <DependentUpon>material.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="App_Pages\readingMaterial.aspx.designer.cs">
-      <DependentUpon>readingMaterial.aspx</DependentUpon>
+    <Compile Include="App_Pages\material.aspx.designer.cs">
+      <DependentUpon>material.aspx</DependentUpon>
     </Compile>
     <Compile Include="App_Pages\TARCLearn.Master.cs">
       <DependentUpon>TARCLearn.Master</DependentUpon>

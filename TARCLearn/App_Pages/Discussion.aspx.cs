@@ -132,10 +132,10 @@ namespace TARCLearn.App_Pages
             TextBox txtDiscussionTitle = (TextBox)e.Item.FindControl("txtDiscussionTitle");
            
 
-            LinkButton btnEdit = (LinkButton)e.Item.FindControl("btnEdit");
-            LinkButton btnSave = (LinkButton)e.Item.FindControl("btnSave");
-            LinkButton btnCancel = (LinkButton)e.Item.FindControl("btnCancel");
-            LinkButton btnDel = (LinkButton)e.Item.FindControl("btnDelete");
+            ImageButton btnEdit = (ImageButton)e.Item.FindControl("btnEdit");
+            ImageButton btnSave = (ImageButton)e.Item.FindControl("btnSave");
+            ImageButton btnCancel = (ImageButton)e.Item.FindControl("btnCancel");
+            ImageButton btnDel = (ImageButton)e.Item.FindControl("btnDelete");
 
 
             string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
@@ -153,7 +153,7 @@ namespace TARCLearn.App_Pages
                 btnEdit.Visible = false;
                 btnSave.Visible = true;
                 btnCancel.Visible = true;
-                btnDel.Visible = true;
+                btnDel.Visible = false;
 
 
             }
@@ -178,7 +178,7 @@ namespace TARCLearn.App_Pages
 
                     btnEdit.Visible = true;
                     btnCancel.Visible = false;
-                    btnDel.Visible = false;
+                    btnDel.Visible = true;
                     btnSave.Visible = false;
 
                     SqlCommand cmdSelect = new SqlCommand("Select * from [dbo].[DiscussionThread] where threadTitle=@threadTitle", disCon);
@@ -218,7 +218,7 @@ namespace TARCLearn.App_Pages
              
                 btnEdit.Visible = true;
                 btnCancel.Visible = false;
-                btnDel.Visible = false;
+                btnDel.Visible = true;
                 btnSave.Visible = false;
 
                 if (userType == "Lecturer")
