@@ -64,7 +64,7 @@ namespace TARCLearn.App_Pages
                     Session["usertype"] = userType;
                     Session["userId"] = userId;
 
-                    Response.Redirect("course.aspx");
+                    Response.Redirect("~/App_Pages/course.aspx");
                 }
                 else
                 {

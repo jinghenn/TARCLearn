@@ -25,6 +25,7 @@ namespace TARCLearn
         public string userId { get; set; }
         public string password { get; set; }
         public string username { get; set; }
+        public string email { get; set; }
         public bool isLecturer { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

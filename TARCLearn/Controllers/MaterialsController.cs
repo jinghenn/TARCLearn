@@ -85,7 +85,7 @@ namespace TARCLearn.Controllers
         [HttpDelete]
         [Route("api/materials/{materialId}")]
         [ResponseType(typeof(MaterialDetailDto))]
-        public async Task<IHttpActionResult> DeleteChapter(int materialId)
+        public async Task<IHttpActionResult> DeleteMaterial(int materialId)
         {
             try
             {
@@ -114,6 +114,9 @@ namespace TARCLearn.Controllers
                     var path = dto.isVideo ? HttpContext.Current.Server.MapPath("~/videos") :
                         HttpContext.Current.Server.MapPath("~/ReadingMaterials");
                     File.Delete(path + "\\" + dto.materialName);
+                }catch(FileNotFoundException e)
+                {
+                    return Ok(dto);
                 }catch(Exception e)
                 {
                     return Content(HttpStatusCode.InternalServerError, e);
@@ -161,6 +164,62 @@ namespace TARCLearn.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, e);
             }
 
+        }
+
+        [HttpGet]
+        [Route("api/materials/exist")]
+        public HttpResponseMessage isFileExist(int materialId)
+        {
+            try
+            {
+                TARCLearnEntities db = new TARCLearnEntities();
+                var material = db.Materials.FirstOrDefault(m => m.materialId == materialId);
+
+                if (material != null)
+                {
+                    var path = material.isVideo ? HttpContext.Current.Server.MapPath("~/videos") :
+                            HttpContext.Current.Server.MapPath("~/ReadingMaterials");
+                    var isExist = File.Exists(path + "\\" + material.materialName);
+                    if (isExist)
+                    {
+                        return Request.CreateResponse(HttpStatusCode.OK, true);
+                    }
+                    else
+                    {
+                        return Request.CreateResponse(HttpStatusCode.OK, false);
+                    }
+                }
+                else
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Material not found");
+                }
+            }catch(Exception e)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, e);
+            }
+        }
+
+        [HttpGet]
+        [Route("api/materials/index")]
+        public HttpResponseMessage isIndexExist(int chapterId, int materialIndex, string mode, bool isVideo)
+        {
+            try
+            {
+                TARCLearnEntities db = new TARCLearnEntities();
+                var material = db.Materials.Where(m => m.chapterId == chapterId).Where(m => m.index == materialIndex)
+                    .Where(m => m.mode == mode).Where(m => m.isVideo == isVideo).FirstOrDefault();
+
+                if (material == null)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, false);
+                }
+                return Request.CreateResponse(HttpStatusCode.OK, true);
+
+            }
+            catch (Exception e)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, e);
+            }
         }
     }
 }

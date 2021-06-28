@@ -79,6 +79,7 @@ namespace TARCLearn.Controllers
                             {
 
                                 var newMat = JsonConvert.DeserializeObject<MaterialDetailDto>(val);
+                                
                                 var myMat = new Material()
                                 {
                                     materialName = filePath,
@@ -111,4 +112,5 @@ namespace TARCLearn.Controllers
 
         }
     }
+    
 }

@@ -35,6 +35,7 @@ namespace TARCLearn.Controllers
                 userId = u.userId,
                 username = u.username,
                 password = u.password,
+                email = u.email,
                 isLecturer = u.isLecturer
             }).SingleOrDefaultAsync(c => c.userId == id);
             if (user == null)
