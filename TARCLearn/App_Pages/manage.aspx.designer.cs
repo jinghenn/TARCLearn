@@ -33,13 +33,22 @@ namespace TARCLearn.App_Pages
         protected global::System.Web.UI.WebControls.DropDownList formddlMCourse;
 
         /// <summary>
-        /// formddlMStudent control.
+        /// formtxtMStudent control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList formddlMStudent;
+        protected global::System.Web.UI.WebControls.TextBox formtxtMStudent;
+
+        /// <summary>
+        /// rfvformtxtDesc control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvformtxtDesc;
 
         /// <summary>
         /// lblTittle control.

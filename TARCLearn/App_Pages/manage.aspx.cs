@@ -32,14 +32,7 @@ namespace TARCLearn.App_Pages
                 formddlMCourse.DataValueField = "courseId";
                 formddlMCourse.DataBind();
 
-                SqlCommand cmdMStudent = new SqlCommand("SELECT * FROM [dbo].[User] ORDER BY username", manageCon);
-                SqlDataAdapter sdaMStudent = new SqlDataAdapter(cmdMStudent);
-                DataTable dtMStudent = new DataTable();
-                sdaMStudent.Fill(dtMStudent);
-                formddlMStudent.DataSource = dtMStudent;
-                formddlMStudent.DataTextField = "username";
-                formddlMStudent.DataValueField = "userId";
-                formddlMStudent.DataBind();
+                
 
                 manageCon.Close();
             }
@@ -50,59 +43,177 @@ namespace TARCLearn.App_Pages
             if (Page.IsValid)
             {
                 string courseId = formddlMCourse.SelectedValue;
-                string studentId = formddlMStudent.SelectedValue;
+                string email = formtxtMStudent.Text;
+                List<string> failList = new List<string>();
+                List<string> invalidEmailList = new List<string>();
+                char[] delimiterChars = { ' ', ','};
+                string[] emailList = email.Split(delimiterChars);
 
                 string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
                 string providerConStr = new EntityConnectionStringBuilder(conStr).ProviderConnectionString;
                 SqlConnection manageCon = new SqlConnection(providerConStr);
                 manageCon.Open();
 
-                SqlCommand cmdSelectCourse = new SqlCommand("Select * from [dbo].[Enrolment] where userId=@userId and courseId=@courseId", manageCon);
-                cmdSelectCourse.Parameters.AddWithValue("@userId", studentId);
-                cmdSelectCourse.Parameters.AddWithValue("@courseId", courseId);
-                SqlDataReader dtrCourse = cmdSelectCourse.ExecuteReader();
 
-                if (Session["manageStudent"].ToString() == "enrol")
-                {                  
-                    if (!dtrCourse.HasRows)
-                    {
-                        String addEnrolment = "INSERT INTO [dbo].[Enrolment] VALUES(@userId,@courseId);";
-                        SqlCommand cmdAddEnrolment = new SqlCommand(addEnrolment, manageCon);
-
-                        cmdAddEnrolment.Parameters.AddWithValue("@userId", studentId);
-                        cmdAddEnrolment.Parameters.AddWithValue("@courseId", courseId);
-                        cmdAddEnrolment.ExecuteNonQuery();
-                        manageCon.Close();
-                        //courseRepeater.DataBind();
-                        Response.Write("<script>alert('Succecful Enrol Selected User .')</script>");
-                        
-                    }
-                    else
-                    {
-                        manageCon.Close();
-                        Response.Write("<script>alert('Selected Course Already Enrolled by this User .')</script>");
-                    }
-                }else if (Session["manageStudent"].ToString() == "drop")
+                for (int i = 0; i < emailList.Length; i++)
                 {
-                    if (dtrCourse.HasRows)
+                    //get StudentId 
+                    SqlCommand cmdGetStudentId = new SqlCommand("Select userId from [dbo].[User] where email=@email", manageCon);
+                    cmdGetStudentId.Parameters.AddWithValue("@email", emailList[i]);
+                    string studentId = Convert.ToString(cmdGetStudentId.ExecuteScalar());
+
+                    //check student enrol ard or not
+                    SqlCommand cmdSelectCourse = new SqlCommand("Select * from [dbo].[Enrolment] where userId=@userId and courseId=@courseId", manageCon);
+                    cmdSelectCourse.Parameters.AddWithValue("@userId", studentId);
+                    cmdSelectCourse.Parameters.AddWithValue("@courseId", courseId);
+                    SqlDataReader dtrCourse = cmdSelectCourse.ExecuteReader();
+
+                    if (Session["manageStudent"].ToString() == "enrol")
                     {
-                        String strDrop = "DELETE FROM Enrolment WHERE courseId=@courseId AND userId=@userId";
-                        SqlCommand cmdDrop = new SqlCommand(strDrop, manageCon);
-                        cmdDrop.Parameters.AddWithValue("@userId", studentId);
-                        cmdDrop.Parameters.AddWithValue("@courseId", courseId);
-                        cmdDrop.ExecuteNonQuery();
-                        manageCon.Close();
-                        Response.Write("<script>alert('Succecful Drop Selected User.')</script>");
+                        if (!dtrCourse.HasRows && studentId != "")
+                        {
+                            String addEnrolment = "INSERT INTO [dbo].[Enrolment] VALUES(@userId,@courseId);";
+                            SqlCommand cmdAddEnrolment = new SqlCommand(addEnrolment, manageCon);
+
+                            cmdAddEnrolment.Parameters.AddWithValue("@userId", studentId);
+                            cmdAddEnrolment.Parameters.AddWithValue("@courseId", courseId);
+                            cmdAddEnrolment.ExecuteNonQuery();
+
+                            //send email notify
+
+                        } 
+                        else if (studentId == "" && emailList[i] != "")
+                        {
+                            invalidEmailList.Add(emailList[i]);
+                        }
+                        else if(emailList[i] != "")
+                        {
+                            failList.Add(emailList[i]);
+                        }
+                    }
+                    else if (Session["manageStudent"].ToString() == "drop")
+                    {
+                        if (dtrCourse.HasRows && studentId != null)
+                        {
+                            String strDrop = "DELETE FROM Enrolment WHERE courseId=@courseId AND userId=@userId";
+                            SqlCommand cmdDrop = new SqlCommand(strDrop, manageCon);
+                            cmdDrop.Parameters.AddWithValue("@userId", studentId);
+                            cmdDrop.Parameters.AddWithValue("@courseId", courseId);
+                            cmdDrop.ExecuteNonQuery();
+
+                            //send email notify
+
+                        }
+                        else if (studentId == "" && emailList[i] != "")
+                        {
+                            invalidEmailList.Add(emailList[i]);
+                        }
+                        else if (emailList[i] != "")
+                        {
+                            failList.Add(emailList[i]);
+                        }
+
+                    }
+                }
+                manageCon.Close();
+                if (!failList.Any() && !invalidEmailList.Any())
+                {
+                    if (Session["manageStudent"].ToString() == "enrol")
+                    {
+                        Response.Write("<script>alert('Succecful Enrol All Entered User.')</script>");
+                    }
+                    else if (Session["manageStudent"].ToString() == "drop")
+                    {
+                        Response.Write("<script>alert('Succecful Drop All Entered User.')</script>");
+                    }                                      
+                 
+                }
+                else
+                {
+
+                    if (Session["manageStudent"].ToString() == "enrol")
+                    {
+                        string respond = "<script>alert('Succecful Enrol All Entered User except " + failList.Count + " Already Enrolled User ";
+
+                        for (int i = 0; i < failList.Count; i++)
+                        {
+
+                            if (i == failList.Count - 1)
+                            {
+                                respond += failList[i] + ". ";
+                            }
+                            else
+                            {
+                                respond += failList[i] + ", ";
+                            }
+
+
+                        }
+                        
+
+                        respond += " And " + invalidEmailList.Count + " Invalid Email ";
+
+                        for (int i = 0; i < invalidEmailList.Count; i++)
+                        {
+
+                            if (i == invalidEmailList.Count - 1)
+                            {
+                                respond += invalidEmailList[i] + ". ";
+                            }
+                            else
+                            {
+                                respond += invalidEmailList[i] + ", ";
+                            }
+
+
+                        }
+                        respond += "')</script>";
+
+                        Response.Write(respond);
+
+                    }
+                    else if (Session["manageStudent"].ToString() == "drop")
+                    {
+                        string respond = "<script>alert('Succecful Drop All Entered User except " + failList.Count + " Does not Enrolled User ";
+
+                        for (int i = 0; i < failList.Count; i++)
+                        {
+
+                            if (i == failList.Count - 1)
+                            {
+                                respond += failList[i] + ". ";
+                            }
+                            else
+                            {
+                                respond += failList[i] + ", ";
+                            }
+
+
+                        }
+
+
+                        respond += " And " + invalidEmailList.Count + " Invalid Email ";
+
+                        for (int i = 0; i < invalidEmailList.Count; i++)
+                        {
+
+                            if (i == invalidEmailList.Count - 1)
+                            {
+                                respond += invalidEmailList[i] + ". ";
+                            }
+                            else
+                            {
+                                respond += invalidEmailList[i] + ", ";
+                            }
+
+
+                        }
+                        respond += "')</script>";
+
+                        Response.Write(respond);
                         
                     }
-                    else
-                    {
-                        manageCon.Close();
-                        Response.Write("<script>alert('Selected Course Does not Enrolled by this User .')</script>");
-                    }
-                    
                 }
-
             }
         }
 
@@ -120,7 +231,7 @@ namespace TARCLearn.App_Pages
             if (dtrCheckCourse.HasRows)
             {
                 Session["manageStudent"] = "drop";
-                lblMTitle.Text = "Enrol Student";
+                lblMTitle.Text = "Drop Student";
                 manageCon.Close();
                 ClientScript.RegisterStartupScript(this.GetType(), "Pop", "openModal();", true);
             }
@@ -145,7 +256,7 @@ namespace TARCLearn.App_Pages
             if (dtrCheckCourse.HasRows)
             {
                 Session["manageStudent"] = "enrol";
-                lblMTitle.Text = "Drop Student";
+                lblMTitle.Text = "Enrol Student";
                 manageCon.Close();
                 ClientScript.RegisterStartupScript(this.GetType(), "Pop", "openModal();", true);
             }

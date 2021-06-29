@@ -78,12 +78,14 @@
                         </div>
 
                         <div class="row mb-3">
-                            <label for="formddlMStudent" class="col-sm-3 col-form-label">Student</label>
+                            <label for="formtxtMStudent" class="col-sm-3 col-form-label">Discussion Description</label>
                             <div class="col-sm-9">
-                                <asp:DropDownList ID="formddlMStudent" CssClass="form-select" runat="server" ></asp:DropDownList>
-
+                                <asp:TextBox ID="formtxtMStudent" CssClass="form-control" runat="server" TextMode="MultiLine"></asp:TextBox>
+                                <asp:RequiredFieldValidator ValidationGroup="Edit Form" ForeColor="Red" ID="rfvformtxtDesc" ControlToValidate="formtxtMStudent" runat="server" Display="Dynamic" ErrorMessage="Discussion Description Cannot Be Blank"></asp:RequiredFieldValidator>
                             </div>
-                        </div>
+                        </div>  
+
+                        
 
                         <div class="row mb-3">
                             <asp:Button CssClass="btn btn-success" runat="server" OnClick="manageStudentFormSubmitClicked"  Text="Save" />
