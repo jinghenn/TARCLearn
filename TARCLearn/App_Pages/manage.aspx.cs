@@ -5,6 +5,8 @@ using System.Data;
 using System.Data.Entity.Core.EntityClient;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Net.Mail;
+using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -79,7 +81,42 @@ namespace TARCLearn.App_Pages
                             cmdAddEnrolment.Parameters.AddWithValue("@courseId", courseId);
                             cmdAddEnrolment.ExecuteNonQuery();
 
+                            //get course code                            
+                            SqlCommand cmdGetCC = new SqlCommand("Select courseCode from [dbo].[Course] where courseId=@courseId", manageCon);
+                            cmdGetCC.Parameters.AddWithValue("@courseId", courseId);
+                            string courseCode = Convert.ToString(cmdGetCC.ExecuteScalar());
+
+                            //get course Title                            
+                            SqlCommand cmdGetCT = new SqlCommand("Select courseTitle from [dbo].[Course] where courseId=@courseId", manageCon);
+                            cmdGetCT.Parameters.AddWithValue("@courseId", courseId);
+                            string courseTitle = Convert.ToString(cmdGetCT.ExecuteScalar());
+
                             //send email notify
+                            string to = emailList[i]; //To address    
+                            string from = "tarclearn@gmail.com"; //From address    
+                            MailMessage message = new MailMessage(from, to);                           
+
+                            string mailbody = "You have been invite to new course" + courseCode + " " + courseTitle;
+                            message.Subject = "Invited to New Course";
+                            message.Body = mailbody;
+                            message.BodyEncoding = Encoding.UTF8;
+                            message.IsBodyHtml = true;
+                            SmtpClient client = new SmtpClient("smtp.gmail.com", 587); //Gmail smtp    
+                            System.Net.NetworkCredential basicCredential1 = new
+                            System.Net.NetworkCredential("tarclearn@gmail.com", "tarclearn1122");
+                            client.EnableSsl = true;
+                            client.UseDefaultCredentials = false;
+                            client.Credentials = basicCredential1;
+
+                            try
+                            {
+                                client.Send(message);                               
+                            }
+
+                            catch (Exception ex)
+                            {
+                                throw ex;
+                            }
 
                         } 
                         else if (studentId == "" && emailList[i] != "")
@@ -102,6 +139,42 @@ namespace TARCLearn.App_Pages
                             cmdDrop.ExecuteNonQuery();
 
                             //send email notify
+                            //get course code                            
+                            SqlCommand cmdGetCC = new SqlCommand("Select courseCode from [dbo].[Course] where courseId=@courseId", manageCon);
+                            cmdGetCC.Parameters.AddWithValue("@courseId", courseId);
+                            string courseCode = Convert.ToString(cmdGetCC.ExecuteScalar());
+
+                            //get course Title                            
+                            SqlCommand cmdGetCT = new SqlCommand("Select courseTitle from [dbo].[Course] where courseId=@courseId", manageCon);
+                            cmdGetCT.Parameters.AddWithValue("@courseId", courseId);
+                            string courseTitle = Convert.ToString(cmdGetCT.ExecuteScalar());
+
+                            //send email notify
+                            string to = emailList[i]; //To address    
+                            string from = "tarclearn@gmail.com"; //From address    
+                            MailMessage message = new MailMessage(from, to);
+
+                            string mailbody = "You have been drop from the course" + courseCode + " " + courseTitle;
+                            message.Subject = "Dropped from a Course";
+                            message.Body = mailbody;
+                            message.BodyEncoding = Encoding.UTF8;
+                            message.IsBodyHtml = true;
+                            SmtpClient client = new SmtpClient("smtp.gmail.com", 587); //Gmail smtp    
+                            System.Net.NetworkCredential basicCredential1 = new
+                            System.Net.NetworkCredential("tarclearn@gmail.com", "tarclearn1122");
+                            client.EnableSsl = true;
+                            client.UseDefaultCredentials = false;
+                            client.Credentials = basicCredential1;
+
+                            try
+                            {
+                                client.Send(message);
+                            }
+
+                            catch (Exception ex)
+                            {
+                                throw ex;
+                            }
 
                         }
                         else if (studentId == "" && emailList[i] != "")
