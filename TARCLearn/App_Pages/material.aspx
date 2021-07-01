@@ -75,7 +75,8 @@
 
             } else {
                 arguments.IsValid =
-                    (sFile.endsWith('.pdf'));
+                    ((sFile.endsWith('.pdf')) ||
+                        (sFile.endsWith('.pptx'));
             }
         }
 

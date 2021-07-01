@@ -9,6 +9,8 @@ using System.Configuration;
 using System.Data.Entity.Core.EntityClient;
 using System.IO;
 using System.Drawing;
+using GroupDocs.Viewer;
+using GroupDocs.Viewer.Options;
 
 namespace TARCLearn.App_Pages
 {
@@ -318,14 +320,16 @@ namespace TARCLearn.App_Pages
             {
                 string newFileName;
                 string oldFileName;
+                string extension = System.IO.Path.GetExtension(materialFileName);
+               
                 if (isVideo)
                 {
-                     newFileName = "~/videos/" + materialTitle + ".mp4";
+                     newFileName = "~/videos/" + materialTitle + extension;
                      oldFileName = "~/videos/" + materialFileName;
                 }
                 else
                 {
-                    newFileName = "~/ReadingMaterials/" + materialTitle + ".pdf";
+                    newFileName = "~/ReadingMaterials/" + materialTitle + extension;
                     oldFileName = "~/ReadingMaterials/" + materialFileName;
                 }
                  
@@ -624,7 +628,7 @@ namespace TARCLearn.App_Pages
                         // Get the extension of the uploaded file.
                         string extension = System.IO.Path.GetExtension(fileName);
 
-                        if (extension == ".pdf")
+                        if (extension == ".pdf" || extension == ".pptx")
                         {
                             string path = Server.MapPath("~/ReadingMaterials/" + file.FileName);
                             file.PostedFile.SaveAs(path);
