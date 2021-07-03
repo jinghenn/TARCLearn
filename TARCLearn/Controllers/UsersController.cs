@@ -176,9 +176,7 @@ namespace TARCLearn.Controllers
                         userName = dm.User.username
                     }).ToHashSet();
                 
-                var distinctDiscussion = discussions.Distinct(new DiscussionEquatable());
-                var distinctCommentDiscussion = commentedDiscussions.Distinct(new DiscussionEquatable());
-                var mergedDiscussionSet = distinctDiscussion.Union(distinctCommentDiscussion);
+                var mergedDiscussionSet = discussions.Union(commentedDiscussions).Distinct(new DiscussionEqualityComparer());
                 return Ok(mergedDiscussionSet);
             }
             catch (Exception e)
@@ -187,7 +185,7 @@ namespace TARCLearn.Controllers
             }
         }
     }
-    class DiscussionEquatable : IEqualityComparer<DiscussionThreadDto>
+    class DiscussionEqualityComparer : IEqualityComparer<DiscussionThreadDto>
     {
         
         public bool Equals(DiscussionThreadDto x, DiscussionThreadDto y)
