@@ -9,7 +9,7 @@ using System.Web.Http.Description;
 using System.Threading.Tasks;
 using TARCLearn.Models;
 using System.Net.Mail;
-
+//using System.Linq.Dynamic.Core;
 namespace TARCLearn.Controllers
 {
     public class CoursesController : ApiController
@@ -291,7 +291,7 @@ namespace TARCLearn.Controllers
             new CourseChaptersDto()
             {
                 courseId = c.courseId,
-                Chapters = c.Chapters.OrderBy(ch => new ChapterComparer()).Select(ch => new ChapterDetailDto()
+                Chapters = c.Chapters.Select(ch => new ChapterDetailDto()
                 {
                     chapterId = ch.chapterId,
                     chapterNo = ch.chapterNo,
@@ -300,6 +300,9 @@ namespace TARCLearn.Controllers
                 })
 
             }).SingleOrDefaultAsync(c => c.courseId == id);
+            var sorted = new List<ChapterDetailDto>(course.Chapters);
+            sorted.Sort(new ChapterComparer());
+            course.Chapters = sorted;
             if (course == null)
             {
                 return Content(HttpStatusCode.NotFound, "Course: " + course.courseId + " not found");
@@ -338,13 +341,12 @@ namespace TARCLearn.Controllers
             
         }
     }
-    internal class ChapterComparer : IComparer<Chapter>
+    internal class ChapterComparer : IComparer<ChapterDetailDto>
     {
-
-        public int Compare(Chapter x, Chapter y)
+        public int Compare(ChapterDetailDto x, ChapterDetailDto y)
         {
-            var a = Convert.ToDouble(x.chapterNo);
-            var b = Convert.ToDouble(y.chapterNo);
+            var a = double.Parse(x.chapterNo);
+            var b = double.Parse(y.chapterNo);
             if (a > b) return 1;
             if (a < b) return -1;
             return 0;

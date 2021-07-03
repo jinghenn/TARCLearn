@@ -256,5 +256,27 @@ namespace TARCLearn.Controllers
                 return Content(HttpStatusCode.BadRequest, e);
             }
         }
+
+        [HttpGet]
+        [Route("api/chapters/no")]
+        public HttpResponseMessage IsChapterNoExist(string chapterNo, int courseId)
+        {
+            try
+            {
+                TARCLearnEntities db = new TARCLearnEntities();
+                var chapter = db.Chapters.Where(c => c.chapterNo == chapterNo).Where(c => c.courseId == courseId).FirstOrDefault();
+
+                if (chapter == null)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, false);
+                }
+                return Request.CreateResponse(HttpStatusCode.OK, true);
+
+            }
+            catch (Exception e)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, e);
+            }
+        }
     }
 }
