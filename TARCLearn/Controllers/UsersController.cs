@@ -148,34 +148,40 @@ namespace TARCLearn.Controllers
 
         [HttpGet]
         [Route("api/users/{id}/discussions")]
-        [ResponseType(typeof(IEnumerable<DiscussionThreadDto>))]
+        [ResponseType(typeof(IEnumerable<DiscussionThreadDetailDto>))]
         public async Task<IHttpActionResult> GetUserDiscussions(string id)
         {
             try
             {
                 TARCLearnEntities db = new TARCLearnEntities();
                 var user = await db.Users.FirstOrDefaultAsync(u => u.userId == id);
-                if(user == null)
+                if (user == null)
                 {
                     return Content(HttpStatusCode.NotFound, $"User {id} not found");
                 }
                 var discussions = db.DiscussionThreads.Include(d => d.User)
                     .Where(d => d.userId == id)
-                    .Select(t => new DiscussionThreadDto
+                    .Select(t => new DiscussionThreadDetailDto
                     {
                         threadId = t.threadId,
                         threadTitle = t.threadTitle,
-                        userName = t.User.username
+                        threadDescription = t.threadDescription,
+                        userName = t.User.username,
+                        userId = t.userId,
+                        chapterId = t.chapterId
                     }).ToHashSet();
                 var commentedDiscussions = db.DiscussionMessages.Include(dm => dm.DiscussionThread)
-                    .Include(dm => dm.User)
-                    .Where(dm => dm.userId == id).Select(dm =>
-                    new DiscussionThreadDto { 
+                    .Include(dm => dm.User).Select(
+                    dm => new DiscussionThreadDetailDto
+                    {
                         threadId = dm.threadId,
                         threadTitle = dm.DiscussionThread.threadTitle,
-                        userName = dm.User.username
+                        threadDescription = dm.DiscussionThread.threadDescription,
+                        userName = dm.DiscussionThread.User.username,
+                        userId = dm.DiscussionThread.userId,
+                        chapterId = dm.DiscussionThread.chapterId
                     }).ToHashSet();
-                
+
                 var mergedDiscussionSet = discussions.Union(commentedDiscussions).Distinct(new DiscussionEqualityComparer());
                 return Ok(mergedDiscussionSet);
             }
@@ -185,15 +191,15 @@ namespace TARCLearn.Controllers
             }
         }
     }
-    class DiscussionEqualityComparer : IEqualityComparer<DiscussionThreadDto>
+    class DiscussionEqualityComparer : IEqualityComparer<DiscussionThreadDetailDto>
     {
-        
-        public bool Equals(DiscussionThreadDto x, DiscussionThreadDto y)
+
+        public bool Equals(DiscussionThreadDetailDto x, DiscussionThreadDetailDto y)
         {
             return x.threadId == y.threadId;
         }
 
-        public int GetHashCode(DiscussionThreadDto obj)
+        public int GetHashCode(DiscussionThreadDetailDto obj)
         {
             return obj.threadId.GetHashCode();
         }
