@@ -120,53 +120,6 @@ namespace TARCLearn.Controllers
                 return Content(HttpStatusCode.BadRequest, e);
             }
         }
-        //[HttpPost]
-        //[Route("api/courses/enrol", Name = "EnrolUser")]
-        //[ResponseType(typeof(IEnumerable<UserDto>))]
-        //public async Task<IHttpActionResult> PostEnrolment(int courseId, string userId)
-        //{
-        //    try
-        //    {
-        //        TARCLearnEntities entities = new TARCLearnEntities();
-        //        var course = await entities.Courses.Include(c => c.Users)
-        //            .FirstOrDefaultAsync(c => c.courseId == courseId);
-        //        var user = await entities.Users.FirstOrDefaultAsync(u => u.userId == userId);
-        //        if (course == null || user == null)
-        //        {
-        //            return Content(HttpStatusCode.NotFound, "Course: " + courseId + " does not exist.");
-        //        }
-        //        if (user == null)
-        //        {
-        //            return Content(HttpStatusCode.NotFound, "User: " + userId + " does not exist.");
-        //        }
-        //        if (course.Users.Contains(user))
-        //        {
-        //            return Content(HttpStatusCode.Conflict, userId + " already in course " + courseId);
-        //        }
-
-        //        course.Users.Add(user);
-        //        await entities.SaveChangesAsync();
-
-        //        var dto = new CourseUsersDto()
-        //        {
-        //            courseId = course.courseId,
-        //            Users = course.Users.Select(u => new UserDto()
-        //            {
-        //                userId = u.userId,
-        //                username = u.username,
-        //                email = u.email
-        //            })
-        //        };
-
-        //        return CreatedAtRoute("EnrolUser", new { courseId = course.courseId }, dto.Users);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return Content(HttpStatusCode.BadRequest, e.ToString());
-        //    }
-
-
-        //}
 
         [HttpPost]
         [Route("api/courses/{courseId}/enrol")]

@@ -61,7 +61,7 @@ namespace TARCLearn.Controllers
                     courseTitle = cid.courseTitle
                 })
             }).SingleOrDefaultAsync(c => c.userId == id);
-            if(user == null)
+            if (user == null)
             {
                 return NotFound();
             }
@@ -146,5 +146,58 @@ namespace TARCLearn.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("api/users/{id}/discussions")]
+        [ResponseType(typeof(IEnumerable<DiscussionThreadDto>))]
+        public async Task<IHttpActionResult> GetUserDiscussions(string id)
+        {
+            try
+            {
+                TARCLearnEntities db = new TARCLearnEntities();
+                var user = await db.Users.FirstOrDefaultAsync(u => u.userId == id);
+                if(user == null)
+                {
+                    return Content(HttpStatusCode.NotFound, $"User {id} not found");
+                }
+                var discussions = db.DiscussionThreads.Include(d => d.User)
+                    .Where(d => d.userId == id)
+                    .Select(t => new DiscussionThreadDto
+                    {
+                        threadId = t.threadId,
+                        threadTitle = t.threadTitle,
+                        userName = t.User.username
+                    }).ToHashSet();
+                var commentedDiscussions = db.DiscussionMessages.Include(dm => dm.DiscussionThread)
+                    .Include(dm => dm.User)
+                    .Where(dm => dm.userId == id).Select(dm =>
+                    new DiscussionThreadDto { 
+                        threadId = dm.threadId,
+                        threadTitle = dm.DiscussionThread.threadTitle,
+                        userName = dm.User.username
+                    }).ToHashSet();
+                
+                var distinctDiscussion = discussions.Distinct(new DiscussionEquatable());
+                var distinctCommentDiscussion = commentedDiscussions.Distinct(new DiscussionEquatable());
+                var mergedDiscussionSet = distinctDiscussion.Union(distinctCommentDiscussion);
+                return Ok(mergedDiscussionSet);
+            }
+            catch (Exception e)
+            {
+                return Content(HttpStatusCode.BadRequest, e);
+            }
+        }
+    }
+    class DiscussionEquatable : IEqualityComparer<DiscussionThreadDto>
+    {
+        
+        public bool Equals(DiscussionThreadDto x, DiscussionThreadDto y)
+        {
+            return x.threadId == y.threadId;
+        }
+
+        public int GetHashCode(DiscussionThreadDto obj)
+        {
+            return obj.threadId.GetHashCode();
+        }
     }
 }
