@@ -8,6 +8,7 @@ using System.Data.Entity;
 using System.Web.Http.Description;
 using System.Threading.Tasks;
 using TARCLearn.Models;
+using System.Net.Mail;
 
 namespace TARCLearn.Controllers
 {
@@ -181,7 +182,8 @@ namespace TARCLearn.Controllers
                     return Content(HttpStatusCode.NotFound, "course" + courseId + " not found.");
                 }
 
-                List<string> failedEmail = new List<string>();
+                var failedEmail = new List<string>();
+                var successedEmail = new List<string>();
                 bool failFlag = false;
                 foreach (string email in emailList)
                 {
@@ -193,10 +195,10 @@ namespace TARCLearn.Controllers
                         continue;
                     }
                     course.Users.Add(currentUser);
-
+                    successedEmail.Add(email);
                 }
                 await db.SaveChangesAsync();
-
+                SendEnrolmentEmail(successedEmail, $"{course.courseCode} {course.courseTitle}");
                 if (failFlag)
                 {
                     IEnumerable<string> mList = failedEmail;
@@ -305,6 +307,36 @@ namespace TARCLearn.Controllers
             return Ok(course.Chapters);
         }
 
+
+        private void SendEnrolmentEmail(List<string> address, string course)
+        {
+            try
+            {
+                var enrolmentEmail = new MailMessage();
+                address.ForEach(a =>
+                {
+                    enrolmentEmail.To.Add(a);
+                });
+                enrolmentEmail.Subject = $"TARCLearn enrolment: \"{course}\"";
+                enrolmentEmail.From = new MailAddress("tarclearn@gmail.com");
+                enrolmentEmail.Body = $"You have been added to the course: {course}";
+                var smtp = new SmtpClient
+                {
+                    Host = "smtp.gmail.com",
+                    Port = 587,
+                    UseDefaultCredentials = false,
+                    Credentials = new NetworkCredential("tarclearn@gmail.com", "tarclearn1122"),
+                    EnableSsl = true
+                };
+                smtp.Send(enrolmentEmail);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.StackTrace);
+            }
+
+            
+        }
     }
     internal class ChapterComparer : IComparer<Chapter>
     {
@@ -318,4 +350,6 @@ namespace TARCLearn.Controllers
             return 0;
         }
     }
+
+    
 }
