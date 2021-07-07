@@ -39,6 +39,8 @@
         function editCourse() {
             $('#editCourseForm').modal('show');
         }
+
+        
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -57,8 +59,10 @@
                             <div class="col-sm-9">
                                 <asp:TextBox ID="formCourseCode" CssClass="form-control" runat="server"></asp:TextBox>
                                 <asp:RequiredFieldValidator ValidationGroup="Create Course Form" ForeColor="Red" ID="rfvFormCourseCode" ControlToValidate="formCourseCode" runat="server" Display="Dynamic" ErrorMessage="Course Code Cannot Be Blank"></asp:RequiredFieldValidator>
+                                <asp:RegularExpressionValidator ValidationGroup="Create Course Form" ForeColor="Red" id="revFormCourseCode" runat="server" Display="Dynamic" ErrorMessage="Wrong Format." ValidationExpression="([A-Z]{4}\d{4})|(MPU-[a-zA-Z0-9]{4})|([A-Z]{4}\d{3}[A-Z])" ControlToValidate="formCourseCode" />                            
+                        
                             </div>
-                        </div>   
+                        </div>
 
                         <div class="row mb-3">
                             <label for="formCourseTitle" class="col-sm-3 col-form-label">Course Title</label>
@@ -98,6 +102,8 @@
                             <div class="col-sm-9">
                                 <asp:TextBox ID="formEditCourseCode" CssClass="form-control" runat="server"></asp:TextBox>
                                 <asp:RequiredFieldValidator ValidationGroup="Edit Course Form" ForeColor="Red" ID="rfvFormEditCourseCode" ControlToValidate="formEditCourseCode" runat="server" Display="Dynamic" ErrorMessage="Course Code Cannot Be Blank"></asp:RequiredFieldValidator>
+                                <asp:RegularExpressionValidator ValidationGroup="Edit Course Form" ForeColor="Red" id="revFormEditCourseCode" runat="server" Display="Dynamic" ErrorMessage="Wrong Format." ValidationExpression="([A-Z]{4}\d{4})|(MPU-[a-zA-Z0-9]{4})|([A-Z]{4}\d{3}[A-Z])" ControlToValidate="formEditCourseCode" />                            
+
                             </div>
                         </div>   
 

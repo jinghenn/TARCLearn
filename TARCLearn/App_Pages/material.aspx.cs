@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Data.SqlClient;
@@ -9,8 +6,7 @@ using System.Configuration;
 using System.Data.Entity.Core.EntityClient;
 using System.IO;
 using System.Drawing;
-using GroupDocs.Viewer;
-using GroupDocs.Viewer.Options;
+using System.Linq;
 
 namespace TARCLearn.App_Pages
 {
@@ -20,7 +16,7 @@ namespace TARCLearn.App_Pages
 
         protected void Page_Load(object sender, EventArgs e)
         {
-           
+
             if (!IsPostBack)
             {
                 string chapterId = Request.QueryString["chapterId"];
@@ -30,91 +26,68 @@ namespace TARCLearn.App_Pages
                     Session["isDel"] = "false";
                 }
 
-                
+
                 if (materialType == "video")
                 {
                     isVideo = true;
                     lblTittle.Text = "Video";
-                    lblSupport.Text = "Supported file extensions : .mp4";
+                    lblSupport.Text = "Supported file extensions : .flv, .mov, .wmv, .avi, .avchd, .f4v, .swf, .mkv, .webm, .html5', .mpeg-2 and .mp4";
                 }
                 else
                 {
                     isVideo = false;
-                    lblSupport.Text = "Supported file extensions : .pdf";
+                    lblSupport.Text = "Supported file extensions : .pdf, .pptx, .docx, .xlsx, .jpg, .jpeg and .png";
                 }
-                
-                
+
+
                 string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
                 string providerConStr = new EntityConnectionStringBuilder(conStr).ProviderConnectionString;
                 SqlConnection materialCon = new SqlConnection(providerConStr);
                 materialCon.Open();
 
                 //select data to be bound
-                String strSelectLect = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = @isVideo AND mode = 'LECTURE';";
-                SqlCommand cmdSelectLect = new SqlCommand(strSelectLect, materialCon);
-                cmdSelectLect.Parameters.AddWithValue("@chapterId", chapterId);
-                cmdSelectLect.Parameters.AddWithValue("@isVideo", isVideo);
-                rptLect.DataSource = cmdSelectLect.ExecuteReader();
+                
+                
+
+                TARCLearnEntities db = new TARCLearnEntities();
+                int chapterIdINT = Convert.ToInt32(chapterId);
+                
+                var materialLec = db.Materials.Where(m => m.chapterId == chapterIdINT).Where(m => m.mode == "LECTURE").Where(m => m.isVideo == isVideo).OrderBy(m => m.index);
+                rptLect.DataSource = materialLec.ToList(); ;
                 rptLect.DataBind();
 
-                
-
-                String strSelectTut = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = @isVideo AND mode = 'TUTORIAL';";
-                SqlCommand cmdSelectTut = new SqlCommand(strSelectTut, materialCon);
-                cmdSelectTut.Parameters.AddWithValue("@chapterId", chapterId);
-                cmdSelectTut.Parameters.AddWithValue("@isVideo", isVideo);
-                rptTut.DataSource = cmdSelectTut.ExecuteReader();
+                var materialTut = db.Materials.Where(m => m.chapterId == chapterIdINT).Where(m => m.mode == "TUTORIAL").Where(m => m.isVideo == isVideo).OrderBy(m => m.index);
+                rptTut.DataSource = materialTut.ToList(); ;
                 rptTut.DataBind();
 
-                
-
-                String strSelectPrac = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = @isVideo AND mode = 'PRACTICAL';";
-                SqlCommand cmdSelectPrac = new SqlCommand(strSelectPrac, materialCon);
-                cmdSelectPrac.Parameters.AddWithValue("@chapterId", chapterId);
-                cmdSelectPrac.Parameters.AddWithValue("@isVideo", isVideo);
-                rptPrac.DataSource = cmdSelectPrac.ExecuteReader();
+                var materialPrac = db.Materials.Where(m => m.chapterId == chapterIdINT).Where(m => m.mode == "PRACTICAL").Where(m => m.isVideo == isVideo).OrderBy(m => m.index);
+                rptPrac.DataSource = materialPrac.ToList(); ;
                 rptPrac.DataBind();
 
-                
-
-                String strSelectOth = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = @isVideo AND mode = 'OTHER';";
-                SqlCommand cmdSelectOth = new SqlCommand(strSelectOth, materialCon);
-                cmdSelectOth.Parameters.AddWithValue("@chapterId", chapterId);
-                cmdSelectOth.Parameters.AddWithValue("@isVideo", isVideo);
-                rptOth.DataSource = cmdSelectOth.ExecuteReader();
+                var materialOth = db.Materials.Where(m => m.chapterId == chapterIdINT).Where(m => m.mode == "OTHER").Where(m => m.isVideo == isVideo).OrderBy(m => m.index);
+                rptOth.DataSource = materialOth.ToList(); ;
                 rptOth.DataBind();
 
                 string userType = Session["userType"].ToString();
                 if (userType == "Lecturer")
                 {
-
-                    String strDelLect = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = @isVideo AND mode = 'LECTURE';";
-                    SqlCommand cmdDelLect = new SqlCommand(strDelLect, materialCon);
-                    cmdDelLect.Parameters.AddWithValue("@chapterId", chapterId);
-                    cmdDelLect.Parameters.AddWithValue("@isVideo", isVideo);
-                    rptDelLect.DataSource = cmdDelLect.ExecuteReader();
+                    var materialDelLec = db.Materials.Where(m => m.chapterId == chapterIdINT).Where(m => m.mode == "LECTURE").Where(m => m.isVideo == isVideo).OrderBy(m => m.index);
+                    rptDelLect.DataSource = materialDelLec.ToList(); ;
                     rptDelLect.DataBind();
 
-                    String strDelTut = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = @isVideo AND mode = 'TUTORIAL';";
-                    SqlCommand cmdDelTut = new SqlCommand(strDelTut, materialCon);
-                    cmdDelTut.Parameters.AddWithValue("@chapterId", chapterId);
-                    cmdDelTut.Parameters.AddWithValue("@isVideo", isVideo);
-                    rptDelTut.DataSource = cmdDelTut.ExecuteReader();
+                    var materialDelTut = db.Materials.Where(m => m.chapterId == chapterIdINT).Where(m => m.mode == "TUTORIAL").Where(m => m.isVideo == isVideo).OrderBy(m => m.index);
+                    rptDelTut.DataSource = materialDelTut.ToList(); ;
                     rptDelTut.DataBind();
 
-                    String strDelPrac = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = @isVideo AND mode = 'PRACTICAL';";
-                    SqlCommand cmdDelPrac = new SqlCommand(strDelPrac, materialCon);
-                    cmdDelPrac.Parameters.AddWithValue("@chapterId", chapterId);
-                    cmdDelPrac.Parameters.AddWithValue("@isVideo", isVideo);
-                    rptDelPrac.DataSource = cmdDelPrac.ExecuteReader();
+                    var materialDelPrac = db.Materials.Where(m => m.chapterId == chapterIdINT).Where(m => m.mode == "PRACTICAL").Where(m => m.isVideo == isVideo).OrderBy(m => m.index);
+                    rptDelPrac.DataSource = materialDelPrac.ToList(); ;
                     rptDelPrac.DataBind();
 
-                    String strDelOth = "Select materialTitle AS materialTitle, materialId AS materialId from Material Where chapterId = @chapterId AND isVideo = @isVideo AND mode = 'OTHER';";
-                    SqlCommand cmdDelOth = new SqlCommand(strDelOth, materialCon);
-                    cmdDelOth.Parameters.AddWithValue("@chapterId", chapterId);
-                    cmdDelOth.Parameters.AddWithValue("@isVideo", isVideo);
-                    rptDelOth.DataSource = cmdDelOth.ExecuteReader();
+                    var materialDelOth = db.Materials.Where(m => m.chapterId == chapterIdINT).Where(m => m.mode == "OTHER").Where(m => m.isVideo == isVideo).OrderBy(m => m.index);
+                    rptDelOth.DataSource = materialDelOth.ToList(); ;
                     rptDelOth.DataBind();
+
+                    
                 }
                 else
                 {
@@ -216,7 +189,7 @@ namespace TARCLearn.App_Pages
             }
         }
 
-        protected void rmRepeater_ItemCommand(object source, RepeaterCommandEventArgs e)
+        protected void rptMaterial_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
             string materialType = Request.QueryString["materialType"];
 
@@ -239,15 +212,15 @@ namespace TARCLearn.App_Pages
                 }
                 else
                 {
-                    url = "pdfViewer.aspx?materialId=" + materialId;
+                    url = "materialViewer.aspx?materialId=" + materialId;
                 }
-                 
+
                 Response.Redirect(url);
 
             }
         }
 
-        protected void btnDeleteRM_Click(object sender, ImageClickEventArgs e)
+        protected void btnMore_Click(object sender, ImageClickEventArgs e)
         {
             String isDel = Session["isDel"].ToString();
 
@@ -306,75 +279,7 @@ namespace TARCLearn.App_Pages
             }
         }
 
-        public void saveFuction(SqlConnection materialCon, string materialTitle, string materialId, string materialFileName)
-        {
-           
-
-            SqlCommand cmdSelectMaterialTitle = new SqlCommand("Select * from [dbo].[Material] where materialTitle=@materialTitle", materialCon);
-            cmdSelectMaterialTitle.Parameters.AddWithValue("@materialTitle", materialTitle);
-            SqlDataReader dtrMaterialTitle = cmdSelectMaterialTitle.ExecuteReader();
-
-          
-
-            if (!dtrMaterialTitle.HasRows )
-            {
-                string newFileName;
-                string oldFileName;
-                string extension = System.IO.Path.GetExtension(materialFileName);
-               
-                if (isVideo)
-                {
-                     newFileName = "~/videos/" + materialTitle + extension;
-                     oldFileName = "~/videos/" + materialFileName;
-                }
-                else
-                {
-                    newFileName = "~/ReadingMaterials/" + materialTitle + extension;
-                    oldFileName = "~/ReadingMaterials/" + materialFileName;
-                }
-                 
-                string newMaterialTitle = Server.MapPath(newFileName);              
-                string oldMaterialTitle = Server.MapPath(oldFileName);
-
-                System.IO.File.Move(oldMaterialTitle, newMaterialTitle);
-
-                String editMaterial = "UPDATE [dbo].[Material] SET materialTitle=@materialTitle, materialName=@materialName WHERE materialId = @materialId";
-                SqlCommand cmdEditMaterial = new SqlCommand(editMaterial, materialCon);
-                cmdEditMaterial.Parameters.AddWithValue("@materialTitle", materialTitle);
-                cmdEditMaterial.Parameters.AddWithValue("@materialName", materialTitle + ".pdf");
-                cmdEditMaterial.Parameters.AddWithValue("@materialId", materialId);               
-                cmdEditMaterial.ExecuteNonQuery();
-
-                materialCon.Close();
-               
-                string chapterId = Request.QueryString["chapterId"];
-                string materialType = Request.QueryString["materialType"];
-                string url = "material.aspx?chapterId=" + chapterId + "&materialType=" + materialType;
-                Response.Redirect(url);
-            }            
-            else
-            {
-                Response.Write("<script>alert('Entered Material Title Already Exists.')</script>");
-
-            }
-        }
-
-        public void cancelFunction(TextBox txt, LinkButton btnEdit, LinkButton btnCancel, LinkButton btnDel, LinkButton btnSave)
-        {           
-            txt.Enabled = false;
-            txt.BorderStyle = BorderStyle.None;
-            txt.BackColor = Color.Transparent;
-
-            btnEdit.Visible = true;
-            btnCancel.Visible = false;
-            btnDel.Visible = false;
-            btnSave.Visible = false;
-
-            
-        }
-
-
-        protected void rptEditRM_ItemCommand(object source, RepeaterCommandEventArgs e)
+        protected void rptEdit_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
             //get materialId 
             string materialId = e.CommandArgument.ToString();
@@ -390,73 +295,42 @@ namespace TARCLearn.App_Pages
             {
                 isVideo = false;
             }
-            ImageButton btnEdit = (ImageButton)e.Item.FindControl("btnEdit");
-            ImageButton btnSave = (ImageButton)e.Item.FindControl("btnSave");
-            ImageButton btnCancel = (ImageButton)e.Item.FindControl("btnCancel");
-            ImageButton btnDel = (ImageButton)e.Item.FindControl("btnDelete");
 
             string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
             string providerConStr = new EntityConnectionStringBuilder(conStr).ProviderConnectionString;
-            SqlConnection rmCon = new SqlConnection(providerConStr);
-            rmCon.Open();
+            SqlConnection materialCon = new SqlConnection(providerConStr);
+            materialCon.Open();
 
             //get materialFileName
-            SqlCommand cmdGetRmTitle = new SqlCommand("Select materialName from [dbo].[Material] where materialId=@materialId;", rmCon);
-            cmdGetRmTitle.Parameters.AddWithValue("@materialId", materialId);
-            String materialFileName = Convert.ToString(cmdGetRmTitle.ExecuteScalar());
+            SqlCommand cmdGetFileName = new SqlCommand("Select materialName from [dbo].[Material] where materialId=@materialId;", materialCon);
+            cmdGetFileName.Parameters.AddWithValue("@materialId", materialId);
+            String materialFileName = Convert.ToString(cmdGetFileName.ExecuteScalar());
 
-            if (e.CommandName == "editLec")
+            if (e.CommandName == "edit")
             {
-                TextBox txtLec = (TextBox)e.Item.FindControl("txtLec");
-                txtLec.Enabled = true;
-                txtLec.BorderStyle = BorderStyle.Inset;
-                txtLec.BackColor = Color.White;
+                Session["materialId"] = materialId;
+                int materialIdINT = Convert.ToInt32(materialId);
+                TARCLearnEntities db = new TARCLearnEntities();
+                var material = db.Materials.FirstOrDefault(m => m.materialId == materialIdINT);
+                var index = material.index;
+                formEditIndex.Text = Convert.ToString(index);
 
-                btnEdit.Visible = false;
-                btnSave.Visible = true;
-                btnCancel.Visible = true;
-                btnDel.Visible = false;
+                SqlCommand cmdGetTitle = new SqlCommand("Select materialTitle from [dbo].[Material] where materialId=@materialId;", materialCon);
+                cmdGetTitle.Parameters.AddWithValue("@materialId", materialId);
+                formEditTitle.Text = Convert.ToString(cmdGetTitle.ExecuteScalar());
 
-            }
-            if (e.CommandName == "editPrac")
-            {
-                TextBox txtPrac = (TextBox)e.Item.FindControl("txtPrac");
-                txtPrac.Enabled = true;
-                txtPrac.BorderStyle = BorderStyle.Inset;
-                txtPrac.BackColor = Color.White;
+                SqlCommand cmdGetDesc = new SqlCommand("Select materialDescription from [dbo].[Material] where materialId=@materialId;", materialCon);
+                cmdGetDesc.Parameters.AddWithValue("@materialId", materialId);
+                formEditDescription.Text = Convert.ToString(cmdGetDesc.ExecuteScalar());
 
-                btnEdit.Visible = false;
-                btnSave.Visible = true;
-                btnCancel.Visible = true;
-                btnDel.Visible = false;
+                SqlCommand cmdGetMode = new SqlCommand("Select mode from [dbo].[Material] where materialId=@materialId;", materialCon);
+                cmdGetMode.Parameters.AddWithValue("@materialId", materialId);
+                ddlFormEditMaterialMode.SelectedValue = Convert.ToString(cmdGetMode.ExecuteScalar());
+                materialCon.Close();
 
-            }
-            if (e.CommandName == "editTut")
-            {
-                TextBox txtTut = (TextBox)e.Item.FindControl("txtTut");
-                txtTut.Enabled = true;
-                txtTut.BorderStyle = BorderStyle.Inset;
-                txtTut.BackColor = Color.White;
+                ClientScript.RegisterStartupScript(this.GetType(), "Pop", "editMaterial();", true);
 
-                btnEdit.Visible = false;
-                btnSave.Visible = true;
-                btnCancel.Visible = true;
-                btnDel.Visible = false;
-
-            }
-            if (e.CommandName == "editOth")
-            {
-                TextBox txtOth = (TextBox)e.Item.FindControl("txtOth");
-                txtOth.Enabled = true;
-                txtOth.BorderStyle = BorderStyle.Inset;
-                txtOth.BackColor = Color.White;
-
-                btnEdit.Visible = false;
-                btnSave.Visible = true;
-                btnCancel.Visible = true;
-                btnDel.Visible = false;
-
-            }
+            }           
             if (e.CommandName == "delete")
             {
                 string file_name;
@@ -464,12 +338,12 @@ namespace TARCLearn.App_Pages
                 if (isVideo)
                 {
                     file_name = "~/videos/" + materialFileName;
-                    
+
                 }
                 else
                 {
                     file_name = "~/ReadingMaterials/" + materialFileName;
-                    
+
                 }
 
                 string strPath = Server.MapPath(file_name);
@@ -478,16 +352,20 @@ namespace TARCLearn.App_Pages
                 {
                     System.IO.File.Delete(strPath);
                     String strDelRm = "DELETE FROM Material WHERE materialId=@materialId;";
-                    SqlCommand cmdDelRm = new SqlCommand(strDelRm, rmCon);
+                    SqlCommand cmdDelRm = new SqlCommand(strDelRm, materialCon);
                     cmdDelRm.Parameters.AddWithValue("@materialId", materialId);
                     cmdDelRm.ExecuteNonQuery();
 
-                    rmCon.Close();
+                    materialCon.Close();
 
-                    Response.Write("<script>alert('Successfully deleted.')</script>");
-                                        
+                    System.Text.StringBuilder javaScript = new System.Text.StringBuilder();
+                    string scriptKey = "SuccessMessage";
                     string url = "material.aspx?chapterId=" + chapterId + "&materialType=" + materialType;
-                    Response.Redirect(url);
+
+                    javaScript.Append("var userConfirmation = window.confirm('" + "Successfully deleted!" + "');\n");
+                    javaScript.Append("window.location='" + url + "';");
+
+                    ClientScript.RegisterStartupScript(this.GetType(), scriptKey, javaScript.ToString(), true);
 
                 }
                 else
@@ -497,97 +375,25 @@ namespace TARCLearn.App_Pages
 
                 }
             }
-            if (e.CommandName == "saveLec")
-            {
-                if (Page.IsValid)
-                {
-                    TextBox txtLec = (TextBox)e.Item.FindControl("txtLec");
-                    txtLec.Enabled = true;
-                    txtLec.BorderStyle = BorderStyle.Inset;
-                    txtLec.BackColor = Color.White;
-
-                    btnEdit.Visible = true;
-                    btnCancel.Visible = false;
-                    btnDel.Visible = true;
-                    btnSave.Visible = false;
-
-                    saveFuction(rmCon, txtLec.Text, materialId, materialFileName);
-                }
-            }
-            if (e.CommandName == "savePrac")
-            {
-                if (Page.IsValid)
-                {
-                    TextBox txtPrac = (TextBox)e.Item.FindControl("txtPrac");
-                    txtPrac.Enabled = true;
-                    txtPrac.BorderStyle = BorderStyle.Inset;
-                    txtPrac.BackColor = Color.White;
-
-                    btnEdit.Visible = true;
-                    btnCancel.Visible = false;
-                    btnDel.Visible = true;
-                    btnSave.Visible = false;
-
-                    saveFuction(rmCon, txtPrac.Text, materialId, materialFileName);
-                }
-            }
-            if (e.CommandName == "saveTut")
-            {
-                if (Page.IsValid)
-                {
-                    TextBox txtTut = (TextBox)e.Item.FindControl("txtTut");
-                    txtTut.Enabled = true;
-                    txtTut.BorderStyle = BorderStyle.Inset;
-                    txtTut.BackColor = Color.White;
-
-                    btnEdit.Visible = true;
-                    btnCancel.Visible = false;
-                    btnDel.Visible = true;
-                    btnSave.Visible = false;
-
-                    saveFuction(rmCon, txtTut.Text, materialId, materialFileName);
-                }
-            }
-            if (e.CommandName == "saveOth")
-            {
-                if (Page.IsValid)
-                {
-                    TextBox txtOth = (TextBox)e.Item.FindControl("txtOth");
-                    txtOth.Enabled = true;
-                    txtOth.BorderStyle = BorderStyle.Inset;
-                    txtOth.BackColor = Color.White;
-
-                    btnEdit.Visible = true;
-                    btnCancel.Visible = false;
-                    btnDel.Visible = true;
-                    btnSave.Visible = false;
-
-                    saveFuction(rmCon, txtOth.Text, materialId, materialFileName);
-                }
-            }
-            if (e.CommandName == "cancel")
-            {
-                string url = "material.aspx?chapterId=" + chapterId + "&materialType=" + materialType;
-                Response.Redirect(url);
-
-            }
             
+            
+           
         }
 
         protected void addNewMaterialFormSubmitClicked(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
-                string materialType = Request.QueryString["materialType"];              
+                string materialType = Request.QueryString["materialType"];
 
                 if (materialType == "video")
                 {
                     isVideo = true;
-                   
+
                 }
                 else
                 {
-                    isVideo = false;                    
+                    isVideo = false;
                 }
                 string description;
                 string chapterId = Request.QueryString["chapterId"];
@@ -601,8 +407,8 @@ namespace TARCLearn.App_Pages
                 {
                     filepath = "../ReadingMaterials/" + file.FileName;
 
-                }                
-                
+                }
+
                 string strPath = Server.MapPath(filepath);
                 FileInfo fileInfo = new FileInfo(strPath);
 
@@ -618,22 +424,27 @@ namespace TARCLearn.App_Pages
                 cmdSelectMaterialTitle.Parameters.AddWithValue("@isVideo", isVideo);
                 SqlDataReader dtrMaterialTitle = cmdSelectMaterialTitle.ExecuteReader();
 
-                if (!dtrMaterialTitle.HasRows && !fileInfo.Exists)                   
+                TARCLearnEntities db = new TARCLearnEntities();
+                int chapterIdINT = Convert.ToInt32(chapterId);
+                int newIndex = Convert.ToInt32(formIndex.Text);
+                var dtrMaterialIndex = db.Materials.Where(m => m.chapterId == chapterIdINT).Where(m => m.mode == ddlFormEditMaterialMode.SelectedValue).Where(m => m.index == newIndex);
+
+
+                if (!dtrMaterialTitle.HasRows && !fileInfo.Exists && !dtrMaterialIndex.Any())
                 {
                     if (file.HasFile && file.PostedFile != null)
                     {
                         // Get the name of the file to upload.
                         string fileName = Server.HtmlEncode(file.FileName);
 
-                        // Get the extension of the uploaded file.
-                        string extension = System.IO.Path.GetExtension(fileName);
 
-                        if (extension == ".pdf" || extension == ".pptx")
+                        if (!isVideo)
                         {
                             string path = Server.MapPath("~/ReadingMaterials/" + file.FileName);
                             file.PostedFile.SaveAs(path);
 
-                        }else
+                        }
+                        else
                         {
                             string path = Server.MapPath("~/videos/" + file.FileName);
                             file.PostedFile.SaveAs(path);
@@ -646,16 +457,13 @@ namespace TARCLearn.App_Pages
                         {
                             description = null;
                         }
-                        String getIndex = "SELECT COUNT(materialId) FROM [dbo].[Material] WHERE @chapterId = chapterId AND @isVideo = isVideo; ";
-                        SqlCommand cmdGetIndex = new SqlCommand(getIndex, materialCon);
-                        cmdGetIndex.Parameters.AddWithValue("@chapterId", chapterId);
-                        cmdGetIndex.Parameters.AddWithValue("@isVideo", isVideo);
-                        int newIndex = Convert.ToInt32(cmdGetIndex.ExecuteScalar()) + 1;
+
+                       
 
                         String addMaterial = "INSERT INTO [dbo].[Material] VALUES(@index,@materialTitle,@materialDescription,@materialName,@isVideo,@mode,@chapterId);";
                         SqlCommand cmdAddMaterial = new SqlCommand(addMaterial, materialCon);
 
-                        cmdAddMaterial.Parameters.AddWithValue("@index", newIndex);
+                        cmdAddMaterial.Parameters.AddWithValue("@index", formIndex.Text);
                         cmdAddMaterial.Parameters.AddWithValue("@materialTitle", formTitle.Text);
                         cmdAddMaterial.Parameters.AddWithValue("@materialDescription", description);
                         cmdAddMaterial.Parameters.AddWithValue("@materialName", file.FileName);
@@ -665,18 +473,34 @@ namespace TARCLearn.App_Pages
 
                         cmdAddMaterial.ExecuteNonQuery();
                         materialCon.Close();
-                       
+
                         string url = "material.aspx?chapterId=" + chapterId + "&materialType=" + materialType;
                         Response.Redirect(url);
                     }
+                }
+                else if(dtrMaterialTitle.HasRows && fileInfo.Exists && dtrMaterialIndex.Any())
+                {
+                    Response.Write("<script>alert('Entered Index, Title And Uploaded File Already Exists.')</script>");
                 }
                 else if (dtrMaterialTitle.HasRows && fileInfo.Exists)
                 {
                     Response.Write("<script>alert('Both Entered Title And Uploaded File Already Exists.')</script>");
                 }
+                else if (dtrMaterialIndex.Any() && fileInfo.Exists)
+                {
+                    Response.Write("<script>alert('Both Entered Index And Uploaded File Already Exists.')</script>");
+                }
+                else if (dtrMaterialTitle.HasRows && dtrMaterialIndex.Any())
+                {
+                    Response.Write("<script>alert('Entered Index AND Title Already Exists.')</script>");
+                }
                 else if (dtrMaterialTitle.HasRows)
                 {
                     Response.Write("<script>alert('Entered Title Already Exists.')</script>");
+                }
+                else if (dtrMaterialIndex.Any())
+                {
+                    Response.Write("<script>alert('Entered Index Already Exists.')</script>");
                 }
                 else
                 {
@@ -688,6 +512,217 @@ namespace TARCLearn.App_Pages
 
 
 
+        }
+
+        protected void editMaterialFormSubmitClicked(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {                 
+                string materialId = Session["materialId"].ToString();
+                string chapterId = Request.QueryString["chapterId"];
+                string materialType = Request.QueryString["materialType"];
+
+                if (materialType == "video")
+                {
+                    isVideo = true;
+
+                }
+                else
+                {
+                    isVideo = false;
+                }
+                string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
+                string providerConStr = new EntityConnectionStringBuilder(conStr).ProviderConnectionString;
+                SqlConnection materialCon = new SqlConnection(providerConStr);
+                materialCon.Open();
+
+                //get materialFileName
+                SqlCommand cmdGetFileName = new SqlCommand("Select materialName from [dbo].[Material] where materialId=@materialId;", materialCon);
+                cmdGetFileName.Parameters.AddWithValue("@materialId", materialId);
+                String materialFileName = Convert.ToString(cmdGetFileName.ExecuteScalar());
+
+                SqlCommand cmdGetTitle = new SqlCommand("Select materialTitle from [dbo].[Material] where materialId=@materialId;", materialCon);
+                cmdGetTitle.Parameters.AddWithValue("@materialId", materialId);
+                String currentMaterialTitle = Convert.ToString(cmdGetTitle.ExecuteScalar());
+
+                SqlCommand cmdGetMode = new SqlCommand("Select mode from [dbo].[Material] where materialId=@materialId;", materialCon);
+                cmdGetMode.Parameters.AddWithValue("@materialId", materialId);
+                String currentMaterialMode = Convert.ToString(cmdGetMode.ExecuteScalar());
+
+                SqlCommand cmdGetDesc = new SqlCommand("Select materialDescription from [dbo].[Material] where materialId=@materialId;", materialCon);
+                cmdGetDesc.Parameters.AddWithValue("@materialId", materialId);
+                String currentMaterialDesc = Convert.ToString(cmdGetDesc.ExecuteScalar());
+
+                int materialIdINT = Convert.ToInt32(materialId);
+                TARCLearnEntities db = new TARCLearnEntities();
+                var material = db.Materials.FirstOrDefault(m => m.materialId == materialIdINT);
+                var index = material.index;
+                String currentIndex = Convert.ToString(index);
+
+                SqlCommand cmdSelectMaterialTitle = new SqlCommand("Select * from [dbo].[Material] where materialTitle=@materialTitle", materialCon);
+                cmdSelectMaterialTitle.Parameters.AddWithValue("@materialTitle", formEditTitle.Text);
+                SqlDataReader dtrMaterialTitle = cmdSelectMaterialTitle.ExecuteReader();
+
+                int chapterIdINT = Convert.ToInt32(chapterId);
+                int newIndex = Convert.ToInt32(formEditIndex.Text);
+                var dtrMaterialIndex = db.Materials.Where(m => m.chapterId == chapterIdINT).Where(m => m.mode == ddlFormEditMaterialMode.SelectedValue).Where(m => m.index == newIndex);
+               
+                //When both title and index does not exist
+                if (!dtrMaterialTitle.HasRows && !dtrMaterialIndex.Any())
+                {
+                    string newFileName;
+                    string oldFileName;
+                    string extension = System.IO.Path.GetExtension(materialFileName);
+
+                    if (isVideo)
+                    {
+                        newFileName = "~/videos/" + formEditTitle.Text + extension;
+                        oldFileName = "~/videos/" + materialFileName;
+                    }
+                    else
+                    {
+                        newFileName = "~/ReadingMaterials/" + formEditTitle.Text + extension;
+                        oldFileName = "~/ReadingMaterials/" + materialFileName;
+                    }
+
+                    string newMaterialTitle = Server.MapPath(newFileName);
+                    string oldMaterialTitle = Server.MapPath(oldFileName);
+
+                    System.IO.File.Move(oldMaterialTitle, newMaterialTitle);                    
+
+                    materialCon.Close();
+                    var materialIndex = db.Materials.SingleOrDefault(m => m.materialId == materialIdINT);
+                    
+                    if (materialIndex != null)
+                    {
+                        materialIndex.materialTitle = formEditTitle.Text;
+                        materialIndex.index = Convert.ToInt32(formEditIndex.Text);
+                        materialIndex.materialName = formEditTitle.Text + extension;
+                        materialIndex.mode = ddlFormEditMaterialMode.SelectedValue;
+                        materialIndex.materialDescription = formEditDescription.Text;
+                        db.SaveChanges();
+                    }
+                    System.Text.StringBuilder javaScript = new System.Text.StringBuilder();
+                    string scriptKey = "SuccessMessage";
+                    string url = "material.aspx?chapterId=" + chapterId + "&materialType=" + materialType;
+
+                    javaScript.Append("var userConfirmation = window.confirm('" + "Successfully updated!" + "');\n");
+                    javaScript.Append("window.location='" + url + "';");
+
+                    ClientScript.RegisterStartupScript(this.GetType(), scriptKey, javaScript.ToString(), true);
+                }
+                //when both title and index exist
+                else if (dtrMaterialTitle.HasRows && dtrMaterialIndex.Any())
+                {
+                    //check if the mode changed
+                    if(ddlFormEditMaterialMode.SelectedValue != currentMaterialMode || formEditDescription.Text != currentMaterialDesc)
+                    {
+                        String editMaterial = "UPDATE [dbo].[Material] SET mode=@mode, materialDescription=@materialDescription WHERE materialId = @materialId";
+                        SqlCommand cmdEditMaterial = new SqlCommand(editMaterial, materialCon);                        
+                        cmdEditMaterial.Parameters.AddWithValue("@materialId", materialId);
+                        cmdEditMaterial.Parameters.AddWithValue("@mode", ddlFormEditMaterialMode.SelectedValue);
+                        cmdEditMaterial.Parameters.AddWithValue("@materialDescription", formEditDescription.Text);
+                        cmdEditMaterial.ExecuteNonQuery();
+
+                        materialCon.Close();
+
+                        
+                        System.Text.StringBuilder javaScript = new System.Text.StringBuilder();
+                        string scriptKey = "SuccessMessage";
+                        string url = "material.aspx?chapterId=" + chapterId + "&materialType=" + materialType;                       
+
+                        javaScript.Append("var userConfirmation = window.confirm('" + "Successfully updated!" + "');\n");
+                        javaScript.Append("window.location='" + url + "';");
+
+                        ClientScript.RegisterStartupScript(this.GetType(), scriptKey, javaScript.ToString(), true);
+                    }
+                    else
+                    {
+                        materialCon.Close();
+                        Response.Write("<script>alert('Both Entered Material Title and Index Already Exists.')</script>");
+                    }
+
+                }
+                //when only index is change
+                else if (dtrMaterialTitle.HasRows && (formEditTitle.Text == currentMaterialTitle) && !dtrMaterialIndex.Any())
+                {
+                    var materialIndex = db.Materials.SingleOrDefault(m => m.materialId == materialIdINT);
+
+                    if (materialIndex != null)
+                    {
+                        materialIndex.index = Convert.ToInt32(formEditIndex.Text);
+                        materialIndex.mode = ddlFormEditMaterialMode.SelectedValue;
+                        materialIndex.materialDescription = formEditDescription.Text;
+                        db.SaveChanges();
+                    }                  
+
+                    materialCon.Close();
+                    System.Text.StringBuilder javaScript = new System.Text.StringBuilder();
+                    string scriptKey = "SuccessMessage";
+                    string url = "material.aspx?chapterId=" + chapterId + "&materialType=" + materialType;
+
+                    javaScript.Append("var userConfirmation = window.confirm('" + "Successfully updated!" + "');\n");
+                    javaScript.Append("window.location='" + url + "';");
+
+                    ClientScript.RegisterStartupScript(this.GetType(), scriptKey, javaScript.ToString(), true);
+                }
+                //when title and index is change but title ard exist
+                else if (dtrMaterialTitle.HasRows && (formEditTitle.Text != currentMaterialTitle) && !dtrMaterialIndex.Any())
+                {
+                    materialCon.Close();
+                    Response.Write("<script>alert('Entered Title Already Exists.')</script>");
+
+                }
+                else if (!dtrMaterialTitle.HasRows && (formEditIndex.Text == currentIndex) && dtrMaterialIndex.Any())
+                {
+                    string newFileName;
+                    string oldFileName;
+                    string extension = System.IO.Path.GetExtension(materialFileName);
+
+                    if (isVideo)
+                    {
+                        newFileName = "~/videos/" + formEditTitle.Text + extension;
+                        oldFileName = "~/videos/" + materialFileName;
+                    }
+                    else
+                    {
+                        newFileName = "~/ReadingMaterials/" + formEditTitle.Text + extension;
+                        oldFileName = "~/ReadingMaterials/" + materialFileName;
+                    }
+
+                    string newMaterialTitle = Server.MapPath(newFileName);
+                    string oldMaterialTitle = Server.MapPath(oldFileName);
+
+                    System.IO.File.Move(oldMaterialTitle, newMaterialTitle);
+
+                    String editMaterial = "UPDATE [dbo].[Material] SET materialTitle=@materialTitle , mode=@mode, materialName=@materialName, materialDescription=@materialDescription WHERE materialId = @materialId";
+                    SqlCommand cmdEditMaterial = new SqlCommand(editMaterial, materialCon);
+                    cmdEditMaterial.Parameters.AddWithValue("@materialTitle", formEditTitle.Text);
+                    cmdEditMaterial.Parameters.AddWithValue("@materialName", formEditTitle.Text + extension);
+                    cmdEditMaterial.Parameters.AddWithValue("@mode", ddlFormEditMaterialMode.SelectedValue);
+                    cmdEditMaterial.Parameters.AddWithValue("@materialDescription", formEditDescription.Text);
+                    cmdEditMaterial.Parameters.AddWithValue("@materialId", materialId);
+                    cmdEditMaterial.ExecuteNonQuery();
+
+                    materialCon.Close();
+
+                    System.Text.StringBuilder javaScript = new System.Text.StringBuilder();
+                    string scriptKey = "SuccessMessage";
+                    string url = "material.aspx?chapterId=" + chapterId + "&materialType=" + materialType;
+
+                    javaScript.Append("var userConfirmation = window.confirm('" + "Successfully updated!" + "');\n");
+                    javaScript.Append("window.location='" + url + "';");
+
+                    ClientScript.RegisterStartupScript(this.GetType(), scriptKey, javaScript.ToString(), true);
+                }
+                else if (!dtrMaterialTitle.HasRows && (formEditIndex.Text != currentIndex) && dtrMaterialIndex.Any())
+                {
+                    materialCon.Close();
+                    Response.Write("<script>alert('Entered Material Index Already Exists For This Chapter.')</script>");
+
+                }
+                
+            }
         }
     }
 }

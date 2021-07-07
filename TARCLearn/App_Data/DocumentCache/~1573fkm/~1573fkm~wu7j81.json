@@ -1,0 +1,29 @@
+{
+  "CacheSourceKey": "1573fkm",
+  "CachePdfKey": "1573fkm/1573fkm-ab7m6i.pdf",
+  "CacheXpzKey": "1573fkm/1573fkm-wu7j81.xpz",
+  "CacheInfoKey": "1573fkm/1573fkm-wu7j81.json",
+  "CacheCopyKey": null,
+  "Document": "note.pptx",
+  "DocumentHandlerType": null,
+  "DocumentHandlerParameters": null,
+  "DocumentLocation": "~\\ReadingMaterials",
+  "DocumentFileName": "note.pptx",
+  "InputOptions": {
+    "Format": "Pptx",
+    "Password": null
+  },
+  "PdfOutputOptions": {
+    "Watermarks": [],
+    "FastWebViewEnabled": false,
+    "Password": null,
+    "Attachments": [],
+    "Format": "Pdf"
+  },
+  "XpzOutputOptions": {
+    "Password": "1573fkm",
+    "HighQualityEnabled": false,
+    "Format": "Xpz"
+  },
+  "Attachments": []
+}

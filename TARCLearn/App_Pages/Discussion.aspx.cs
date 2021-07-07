@@ -17,7 +17,7 @@ namespace TARCLearn.App_Pages
         {
             if (!IsPostBack)
             {
-                string userType = Session["userType"].ToString();
+                
                 string userId = Session["userId"].ToString();
                 string chapterId = Request.QueryString["chapterId"];
                 string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
@@ -33,30 +33,12 @@ namespace TARCLearn.App_Pages
                 disRepeater.DataSource = cmdSelectDis.ExecuteReader();
                 disRepeater.DataBind();
 
-                if(userType == "Lecturer")
-                {
-                    String strSelectEditDis = "Select threadTitle AS threadTitle,  threadId AS threadId FROM DiscussionThread WHERE chapterId=@chapterId;";
-                    SqlCommand cmdSelectEditDis = new SqlCommand(strSelectEditDis, disCon);
-                    cmdSelectEditDis.Parameters.AddWithValue("@chapterId", chapterId);
+                String strSelectEditDis = "Select threadTitle AS threadTitle,  threadId AS threadId FROM DiscussionThread WHERE chapterId=@chapterId;";
+                SqlCommand cmdSelectEditDis = new SqlCommand(strSelectEditDis, disCon);
+                cmdSelectEditDis.Parameters.AddWithValue("@chapterId", chapterId);
 
-                    rptEditDiscussion.DataSource = cmdSelectEditDis.ExecuteReader();
-                    rptEditDiscussion.DataBind();
-                }
-                else
-                {
-                    String strSelectEditDis = "Select threadTitle AS threadTitle,  threadId AS threadId FROM DiscussionThread WHERE chapterId=@chapterId AND userId = @userId;";
-                    SqlCommand cmdSelectEditDis = new SqlCommand(strSelectEditDis, disCon);
-                    cmdSelectEditDis.Parameters.AddWithValue("@chapterId", chapterId);
-                    cmdSelectEditDis.Parameters.AddWithValue("@userId", userId);
-                    rptEditDiscussion.DataSource = cmdSelectEditDis.ExecuteReader();
-                    rptEditDiscussion.DataBind();
-
-                    btnMore.Visible = false;
-                    btnAdd.Visible = false;
-
-                }
-
-
+                rptEditDiscussion.DataSource = cmdSelectEditDis.ExecuteReader();
+                rptEditDiscussion.DataBind();
 
                 disCon.Close();
             }
@@ -75,7 +57,7 @@ namespace TARCLearn.App_Pages
                 string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
                 string providerConStr = new EntityConnectionStringBuilder(conStr).ProviderConnectionString;
                 SqlConnection disCon = new SqlConnection(providerConStr);
-                disCon.Open();              
+                disCon.Open();
 
                 SqlCommand cmdSelectDisTitle = new SqlCommand("Select * from [dbo].[DiscussionThread] where threadTitle=@threadTitle AND chapterId=@chapterId;", disCon);
                 cmdSelectDisTitle.Parameters.AddWithValue("@threadTitle", threadTitle);
@@ -97,11 +79,11 @@ namespace TARCLearn.App_Pages
                     String url = "Discussion.aspx?chapterId=" + chapterId;
                     Response.Redirect(url);
                 }
-                else 
+                else
                 {
                     Response.Write("<script>alert('Discussion Title Arealdy Exist.')</script>");
                 }
-                
+
 
 
             }
@@ -116,13 +98,50 @@ namespace TARCLearn.App_Pages
             string chapterId = Request.QueryString["chapterId"];
             if (e.CommandName == "selectDiscussion")
             {
-                
-                String url = "discussionThreads.aspx?threadId=" + threadId + "&chapterId="+ chapterId;
+
+                String url = "discussionThreads.aspx?threadId=" + threadId + "&chapterId=" + chapterId;
                 Response.Redirect(url);
 
             }
         }
+        protected void rptEditDiscussion_ItemDataBound(object sender, RepeaterItemEventArgs e)
+        {
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+                ImageButton btnDelete = (ImageButton)e.Item.FindControl("btnDelete");
+                ImageButton btnEdit = (ImageButton)e.Item.FindControl("btnEdit");
 
+                string userId = Session["userId"].ToString();
+                string userType = Session["userType"].ToString();
+               
+                string threadId = DataBinder.Eval(e.Item.DataItem, "threadId").ToString();
+
+                string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
+                string providerConStr = new EntityConnectionStringBuilder(conStr).ProviderConnectionString;
+                SqlConnection threadCon = new SqlConnection(providerConStr);
+                threadCon.Open();
+
+                String strGetUser = "SELECT userId FROM DiscussionThread WHERE threadId = @threadId;";
+                SqlCommand cmdGetUser = new SqlCommand(strGetUser, threadCon);
+                cmdGetUser.Parameters.AddWithValue("@threadId", threadId);
+                string currentThreadOwner = Convert.ToString(cmdGetUser.ExecuteScalar());
+
+                if (currentThreadOwner != userId)
+                {
+                    if (userType == "Lecturer")
+                    {
+                        btnEdit.Visible = false;
+                    }
+                    else
+                    {
+                        btnEdit.Visible = false;
+                        btnDelete.Visible = false;
+                    }
+                }
+
+            }
+        
+        }
         protected void rptEditDiscussion_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
             string userType = Session["userType"].ToString();
@@ -194,7 +213,7 @@ namespace TARCLearn.App_Pages
                         cmdEdit.Parameters.AddWithValue("@threadTitle", txtDiscussionTitle.Text);
                         cmdEdit.Parameters.AddWithValue("@threadId", threadId);
                         cmdEdit.ExecuteNonQuery();
-                        String url = "Discussion.aspx?courseId=" + chapterId;
+                        String url = "Discussion.aspx?chapterId=" + chapterId;
                         Response.Redirect(url);
                     }
                     else
@@ -211,39 +230,13 @@ namespace TARCLearn.App_Pages
             }
             if (e.CommandName == "cancel")
             {
-
-                txtDiscussionTitle.Enabled = false;
-                txtDiscussionTitle.BorderStyle = BorderStyle.None;
-                txtDiscussionTitle.BackColor = Color.Transparent;
-             
-                btnEdit.Visible = true;
-                btnCancel.Visible = false;
-                btnDel.Visible = true;
-                btnSave.Visible = false;
-
-                if (userType == "Lecturer")
-                {
-                    String strSelectEditDis = "Select threadTitle AS threadTitle,  threadId AS threadId FROM DiscussionThread WHERE chapterId=@chapterId;";
-                    SqlCommand cmdSelectEditDis = new SqlCommand(strSelectEditDis, disCon);
-                    cmdSelectEditDis.Parameters.AddWithValue("@chapterId", chapterId);
-
-                    rptEditDiscussion.DataSource = cmdSelectEditDis.ExecuteReader();
-                    rptEditDiscussion.DataBind();
-                }
-                else
-                {
-                    String strSelectEditDis = "Select threadTitle AS threadTitle,  threadId AS threadId FROM DiscussionThread WHERE chapterId=@chapterId AND userId = @userId;";
-                    SqlCommand cmdSelectEditDis = new SqlCommand(strSelectEditDis, disCon);
-                    cmdSelectEditDis.Parameters.AddWithValue("@chapterId", chapterId);
-                    cmdSelectEditDis.Parameters.AddWithValue("@userId", userId);
-                    rptEditDiscussion.DataSource = cmdSelectEditDis.ExecuteReader();
-                    rptEditDiscussion.DataBind();
-                }
+                String url = "Discussion.aspx?chapterId=" + chapterId;
+                Response.Redirect(url);
 
             }
         }
 
-        protected void btnEdit_Click(object sender, ImageClickEventArgs e)
+        protected void btnMore_Click(object sender, ImageClickEventArgs e)
         {
             string userType = Session["userType"].ToString();
             string userId = Session["userId"].ToString();

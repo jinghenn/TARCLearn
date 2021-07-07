@@ -82,7 +82,7 @@
                                  </asp:Panel>
                                
                                  <asp:Button ID="btnCourses" runat="server" class=" button" Text="Courses" Width="280px" Height="70px" BorderWidth="0px" OnClick="btnCourses_Click" />
-                                 <asp:Button ID="btnDN" runat="server" class=" button" Text="Discussion Room" Width="280px" Height="70px" BorderWidth="0px"/>                                                             
+                                 <asp:Button ID="btnDN" runat="server" class=" button" Text="My Discussions" Width="280px" Height="70px" BorderWidth="0px" OnClick="btnDN_Click"/>                                                             
                                <asp:Button ID="btnManage" runat="server" class=" button" Text="Manage Enrolment" Width="280px" Height="70px" BorderWidth="0px" OnClick="btnManage_Click" />  
                             </asp:Panel>
                             

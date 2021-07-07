@@ -15,6 +15,7 @@ namespace TARCLearn
         {
             // Code that runs on application startup
             GlobalConfiguration.Configure(WebApiConfig.Register);
+            //DocumentUltimateConfiguration.Current.LicenseKey = "QQJDJLJP34...";
         }
     }
 }

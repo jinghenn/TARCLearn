@@ -66,6 +66,12 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="GleamTech.Common, Version=4.5.0.0, Culture=neutral, PublicKeyToken=a05198837413a6d8, processorArchitecture=MSIL">
+      <HintPath>..\packages\GleamTech.Common.4.5.4\lib\net40\GleamTech.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="GleamTech.DocumentUltimate, Version=5.7.0.0, Culture=neutral, PublicKeyToken=a05198837413a6d8, processorArchitecture=MSIL">
+      <HintPath>..\packages\GleamTech.DocumentUltimate.5.9.7\lib\net40\GleamTech.DocumentUltimate.dll</HintPath>
+    </Reference>
     <Reference Include="GroupDocs.Viewer">
       <HintPath>..\lib\net20\GroupDocs.Viewer.dll</HintPath>
     </Reference>
@@ -118,6 +124,8 @@
     <Content Include="App_Pages\discussionThreads.aspx" />
     <Content Include="App_Pages\Login.aspx" />
     <Content Include="App_Pages\manage.aspx" />
+    <Content Include="App_Pages\materialViewer.aspx" />
+    <Content Include="App_Pages\myDiscussions.aspx" />
     <Content Include="App_Pages\pdfViewer.aspx" />
     <Content Include="App_Pages\questionList.aspx" />
     <Content Include="App_Pages\quiz.aspx" />
@@ -187,6 +195,20 @@
     </Compile>
     <Compile Include="App_Pages\manage.aspx.designer.cs">
       <DependentUpon>manage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="App_Pages\materialViewer.aspx.cs">
+      <DependentUpon>materialViewer.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="App_Pages\materialViewer.aspx.designer.cs">
+      <DependentUpon>materialViewer.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="App_Pages\myDiscussions.aspx.cs">
+      <DependentUpon>myDiscussions.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="App_Pages\myDiscussions.aspx.designer.cs">
+      <DependentUpon>myDiscussions.aspx</DependentUpon>
     </Compile>
     <Compile Include="App_Pages\pdfViewer.aspx.cs">
       <DependentUpon>pdfViewer.aspx</DependentUpon>

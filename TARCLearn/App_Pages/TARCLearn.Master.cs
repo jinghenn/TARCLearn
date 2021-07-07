@@ -33,5 +33,10 @@ namespace TARCLearn.App_Pages
         {
             Response.Redirect("manage.aspx");
         }
+
+        protected void btnDN_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("myDiscussions.aspx");
+        }
     }
 }

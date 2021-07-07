@@ -74,7 +74,7 @@
     <div class="main main-raised" >
         <div class="label1">
             <asp:Label ID="lblTittle" runat="server" Font-Bold="true" Font-Size="Large">DiscussionThread</asp:Label> 
-            <asp:ImageButton ID="btnMore" CssClass="rightButton" Height="15px" Width="15px" runat="server" ImageUrl="~/images/more_icon.png" OnClick="btnEdit_Click" /> 
+            <asp:ImageButton ID="btnMore" CssClass="rightButton" Height="15px" Width="15px" runat="server" ImageUrl="~/images/more_icon.png" OnClick="btnMore_Click" /> 
             <asp:ImageButton ID="btnAdd" CssClass="rightButton" Height="15px" Width="15px" runat="server" ImageUrl="~/images/add_icon.png"  data-toggle="modal" data-target="#modalForm" OnClientClick="return false;" />        
         </div>
     
@@ -87,7 +87,7 @@
             </ItemTemplate>
         </asp:Repeater>
 
-        <asp:Repeater ID="rptEditDiscussion" runat="server"  Visible="False" OnItemCommand="rptEditDiscussion_ItemCommand">
+        <asp:Repeater ID="rptEditDiscussion" runat="server"  Visible="False" OnItemCommand="rptEditDiscussion_ItemCommand" OnItemDataBound="rptEditDiscussion_ItemDataBound">
             <ItemTemplate>
                 <div style="padding:12.5px 0 12.5px 30px; height: 70px;">
                     <div>

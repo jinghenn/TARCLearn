@@ -25,7 +25,7 @@ namespace TARCLearn.App_Pages
                 chpCon.Open();
 
                 //select data to be bound
-                String strSelectChp = "Select chapterTitle AS chpTitle, chapterId AS chpId, chapterNo AS chpNo from Chapter Where courseId=@courseId;";
+                String strSelectChp = "Select chapterTitle AS chpTitle, chapterId AS chpId, chapterNo AS chpNo from Chapter Where courseId=@courseId ORDER BY CAST(SUBSTRING(chapterNo, 1, CASE WHEN CHARINDEX('.',chapterNo) > 0 THEN CHARINDEX('.',chapterNo) - 1 ELSE LEN(chapterNo) END) AS INT),CAST(SUBSTRING(chapterNo, CASE WHEN CHARINDEX('.', chapterNo) > 0 THEN CHARINDEX('.', chapterNo) + 1 ELSE NULL END, LEN(chapterNo)) AS INT); ";
                 SqlCommand cmdSelectChapter = new SqlCommand(strSelectChp, chpCon);
                 cmdSelectChapter.Parameters.AddWithValue("@courseId", courseId);
 
@@ -36,7 +36,7 @@ namespace TARCLearn.App_Pages
                 if (userType == "Lecturer")
                 {
                     //select data to be bound
-                    String strSelectEditChp = "Select chapterTitle AS chpTitle, chapterId AS chpId, chapterNo AS chpNo from Chapter Where courseId=@courseId;";
+                    String strSelectEditChp = "Select chapterTitle AS chpTitle, chapterId AS chpId, chapterNo AS chpNo from Chapter Where courseId=@courseId ORDER BY CAST(SUBSTRING(chapterNo, 1, CASE WHEN CHARINDEX('.',chapterNo) > 0 THEN CHARINDEX('.',chapterNo) - 1 ELSE LEN(chapterNo) END) AS INT),CAST(SUBSTRING(chapterNo, CASE WHEN CHARINDEX('.', chapterNo) > 0 THEN CHARINDEX('.', chapterNo) + 1 ELSE NULL END, LEN(chapterNo)) AS INT); ";
                     SqlCommand cmdSelectEditChapter = new SqlCommand(strSelectEditChp, chpCon);
                     cmdSelectEditChapter.Parameters.AddWithValue("@courseId", courseId);
 

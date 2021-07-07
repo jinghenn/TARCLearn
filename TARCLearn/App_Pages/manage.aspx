@@ -78,7 +78,7 @@
                         </div>
 
                         <div class="row mb-3">
-                            <label for="formtxtMStudent" class="col-sm-3 col-form-label">Discussion Description</label>
+                            <label for="formtxtMStudent" class="col-sm-3 col-form-label">Emails</label>
                             <div class="col-sm-9">
                                 <asp:TextBox ID="formtxtMStudent" CssClass="form-control" runat="server" TextMode="MultiLine"></asp:TextBox>
                                 <asp:RequiredFieldValidator ValidationGroup="Edit Form" ForeColor="Red" ID="rfvformtxtDesc" ControlToValidate="formtxtMStudent" runat="server" Display="Dynamic" ErrorMessage="Discussion Description Cannot Be Blank"></asp:RequiredFieldValidator>

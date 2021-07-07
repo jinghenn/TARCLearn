@@ -52,7 +52,7 @@
               
          }
     </style>
-     
+    
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -70,6 +70,7 @@
                             <div class="col-sm-9">
                                 <asp:TextBox ID="formChpNo" CssClass="form-control" runat="server"></asp:TextBox>
                                 <asp:RequiredFieldValidator ValidationGroup="Add Form" ForeColor="Red" ID="rfvChpNo" ControlToValidate="formChpNo" runat="server" Display="Dynamic" ErrorMessage="Chapter No. Cannot Be Blank"></asp:RequiredFieldValidator>
+                                <asp:RegularExpressionValidator ValidationGroup="Add Form" ForeColor="Red" id="revFormChpNo" runat="server" Display="Dynamic" ErrorMessage="Only two level digit is allowed" ValidationExpression="([1-9]{1}.[1-9]{1})|([1-9]{2}.[1-9])" ControlToValidate="formChpNo" />                            
                             </div>
                         </div>  
                         
@@ -131,6 +132,8 @@
                     </div>
                     <div>
                         <asp:RequiredFieldValidator ValidationGroup="Edit" ForeColor="Red" Display="Dynamic" ID="rfvtxtChapterNo" runat="server" ErrorMessage=" - Chapter No Cannot Be Blank" ControlToValidate="txtChapterNo" ></asp:RequiredFieldValidator>
+                        <asp:RegularExpressionValidator ValidationGroup="Edit" ForeColor="Red" id="revtxtChapterNo" runat="server" Display="Dynamic" ErrorMessage=" - Only two level digit is allowed" ValidationExpression="([1-9]{1}.[1-9]{1})|([1-9]{2}.[1-9])" ControlToValidate="txtChapterNo" />                            
+
                     </div>
                     <div>
                         <asp:RequiredFieldValidator ValidationGroup="Edit" ForeColor="Red" Display="Dynamic" ID="rfvtxtChapterTitle" runat="server" ErrorMessage=" - Chapter Title Cannot Be Blank" ControlToValidate="txtChapterTitle" ></asp:RequiredFieldValidator>

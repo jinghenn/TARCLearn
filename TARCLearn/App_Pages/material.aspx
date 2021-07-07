@@ -70,16 +70,41 @@
             const params = new URLSearchParams(window.location.search);
             var materialType = params.get('materialType').toString();
             if (materialType == "video") {
+
                 arguments.IsValid =
-                    (sFile.endsWith('.mp4'));
+                    ((sFile.endsWith('.flv')) ||
+                    (sFile.endsWith('.mov')) ||
+                    (sFile.endsWith('.wmv')) ||
+                    (sFile.endsWith('.avi')) ||
+                    (sFile.endsWith('.avchd')) ||
+                    (sFile.endsWith('.f4v')) ||
+                    (sFile.endsWith('.swf')) ||
+                    (sFile.endsWith('.mkv')) ||
+                    (sFile.endsWith('.webm')) ||
+                    (sFile.endsWith('.html5')) ||
+                    (sFile.endsWith('.mpeg-2')) ||
+                    (sFile.endsWith('.mp4')));
 
             } else {
                 arguments.IsValid =
                     ((sFile.endsWith('.pdf')) ||
-                        (sFile.endsWith('.pptx'));
+                    (sFile.endsWith('.pptx')) ||
+                    (sFile.endsWith('.docx')) ||
+                    (sFile.endsWith('.xlsx')) ||
+                    (sFile.endsWith('.jpg')) ||
+                    (sFile.endsWith('.png')) ||
+                    (sFile.endsWith('.jpeg')));
             }
         }
 
+        function editMaterial() {
+                $('#editForm').modal('show');
+        }
+
+        
+
+
+    
         
     </script>
  
@@ -93,6 +118,15 @@
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">
+
+                        <div class="row mb-3">
+                            <label for="formIndex" class="col-sm-3 col-form-label">Material Index</label>
+                            <div class="col-sm-9">
+                                <asp:TextBox ID="formIndex" CssClass="form-control" runat="server"></asp:TextBox>
+                                <asp:RequiredFieldValidator ValidationGroup="Add Form" ForeColor="Red" ID="rfvFormIndex" ControlToValidate="formIndex" runat="server" Display="Dynamic" ErrorMessage="Material Title Cannot Be Blank"></asp:RequiredFieldValidator>
+                                <asp:RegularExpressionValidator ValidationGroup="Add Form" ForeColor="Red" id="revFormIndex" runat="server" Display="Dynamic" ErrorMessage="Please Enter Only Numbers." ValidationExpression="^\d+$" ControlToValidate="formIndex" />                            
+                            </div>
+                        </div>  
 
                         <div class="row mb-3">
                             <label for="formTitle" class="col-sm-3 col-form-label">Material Title</label>
@@ -139,12 +173,68 @@
                 </div>
             </div>
         </div>
+    <div class="modal fade bd-example-modal-lg" id="editForm">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Edit Material</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="row mb-3">
+                            <label for="formEditIndex" class="col-sm-3 col-form-label">Material Index</label>
+                            <div class="col-sm-9">
+                                <asp:TextBox ID="formEditIndex" CssClass="form-control" runat="server"></asp:TextBox>
+                                <asp:RequiredFieldValidator ValidationGroup="Edit Form" ForeColor="Red" ID="rfvFormEditIndex" ControlToValidate="formEditIndex" runat="server" Display="Dynamic" ErrorMessage="Material Title Cannot Be Blank"></asp:RequiredFieldValidator>
+                                <asp:RegularExpressionValidator ValidationGroup="Edit Form" ForeColor="Red" id="revFormEditIndex" runat="server" Display="Dynamic" ErrorMessage="Please Enter Only Numbers." ValidationExpression="^\d+$" ControlToValidate="formEditIndex" />                            
+                            </div>
+                        </div>  
+
+                        <div class="row mb-3">
+                            <label for="formEditTitle" class="col-sm-3 col-form-label">Material Title</label>
+                            <div class="col-sm-9">
+                                <asp:TextBox ID="formEditTitle" CssClass="form-control" runat="server"></asp:TextBox>
+                                <asp:RequiredFieldValidator ValidationGroup="Edit Form" ForeColor="Red" ID="rfvFormEditTitle" ControlToValidate="formEditTitle" runat="server" Display="Dynamic" ErrorMessage="Material Title Cannot Be Blank"></asp:RequiredFieldValidator>
+                            </div>
+                        </div>  
+
+                        <div class="row mb-3">
+                            <label for="formEditDescription" class="col-sm-3 col-form-label">Material Description</label>
+                            <div class="col-sm-9">
+                                <asp:TextBox ID="formEditDescription" CssClass="form-control" runat="server"></asp:TextBox>
+                            </div>
+                        </div>                                                                  
+
+                        <div class="row mb-3">
+                            <label for="formEditMaterialMode" class="col-sm-3 col-form-label">Material Category</label>
+                            <div class="col-sm-9">
+                                <asp:DropDownList ID="ddlFormEditMaterialMode" CssClass="form-select" runat="server">                                
+                                    <asp:ListItem Value="Lecture">Lecture</asp:ListItem>
+                                    <asp:ListItem Value="Practical">Practical</asp:ListItem>
+                                    <asp:ListItem Value="Tutorial">Tutorial</asp:ListItem>
+                                    <asp:ListItem Value="Other">Other</asp:ListItem>
+                                </asp:DropDownList>
+                            </div>
+                        </div>
+                      
+                         
+
+                        <div class="row mb-3">
+                            <asp:Button CssClass="btn btn-success" runat="server" OnClick="editMaterialFormSubmitClicked" ValidationGroup="Edit Form" Text="Save" />
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
 
     <div class="main main-raised" >
 <%-- title   --%>
       <div class="label1">
          <asp:Label ID="lblTittle" runat="server" Font-Bold="true" Font-Size="Large">Reading Material</asp:Label>   
-         <asp:ImageButton ID="btnMore" CssClass="rightButton" runat="server" ImageUrl="~/images/more_icon.png"  Height="15px" Width="15px" OnClick="btnDeleteRM_Click"   /> 
+         <asp:ImageButton ID="btnMore" CssClass="rightButton" runat="server" ImageUrl="~/images/more_icon.png"  Height="15px" Width="15px" OnClick="btnMore_Click"   /> 
          <asp:ImageButton ID="btnAdd" CssClass="rightButton" runat="server" ImageUrl="~/images/add_icon.png"   Height="15px" Width="15px" data-toggle="modal" data-target="#modalForm" OnClientClick="return false;" />
       </div>
        
@@ -153,27 +243,23 @@
       <asp:Button Text='Lecture'  runat="server" ID="btnLecture" CssClass="button1" OnClick="btnLecture_Click"  />
 
       <%-- normal repeater  --%>   
-      <asp:Repeater ID="rptLect" runat="server" OnItemCommand="rmRepeater_ItemCommand" Visible="False" >
+      <asp:Repeater ID="rptLect" runat="server" OnItemCommand="rptMaterial_ItemCommand" Visible="False" >
         <ItemTemplate>
             <asp:Button CommandName="selectRM" CommandArgument='<%# Eval("materialId")%>' 
-                Text='<%# Eval("materialTitle")%>'  runat="server" ID="btnCourse" CssClass="button2"  />
+                Text='<%# (Eval("materialTitle")) %>'   runat="server" ID="btnCourse" CssClass="button2"  />
             
         </ItemTemplate>
       </asp:Repeater>
 
       <%-- Edit repeater  --%>
-      <asp:Repeater ID="rptDelLect" runat="server"  Visible="False" OnItemCommand="rptEditRM_ItemCommand" >
+      <asp:Repeater ID="rptDelLect" runat="server"  Visible="False" OnItemCommand="rptEdit_ItemCommand" >
         <ItemTemplate>           
             <div class="deleteRpt">                                                              
                     <div>
                         <asp:TextBox ID="txtLec" runat="server" style="width: 700px;" Text='<%# Eval("materialTitle") %>' Enabled="false" BorderStyle="None" BackColor="Transparent"  ></asp:TextBox>
                     
                         <asp:ImageButton ID="btnDelete" CssClass="rightButton" CommandName="delete" CommandArgument='<%# Eval("materialId")%>' Height="15px" Width="15px" runat="server" ImageUrl="~/images/delete_icon.png" Visible="True" CausesValidation="false" OnClientClick='return confirm("Are you sure you want to delete this item?");'/> 
-                        <asp:ImageButton ID="btnEdit" CssClass="rightButton" CommandName="editLec" CommandArgument='<%# Eval("materialId")%>' Height="15px" Width="15px" runat="server" ImageUrl="~/images/edit_icon.png" CausesValidation="false"/>                
-                        <asp:ImageButton ID="btnCancel" CssClass="rightButton" CommandName="cancel" Height="15px" Width="15px" runat="server" ImageUrl="~/images/delete2_icon.png" Visible="False" CausesValidation="false"/>                
-                        <asp:ImageButton ID="btnSave" CssClass="rightButton" CommandName="saveLec" CommandArgument='<%# Eval("materialId")%>' Height="15px" Width="15px" runat="server" ImageUrl="~/images/save_icon.png"  Visible="False" ValidationGroup="Edit"/>                
-
-                    
+                        <asp:ImageButton ID="btnEdit" CssClass="rightButton" CommandName="edit" CommandArgument='<%# Eval("materialId")%>' Height="15px" Width="15px" runat="server" ImageUrl="~/images/edit_icon.png" CausesValidation="false"/>                                 
                         
                     </div>
                     <div>
@@ -189,24 +275,22 @@
     <asp:Button Text='Practical'  runat="server" ID="btnPractical" CssClass="button1" OnClick="btnPractical_Click"  />
 
     <%-- normal repeater  --%>
-    <asp:Repeater ID="rptPrac" runat="server" OnItemCommand="rmRepeater_ItemCommand" Visible="False" >
+    <asp:Repeater ID="rptPrac" runat="server" OnItemCommand="rptMaterial_ItemCommand" Visible="False" >
         <ItemTemplate>
             <asp:Button CommandName="selectRM" CommandArgument='<%# Eval("materialId")%>' 
-                Text='<%# Eval("materialTitle")%>'  runat="server" ID="btnCourse" CssClass="button2"  />
+                Text='<%# (Eval("materialTitle")) %>'  runat="server" ID="btnCourse" CssClass="button2"  />
             
         </ItemTemplate>
     </asp:Repeater>
     
     <%-- Edit repeater  --%>
-    <asp:Repeater ID="rptDelPrac" runat="server"  Visible="False" OnItemCommand="rptEditRM_ItemCommand" >
+    <asp:Repeater ID="rptDelPrac" runat="server"  Visible="False" OnItemCommand="rptEdit_ItemCommand" >
         <ItemTemplate>
            <div class="deleteRpt">
                <div>
                         <asp:TextBox ID="txtPrac" runat="server" style="width: 700px;" Text='<%# Eval("materialTitle") %>' Enabled="false" BorderStyle="None" BackColor="Transparent"  ></asp:TextBox>
                         <asp:ImageButton ID="btnDelete" CssClass="rightButton" CommandName="delete" CommandArgument='<%# Eval("materialId")%>' Height="15px" Width="15px" runat="server" ImageUrl="~/images/delete_icon.png" Visible="True" CausesValidation="false" OnClientClick='return confirm("Are you sure you want to delete this item?");'/> 
-                        <asp:ImageButton ID="btnEdit" CssClass="rightButton" CommandName="editPrac" CommandArgument='<%# Eval("materialId")%>' Height="15px" Width="15px" runat="server" ImageUrl="~/images/edit_icon.png" CausesValidation="false"/>                
-                        <asp:ImageButton ID="btnCancel" CssClass="rightButton" CommandName="cancel" Height="15px" Width="15px" runat="server" ImageUrl="~/images/delete2_icon.png" Visible="False" CausesValidation="false"/>                
-                        <asp:ImageButton ID="btnSave" CssClass="rightButton" CommandName="savePrac" CommandArgument='<%# Eval("materialId")%>' Height="15px" Width="15px" runat="server" ImageUrl="~/images/save_icon.png"  Visible="False" ValidationGroup="Edit"/>                
+                        <asp:ImageButton ID="btnEdit" CssClass="rightButton" CommandName="edit" CommandArgument='<%# Eval("materialId")%>' Height="15px" Width="15px" runat="server" ImageUrl="~/images/edit_icon.png" CausesValidation="false"/>                
    
                  
                 </div>
@@ -221,24 +305,22 @@
     <asp:Button Text='Tutorial'  runat="server" ID="btnTutorial" CssClass="button1" OnClick="btnTutorial_Click"  />
     
     <%-- normal repeater  --%>
-    <asp:Repeater ID="rptTut" runat="server" OnItemCommand="rmRepeater_ItemCommand" Visible="False" >
+    <asp:Repeater ID="rptTut" runat="server" OnItemCommand="rptMaterial_ItemCommand" Visible="False" >
         <ItemTemplate>
             <asp:Button CommandName="selectRM" CommandArgument='<%# Eval("materialId")%>' 
-                Text='<%# Eval("materialTitle")%>'  runat="server" ID="btnCourse" CssClass="button2"  />
+                Text='<%# (Eval("materialTitle")) %>'  runat="server" ID="btnCourse" CssClass="button2"  />
             
         </ItemTemplate>
     </asp:Repeater>
 
     <%-- Edit repeater  --%>
-    <asp:Repeater ID="rptDelTut" runat="server"  Visible="False" OnItemCommand="rptEditRM_ItemCommand" >
+    <asp:Repeater ID="rptDelTut" runat="server"  Visible="False" OnItemCommand="rptEdit_ItemCommand" >
         <ItemTemplate>
            <div class="deleteRpt">
                <div>
                  <asp:TextBox ID="txtTut" runat="server" style="width: 700px;" Text='<%# Eval("materialTitle") %>' Enabled="false" BorderStyle="None" BackColor="Transparent"  ></asp:TextBox>
                  <asp:ImageButton ID="btnDelete" CssClass="rightButton" CommandName="delete" CommandArgument='<%# Eval("materialId")%>' Height="15px" Width="15px" runat="server" ImageUrl="~/images/delete_icon.png" Visible="True" CausesValidation="false" OnClientClick='return confirm("Are you sure you want to delete this item?");'/> 
-                 <asp:ImageButton ID="btnEdit" CssClass="rightButton" CommandName="editTut" CommandArgument='<%# Eval("materialId")%>' Height="15px" Width="15px" runat="server" ImageUrl="~/images/edit_icon.png" CausesValidation="false"/>                
-                 <asp:ImageButton ID="btnCancel" CssClass="rightButton" CommandName="cancel" Height="15px" Width="15px" runat="server" ImageUrl="~/images/delete2_icon.png" Visible="False" CausesValidation="false"/>                
-                 <asp:ImageButton ID="btnSave" CssClass="rightButton" CommandName="saveTut" CommandArgument='<%# Eval("materialId")%>' Height="15px" Width="15px" runat="server" ImageUrl="~/images/save_icon.png"  Visible="False" ValidationGroup="Edit"/>                
+                 <asp:ImageButton ID="btnEdit" CssClass="rightButton" CommandName="edit" CommandArgument='<%# Eval("materialId")%>' Height="15px" Width="15px" runat="server" ImageUrl="~/images/edit_icon.png" CausesValidation="false"/>                
 
                 </div>
                 <div>
@@ -252,24 +334,22 @@
     <asp:Button Text='Other'  runat="server" ID="btnOther" CssClass="button1" OnClick="btnOther_Click"  />
  
 <%-- normal repeater  --%>
-    <asp:Repeater ID="rptOth" runat="server" OnItemCommand="rmRepeater_ItemCommand" Visible="False" >
+    <asp:Repeater ID="rptOth" runat="server" OnItemCommand="rptMaterial_ItemCommand" Visible="False" >
         <ItemTemplate>
             <asp:Button CommandName="selectRM" CommandArgument='<%# Eval("materialId")%>' 
-                Text='<%# Eval("materialTitle")%>'  runat="server" ID="btnCourse" CssClass="button2"  />
+                Text='<%# (Eval("materialTitle")) %>'  runat="server" ID="btnCourse" CssClass="button2"  />
             
         </ItemTemplate>
     </asp:Repeater> 
 
 <%-- Edit repeater  --%>
-    <asp:Repeater ID="rptDelOth" runat="server"  Visible="False" OnItemCommand="rptEditRM_ItemCommand" >
+    <asp:Repeater ID="rptDelOth" runat="server"  Visible="False" OnItemCommand="rptEdit_ItemCommand" >
         <ItemTemplate>
            <div class="deleteRpt">
                <div>
                  <asp:TextBox ID="txtOth" runat="server" style="width: 700px;" Text='<%# Eval("materialTitle") %>' Enabled="false" BorderStyle="None" BackColor="Transparent"  ></asp:TextBox>
                  <asp:ImageButton ID="btnDelete" CssClass="rightButton" CommandName="delete" CommandArgument='<%# Eval("materialId")%>' Height="15px" Width="15px" runat="server" ImageUrl="~/images/delete_icon.png" Visible="True" CausesValidation="false" OnClientClick='return confirm("Are you sure you want to delete this item?");'/> 
-                 <asp:ImageButton ID="btnEdit" CssClass="rightButton" CommandName="editOth" CommandArgument='<%# Eval("materialId")%>' Height="15px" Width="15px" runat="server" ImageUrl="~/images/edit_icon.png" CausesValidation="false"/>                
-                 <asp:ImageButton ID="btnCancel" CssClass="rightButton" CommandName="cancel" Height="15px" Width="15px" runat="server" ImageUrl="~/images/delete2_icon.png" Visible="False" CausesValidation="false"/>                
-                 <asp:ImageButton ID="btnSave" CssClass="rightButton" CommandName="saveOth" CommandArgument='<%# Eval("materialId")%>' Height="15px" Width="15px" runat="server" ImageUrl="~/images/save_icon.png"  Visible="False" ValidationGroup="Edit"/>                
+                 <asp:ImageButton ID="btnEdit" CssClass="rightButton" CommandName="edit" CommandArgument='<%# Eval("materialId")%>' Height="15px" Width="15px" runat="server" ImageUrl="~/images/edit_icon.png" CausesValidation="false"/>                
                 </div>
                 <div>
                     <asp:RequiredFieldValidator ValidationGroup="Edit" ForeColor="Red" Display="Dynamic" ID="rfvtxtOth" runat="server" ErrorMessage=" - Material Title Cannot Be Blank" ControlToValidate="txtOth" ></asp:RequiredFieldValidator>
