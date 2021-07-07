@@ -8,7 +8,8 @@ using System.Data.Entity;
 using System.Web.Http.Description;
 using System.Threading.Tasks;
 using TARCLearn.Models;
-
+using System.Net.Mail;
+//using System.Linq.Dynamic.Core;
 namespace TARCLearn.Controllers
 {
     public class CoursesController : ApiController
@@ -119,53 +120,6 @@ namespace TARCLearn.Controllers
                 return Content(HttpStatusCode.BadRequest, e);
             }
         }
-        //[HttpPost]
-        //[Route("api/courses/enrol", Name = "EnrolUser")]
-        //[ResponseType(typeof(IEnumerable<UserDto>))]
-        //public async Task<IHttpActionResult> PostEnrolment(int courseId, string userId)
-        //{
-        //    try
-        //    {
-        //        TARCLearnEntities entities = new TARCLearnEntities();
-        //        var course = await entities.Courses.Include(c => c.Users)
-        //            .FirstOrDefaultAsync(c => c.courseId == courseId);
-        //        var user = await entities.Users.FirstOrDefaultAsync(u => u.userId == userId);
-        //        if (course == null || user == null)
-        //        {
-        //            return Content(HttpStatusCode.NotFound, "Course: " + courseId + " does not exist.");
-        //        }
-        //        if (user == null)
-        //        {
-        //            return Content(HttpStatusCode.NotFound, "User: " + userId + " does not exist.");
-        //        }
-        //        if (course.Users.Contains(user))
-        //        {
-        //            return Content(HttpStatusCode.Conflict, userId + " already in course " + courseId);
-        //        }
-
-        //        course.Users.Add(user);
-        //        await entities.SaveChangesAsync();
-
-        //        var dto = new CourseUsersDto()
-        //        {
-        //            courseId = course.courseId,
-        //            Users = course.Users.Select(u => new UserDto()
-        //            {
-        //                userId = u.userId,
-        //                username = u.username,
-        //                email = u.email
-        //            })
-        //        };
-
-        //        return CreatedAtRoute("EnrolUser", new { courseId = course.courseId }, dto.Users);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return Content(HttpStatusCode.BadRequest, e.ToString());
-        //    }
-
-
-        //}
 
         [HttpPost]
         [Route("api/courses/{courseId}/enrol")]
@@ -181,7 +135,8 @@ namespace TARCLearn.Controllers
                     return Content(HttpStatusCode.NotFound, "course" + courseId + " not found.");
                 }
 
-                List<string> failedEmail = new List<string>();
+                var failedEmail = new List<string>();
+                var successedEmail = new List<string>();
                 bool failFlag = false;
                 foreach (string email in emailList)
                 {
@@ -193,10 +148,10 @@ namespace TARCLearn.Controllers
                         continue;
                     }
                     course.Users.Add(currentUser);
-
+                    successedEmail.Add(email);
                 }
                 await db.SaveChangesAsync();
-
+                SendEnrolmentEmail(successedEmail, $"{course.courseCode} {course.courseTitle}");
                 if (failFlag)
                 {
                     IEnumerable<string> mList = failedEmail;
@@ -289,7 +244,7 @@ namespace TARCLearn.Controllers
             new CourseChaptersDto()
             {
                 courseId = c.courseId,
-                Chapters = c.Chapters.OrderBy(ch => new ChapterComparer()).Select(ch => new ChapterDetailDto()
+                Chapters = c.Chapters.Select(ch => new ChapterDetailDto()
                 {
                     chapterId = ch.chapterId,
                     chapterNo = ch.chapterNo,
@@ -298,6 +253,9 @@ namespace TARCLearn.Controllers
                 })
 
             }).SingleOrDefaultAsync(c => c.courseId == id);
+            var sorted = new List<ChapterDetailDto>(course.Chapters);
+            sorted.Sort(new ChapterComparer());
+            course.Chapters = sorted;
             if (course == null)
             {
                 return Content(HttpStatusCode.NotFound, "Course: " + course.courseId + " not found");
@@ -305,17 +263,48 @@ namespace TARCLearn.Controllers
             return Ok(course.Chapters);
         }
 
-    }
-    internal class ChapterComparer : IComparer<Chapter>
-    {
 
-        public int Compare(Chapter x, Chapter y)
+        private void SendEnrolmentEmail(List<string> address, string course)
         {
-            var a = Convert.ToDouble(x.chapterNo);
-            var b = Convert.ToDouble(y.chapterNo);
+            try
+            {
+                var enrolmentEmail = new MailMessage();
+                address.ForEach(a =>
+                {
+                    enrolmentEmail.To.Add(a);
+                });
+                enrolmentEmail.Subject = $"TARCLearn enrolment: \"{course}\"";
+                enrolmentEmail.From = new MailAddress("tarclearn@gmail.com");
+                enrolmentEmail.Body = $"You have been added to the course: {course}";
+                var smtp = new SmtpClient
+                {
+                    Host = "smtp.gmail.com",
+                    Port = 587,
+                    UseDefaultCredentials = false,
+                    Credentials = new NetworkCredential("tarclearn@gmail.com", "tarclearn1122"),
+                    EnableSsl = true
+                };
+                smtp.Send(enrolmentEmail);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.StackTrace);
+            }
+
+            
+        }
+    }
+    internal class ChapterComparer : IComparer<ChapterDetailDto>
+    {
+        public int Compare(ChapterDetailDto x, ChapterDetailDto y)
+        {
+            var a = double.Parse(x.chapterNo);
+            var b = double.Parse(y.chapterNo);
             if (a > b) return 1;
             if (a < b) return -1;
             return 0;
         }
     }
+
+    
 }
