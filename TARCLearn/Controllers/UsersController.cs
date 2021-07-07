@@ -158,6 +158,7 @@ namespace TARCLearn.Controllers
                 if (user == null)
                 {
                     return Content(HttpStatusCode.NotFound, $"User {id} not found");
+                    
                 }
                 var discussions = db.DiscussionThreads.Include(d => d.User)
                     .Where(d => d.userId == id)
@@ -171,6 +172,7 @@ namespace TARCLearn.Controllers
                         chapterId = t.chapterId
                     }).ToHashSet();
                 var commentedDiscussions = db.DiscussionMessages.Include(dm => dm.DiscussionThread)
+                    .Where(dm => dm.userId == id) 
                     .Include(dm => dm.User).Select(
                     dm => new DiscussionThreadDetailDto
                     {

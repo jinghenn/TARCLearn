@@ -15,11 +15,11 @@ namespace TARCLearn.App_Pages
     public partial class questionList : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
-        {
-            
+        {            
 
             if (!IsPostBack)
             {
+                Session["quesNo"] = "0";
                 if (Session["editQuiz"] == null)
                 {
                     Session["editQuiz"] = "false";
@@ -75,8 +75,13 @@ namespace TARCLearn.App_Pages
                 Repeater rptEditChoice = (Repeater)e.Item.FindControl("rptEditChoice");
                 LinkButton btnEditQuesText = (LinkButton)e.Item.FindControl("btnEditQuesText");
                 LinkButton btnAddChoice = (LinkButton)e.Item.FindControl("btnAddChoice");
-
+                TextBox txtQuesText = (TextBox)e.Item.FindControl("txtQuesText");
                 string questionId = DataBinder.Eval(e.Item.DataItem, "questionId").ToString();
+                string questionText = DataBinder.Eval(e.Item.DataItem, "questionText").ToString();
+
+                int questionNo = Convert.ToInt32(Session["quesNo"].ToString()) + 1;
+                Session["quesNo"] = questionNo;
+                txtQuesText.Text = Convert.ToString(questionNo) + ".) " + questionText;
 
                 string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
                 string providerConStr = new EntityConnectionStringBuilder(conStr).ProviderConnectionString;
@@ -195,7 +200,20 @@ namespace TARCLearn.App_Pages
             if (Page.IsValid)
             {
 
-                Response.Redirect("Courses.aspx");
+                string quizId = Request.QueryString["quizId"];
+                string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
+                string providerConStr = new EntityConnectionStringBuilder(conStr).ProviderConnectionString;
+                SqlConnection quizCon = new SqlConnection(providerConStr);
+                quizCon.Open();          
+
+                String strGetChp = "Select chapterId FROM Quiz Where quizId=@quizId;";
+                SqlCommand cmdGetChp = new SqlCommand(strGetChp, quizCon);
+                cmdGetChp.Parameters.AddWithValue("@quizId", quizId);
+                string chapterId = Convert.ToString(cmdGetChp.ExecuteScalar());
+
+                quizCon.Close();
+                String url = "quiz.aspx?chapterId=" + chapterId;
+                Response.Redirect(url);
 
 
             }

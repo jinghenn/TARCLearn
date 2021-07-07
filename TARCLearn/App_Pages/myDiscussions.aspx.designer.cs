@@ -24,15 +24,6 @@ namespace TARCLearn.App_Pages
         protected global::System.Web.UI.WebControls.Label lblTittle;
 
         /// <summary>
-        /// btnMore control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.ImageButton btnMore;
-
-        /// <summary>
         /// rptDis control.
         /// </summary>
         /// <remarks>
@@ -40,14 +31,5 @@ namespace TARCLearn.App_Pages
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Repeater rptDis;
-
-        /// <summary>
-        /// rptEditDiscussion control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptEditDiscussion;
     }
 }

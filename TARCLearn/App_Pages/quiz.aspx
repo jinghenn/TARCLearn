@@ -84,13 +84,13 @@
                     <div>
 
                         <asp:TextBox ID="txtQuizTitle" runat="server" style="width: 700px;" Text='<%# Eval("quizTitle") %>' Enabled="false" BorderStyle="None" BackColor="Transparent"  ></asp:TextBox>
-                    
-                        <div class=" rightButton"  role="group">
-                            <asp:LinkButton ID="btnEdit" CommandName="edit"  CssClass="btn btn-outline-info" runat="server" CausesValidation="false">Edit</asp:LinkButton>
-                            <asp:LinkButton ID="btnSave" CommandName="save" CommandArgument='<%# Eval("quizId")%>' CssClass="btn btn-outline-success " runat="server"  Visible="False" ValidationGroup="Edit">Save</asp:LinkButton>
-                            <asp:LinkButton ID="btnCancel" CommandName="cancel"  CssClass="btn btn-outline-danger " runat="server"  Visible="False" CausesValidation="false">Cancel</asp:LinkButton>
-                            <asp:LinkButton ID="btnDelete" CommandName="delete" CommandArgument='<%# Eval("quizId")%>' CssClass="btn btn-danger" runat="server"  Visible="False" CausesValidation="false" OnClientClick='return confirm("Are you sure you want to delete this item?");'>Delete</asp:LinkButton>
-                        </div> 
+                        <asp:ImageButton ID="btnDelete" CssClass="rightButton" CommandName="delete" CommandArgument='<%# Eval("quizId")%>' Height="15px" Width="15px" runat="server" ImageUrl="~/images/delete_icon.png" Visible="True" CausesValidation="false" OnClientClick='return confirm("Are you sure you want to delete this item?");'/> 
+                        <asp:ImageButton ID="btnEdit" CssClass="rightButton" CommandName="edit" CommandArgument='<%# Eval("quizId")%>' Height="15px" Width="15px" runat="server" ImageUrl="~/images/edit_icon.png" CausesValidation="false"/>                
+                        <asp:ImageButton ID="btnCancel" CssClass="rightButton" CommandName="cancel" Height="15px" Width="15px" runat="server" ImageUrl="~/images/delete2_icon.png" Visible="False" CausesValidation="false"/>                
+                        <asp:ImageButton ID="btnSave" CssClass="rightButton" CommandName="save" CommandArgument='<%# Eval("quizId")%>' Height="15px" Width="15px" runat="server" ImageUrl="~/images/save_icon.png"  Visible="False" ValidationGroup="Edit"/>                
+
+
+                        
                     </div>
                     
                     <div>

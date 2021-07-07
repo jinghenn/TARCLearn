@@ -131,7 +131,7 @@
             <asp:Label ID="lblResult" runat="server" Font-Size="XX-Large" Font-Bold="True"></asp:Label>
           </div>
           <div class="modal-footer">
-            <asp:Button CssClass="btn btn-success" runat="server" OnClick="quizResultFormSubmitClicked" Text="Return back to Homepage." />
+            <asp:Button CssClass="btn btn-success" runat="server" OnClick="quizResultFormSubmitClicked" Text="Return back to Quiz List." />
             
           </div>
         </div>
@@ -149,7 +149,7 @@
             <ItemTemplate>
                 <div class="questionBox">
                     <div>
-                            <asp:TextBox ID="txtQuesText" Text='<%# Eval("questionText")%>' runat="server"  Width="70%" Enabled="false" BorderStyle="None" BackColor="Transparent" TextMode="MultiLine" Rows="2" ></asp:TextBox>
+                            <asp:TextBox ID="txtQuesText"  runat="server"  Width="70%" Enabled="false" BorderStyle="None" BackColor="Transparent" TextMode="MultiLine" Rows="2" ></asp:TextBox>
                             <div class=" rightButton "  role="group">
                                 <asp:LinkButton ID="btnEditQuesText" CommandName="edit" CommandArgument='<%# Eval("questionId")%>' CssClass="btn btn-outline-info" runat="server" CausesValidation="false"  Visible="False">Edit</asp:LinkButton>
                                 <asp:LinkButton ID="btnAddChoice" CommandName="add" CommandArgument='<%# Eval("questionId")%>' CssClass="btn btn-outline-secondary " runat="server"  Visible="False" ValidationGroup="Edit" >Add Choice</asp:LinkButton>

@@ -36,7 +36,6 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <div class="label1">
       <asp:Label ID="lblTittle" runat="server" Font-Bold="true" Font-Size="Large">DiscussionThread</asp:Label> 
-      <asp:ImageButton ID="btnMore" CssClass="rightButton" Height="15px" Width="15px" runat="server" ImageUrl="~/images/more_icon.png" OnClick="btnMore_Click" /> 
     </div>
     
     <asp:Repeater ID="rptDis" runat="server" OnItemCommand="courseRepeater_ItemCommand" >
@@ -48,25 +47,7 @@
        </ItemTemplate>
    </asp:Repeater>    
 
-    <asp:Repeater ID="rptEditDiscussion" runat="server"  Visible="False" OnItemCommand="rptEditDiscussion_ItemCommand" >
-            <ItemTemplate>
-                <div style="padding:12.5px 0 12.5px 30px; height: 70px;">
-                    <div>
-                        <asp:TextBox ID="txtDiscussionTitle" runat="server" style="width: 700px;" Text='<%# Eval("threadTitle") %>' Enabled="false" BorderStyle="None" BackColor="Transparent"  ></asp:TextBox>
-                        <asp:ImageButton ID="btnDelete" CssClass="rightButton" CommandName="delete" CommandArgument='<%# Eval("threadId")%>' Height="15px" Width="15px" runat="server" ImageUrl="~/images/delete_icon.png" Visible="True" CausesValidation="false" OnClientClick='return confirm("Are you sure you want to delete this item?");'/> 
-                        <asp:ImageButton ID="btnEdit" CssClass="rightButton" CommandName="edit" CommandArgument='<%# Eval("threadId")%>' Height="15px" Width="15px" runat="server" ImageUrl="~/images/edit_icon.png" CausesValidation="false"/>                
-                        <asp:ImageButton ID="btnCancel" CssClass="rightButton" CommandName="cancel" Height="15px" Width="15px" runat="server" ImageUrl="~/images/delete2_icon.png" Visible="False" CausesValidation="false"/>                
-                        <asp:ImageButton ID="btnSave" CssClass="rightButton" CommandName="save" CommandArgument='<%# Eval("threadId")%>' Height="15px" Width="15px" runat="server" ImageUrl="~/images/save_icon.png"  Visible="False" ValidationGroup="Edit"/>                
-                       
-                    </div>
-                    
-                    <div>
-                        <asp:RequiredFieldValidator ValidationGroup="Edit" ForeColor="Red" Display="Dynamic" ID="rfvtxtDiscussionTitle" runat="server" ErrorMessage=" - Course Title Cannot Be Blank" ControlToValidate="txtDiscussionTitle" ></asp:RequiredFieldValidator>
-                    </div>
-                </div>
-            
-            </ItemTemplate>
-        </asp:Repeater>
+   
 
         
       

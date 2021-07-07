@@ -64,10 +64,10 @@ namespace TARCLearn.App_Pages
 
             TextBox txtQuizTitle = (TextBox)e.Item.FindControl("txtQuizTitle");
 
-            LinkButton btnEdit = (LinkButton)e.Item.FindControl("btnEdit");           
-            LinkButton btnSave = (LinkButton)e.Item.FindControl("btnSave");
-            LinkButton btnCancel = (LinkButton)e.Item.FindControl("btnCancel");
-            LinkButton btnDelete = (LinkButton)e.Item.FindControl("btnDelete");
+            ImageButton btnEdit = (ImageButton)e.Item.FindControl("btnEdit");
+            ImageButton btnSave = (ImageButton)e.Item.FindControl("btnSave");
+            ImageButton btnCancel = (ImageButton)e.Item.FindControl("btnCancel");
+            ImageButton btnDelete = (ImageButton)e.Item.FindControl("btnDelete");
 
             string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
             string providerConStr = new EntityConnectionStringBuilder(conStr).ProviderConnectionString;
@@ -95,7 +95,7 @@ namespace TARCLearn.App_Pages
                 btnEdit.Visible = false;               
                 btnSave.Visible = true;
                 btnCancel.Visible = true;
-                btnDelete.Visible = true;
+                btnDelete.Visible = false;
 
             }
             if (e.CommandName == "save")
@@ -110,7 +110,7 @@ namespace TARCLearn.App_Pages
                     btnEdit.Visible = true;
                     btnSave.Visible = false;
                     btnCancel.Visible = false;
-                    btnDelete.Visible = false;
+                    btnDelete.Visible = true;
 
                     SqlCommand cmdSelect = new SqlCommand("Select * from [dbo].[Quiz] where quizTitle=@quizTitle", quizCon);
                     cmdSelect.Parameters.AddWithValue("@quizTitle", txtQuizTitle.Text);
