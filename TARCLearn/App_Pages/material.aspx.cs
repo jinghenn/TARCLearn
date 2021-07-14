@@ -21,6 +21,7 @@ namespace TARCLearn.App_Pages
             {
                 string chapterId = Request.QueryString["chapterId"];
                 string materialType = Request.QueryString["materialType"];
+                
                 if (Session["isDel"] == null)
                 {
                     Session["isDel"] = "false";
@@ -31,11 +32,13 @@ namespace TARCLearn.App_Pages
                 {
                     isVideo = true;
                     lblTittle.Text = "Video";
+                    lblMaterial.Text = "Video";
                     lblSupport.Text = "Supported file extensions : .flv, .mov, .wmv, .avi, .avchd, .f4v, .swf, .mkv, .webm, .html5', .mpeg-2 and .mp4";
                 }
                 else
                 {
                     isVideo = false;
+                    lblMaterial.Text = "Material";
                     lblSupport.Text = "Supported file extensions : .pdf, .pptx, .doc, .docx, .xlsx, .jpg, .jpeg and .png";
                 }
 
@@ -45,9 +48,15 @@ namespace TARCLearn.App_Pages
                 SqlConnection materialCon = new SqlConnection(providerConStr);
                 materialCon.Open();
 
+                SqlCommand cmdGetCourseId = new SqlCommand("Select courseId from [dbo].[Chapter] where chapterId=@chapterId;", materialCon);
+                cmdGetCourseId.Parameters.AddWithValue("@chapterId", chapterId);
+                string courseId = Convert.ToString(cmdGetCourseId.ExecuteScalar());
+
+                lblHome.Text = "<a href = 'course.aspx'> Home </a>";
+                lblChp.Text = "<a href = 'Chapter.aspx?courseId=" + courseId + "'> Chapter </a>";
+                
+
                 //select data to be bound
-                
-                
 
                 TARCLearnEntities db = new TARCLearnEntities();
                 int chapterIdINT = Convert.ToInt32(chapterId);

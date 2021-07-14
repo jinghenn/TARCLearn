@@ -63,6 +63,13 @@
         </div>
 
     <div class="main main-raised" >
+      <nav aria-label="breadcrumb" style="--bs-breadcrumb-divider: '>'; padding: 10px 0 0 30px; height:41px; background-color:#F5F5F5;">
+       <ol class="breadcrumb">
+         <li class="breadcrumb-item"><asp:Label ID="lblHome" runat="server"/></li>
+         <li class="breadcrumb-item"><asp:Label ID="lblChp" runat="server"/></li>
+         <li class="breadcrumb-item active" aria-current="page">Quizs</li>
+       </ol>
+     </nav>
         <div class="label1">
             <asp:Label ID="lblTittle" runat="server" Font-Bold="true" Font-Size="Large">Quizs</asp:Label> 
             <asp:ImageButton ID="btnMore" CssClass="rightButton" Height="15px" Width="15px" runat="server" ImageUrl="~/images/more_icon.png" OnClick="btnMore_Click" /> 

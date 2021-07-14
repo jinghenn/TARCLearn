@@ -40,6 +40,13 @@ namespace TARCLearn.App_Pages
                 rptEditDiscussion.DataSource = cmdSelectEditDis.ExecuteReader();
                 rptEditDiscussion.DataBind();
 
+                SqlCommand cmdGetCourseId = new SqlCommand("Select courseId from [dbo].[Chapter] where chapterId=@chapterId;", disCon);
+                cmdGetCourseId.Parameters.AddWithValue("@chapterId", chapterId);
+                string courseId = Convert.ToString(cmdGetCourseId.ExecuteScalar());
+
+                lblHome.Text = "<a href = 'course.aspx'> Home </a>";
+                lblChp.Text = "<a href = 'Chapter.aspx?courseId=" + courseId + "'> Chapter </a>";
+
                 disCon.Close();
             }
         }

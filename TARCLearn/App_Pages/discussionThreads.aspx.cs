@@ -16,9 +16,7 @@ namespace TARCLearn.App_Pages
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
-            {
-                
-
+            {               
                 string threadId = Request.QueryString["threadId"];
 
                 string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
@@ -71,6 +69,19 @@ namespace TARCLearn.App_Pages
                         btnDeleteDT.Visible = false;
                     }
                 }
+
+                SqlCommand cmdGetChpId = new SqlCommand("Select chapterId from [dbo].[DiscussionThread] where threadId=@threadId;", threadCon);
+                cmdGetChpId.Parameters.AddWithValue("@threadId", threadId);
+                string chapterId = Convert.ToString(cmdGetChpId.ExecuteScalar());
+
+                SqlCommand cmdGetCourseId = new SqlCommand("Select courseId from [dbo].[Chapter] where chapterId=@chapterId;", threadCon);
+                cmdGetCourseId.Parameters.AddWithValue("@chapterId", chapterId);
+                string courseId = Convert.ToString(cmdGetCourseId.ExecuteScalar());                
+               
+                lblHome.Text = "<a href = 'course.aspx'> Home </a>";
+                lblChp.Text = "<a href = 'Chapter.aspx?courseId=" + courseId + "'> Chapter </a>";
+                lblDis.Text = "<a href = 'Discussion.aspx?chapterId=" + chapterId + "'> Discussion Thread </a>";
+                lblDisTitle.Text = title;
 
                 threadCon.Close();
             }

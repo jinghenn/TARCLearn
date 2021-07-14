@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/App_Pages/TARCLearn.Master" AutoEventWireup="true" CodeBehind="course.aspx.cs" Inherits="TARCLearn.App_Pages.course" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <style>
-       .button1 {
+        .button1 {
             background-color: white;
             text-align: left;
             border-radius: 0px;
@@ -17,11 +17,13 @@
                 background-color: #D6E4F1; /* light blue */
                 color: #0275d8;
             }
-        .label1{
+        
+         .label1{
             width: 100%;            
             height: 70px; 
             padding:25px 0 0 30px;
-        }
+           
+         }
 
         .rightButton{
               float: right;
@@ -44,6 +46,7 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    
      <div class="modal fade bd-example-modal-lg" id="createCourseForm">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -88,7 +91,7 @@
                 </div>
             </div>
         </div>
-    <div class="modal fade bd-example-modal-lg" id="editCourseForm">
+    <div class="modal fade bd-example-modal-lg" id="editCourseForm">       
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -133,9 +136,14 @@
             </div>
         </div>
     <div class="main main-raised" >
+        <nav style="--bs-breadcrumb-divider: '>';  padding: 10px 0 0 30px; height:41px; background-color:#F5F5F5;" aria-label="breadcrumb" >
+              <ol class="breadcrumb">       
+                <li class="breadcrumb-item active"  aria-current="page">Home</li>
+              </ol>
+            </nav>
         <div class="label1">
             <asp:Label ID="lblTittle" runat="server" Font-Bold="true" Font-Size="Large">Courses</asp:Label> 
-            <asp:ImageButton ID="btnMore" CssClass="rightButton" Height="15px" Width="15px" runat="server" ImageUrl="~/images/more_icon.png" OnClick="btnMore_Click" /> 
+            <asp:ImageButton ID="btnMore" CssClass="rightButton"  Height="15px" Width="15px" runat="server" ImageUrl="~/images/more_icon.png" OnClick="btnMore_Click" /> 
             <asp:ImageButton ID="btnCreate" CssClass="rightButton" Height="15px" Width="15px" runat="server" ImageUrl="~/images/add_icon.png"  data-toggle="modal" data-target="#createCourseForm" OnClientClick="return false;" />        
         </div>
     

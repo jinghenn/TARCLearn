@@ -33,6 +33,24 @@ namespace TARCLearn.App_Pages
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvFormQuizTitle;
 
         /// <summary>
+        /// lblHome control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblHome;
+
+        /// <summary>
+        /// lblChp control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblChp;
+
+        /// <summary>
         /// lblTittle control.
         /// </summary>
         /// <remarks>

@@ -34,6 +34,12 @@
    </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+     <nav aria-label="breadcrumb" style="--bs-breadcrumb-divider: '>'; padding: 10px 0 0 30px; height:41px; background-color:#F5F5F5;">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="course.aspx">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">My Discussions</li>
+          </ol>
+      </nav>
     <div class="label1">
       <asp:Label ID="lblTittle" runat="server" Font-Bold="true" Font-Size="Large">DiscussionThread</asp:Label> 
     </div>

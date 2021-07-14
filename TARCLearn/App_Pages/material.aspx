@@ -232,9 +232,16 @@
         </div>
 
     <div class="main main-raised" >
+        <nav aria-label="breadcrumb" style="--bs-breadcrumb-divider: '>'; padding: 10px 0 0 30px; height:41px; background-color:#F5F5F5;">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><asp:Label ID="lblHome" runat="server"/></li>
+             <li class="breadcrumb-item"><asp:Label ID="lblChp" runat="server"/></li>
+            <li class="breadcrumb-item active" aria-current="page"><asp:Label ID="lblMaterial" runat="server"/></li>
+          </ol>
+        </nav>
 <%-- title   --%>
       <div class="label1">
-         <asp:Label ID="lblTittle" runat="server" Font-Bold="true" Font-Size="Large">Reading Material</asp:Label>   
+         <asp:Label ID="lblTittle" runat="server" Font-Bold="true" Font-Size="Large">Material</asp:Label>   
          <asp:ImageButton ID="btnMore" CssClass="rightButton" runat="server" ImageUrl="~/images/more_icon.png"  Height="15px" Width="15px" OnClick="btnMore_Click"   /> 
          <asp:ImageButton ID="btnAdd" CssClass="rightButton" runat="server" ImageUrl="~/images/add_icon.png"   Height="15px" Width="15px" data-toggle="modal" data-target="#modalForm" OnClientClick="return false;" />
       </div>

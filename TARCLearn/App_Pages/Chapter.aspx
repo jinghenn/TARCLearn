@@ -37,13 +37,14 @@
                 background-color: #D6E4F1; /* light blue */
                 color: #0275d8;
             }
-        
-           
+                 
 
+         
          .label1{
             width: 100%;            
             height: 70px; 
             padding:25px 0 0 30px;
+           
          }
          .rightButton{
               float: right;
@@ -56,7 +57,7 @@
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <div class="modal fade bd-example-modal-lg" id="modalForm">
+    <div class="modal fade bd-example-modal-lg" id="modalForm" >
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -94,11 +95,16 @@
         </div>
 
     <div class="main main-raised" >
-
+        <nav aria-label="breadcrumb" style="--bs-breadcrumb-divider: '>'; padding: 10px 0 0 30px; height:41px; background-color:#F5F5F5;">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="course.aspx">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Chapter</li>
+          </ol>
+        </nav>
         <div class="label1">
             <asp:Label ID="lblTittle" runat="server" Font-Bold="true" Font-Size="Large">Chapter</asp:Label>
-             <asp:ImageButton ID="btnMore" CssClass="rightButton" runat="server" ImageUrl="~/images/more_icon.png" Height="15px" Width="15px" OnClick="btnDeleteChapter_Click"  /> 
-             <asp:ImageButton ID="btnAdd" CssClass="rightButton" runat="server" ImageUrl="~/images/add_icon.png"  data-toggle="modal" data-target="#modalForm" Height="15px" Width="15px" OnClientClick="return false;" />
+             <asp:ImageButton ID="btnMore" CssClass="rightButton" runat="server"  ImageUrl="~/images/more_icon.png" Height="15px" Width="15px" OnClick="btnDeleteChapter_Click"  /> 
+             <asp:ImageButton ID="btnAdd" CssClass="rightButton" runat="server"  ImageUrl="~/images/add_icon.png"  data-toggle="modal" data-target="#modalForm" Height="15px" Width="15px" OnClientClick="return false;" />
         </div>
 
         <asp:Repeater ID="chpRepeater" runat="server" OnItemCommand="chapterRepeater_ItemCommand" >
