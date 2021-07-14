@@ -36,7 +36,7 @@ namespace TARCLearn.App_Pages
                 else
                 {
                     isVideo = false;
-                    lblSupport.Text = "Supported file extensions : .pdf, .pptx, .docx, .xlsx, .jpg, .jpeg and .png";
+                    lblSupport.Text = "Supported file extensions : .pdf, .pptx, .doc, .docx, .xlsx, .jpg, .jpeg and .png";
                 }
 
 
@@ -427,7 +427,7 @@ namespace TARCLearn.App_Pages
                 TARCLearnEntities db = new TARCLearnEntities();
                 int chapterIdINT = Convert.ToInt32(chapterId);
                 int newIndex = Convert.ToInt32(formIndex.Text);
-                var dtrMaterialIndex = db.Materials.Where(m => m.chapterId == chapterIdINT).Where(m => m.mode == ddlFormEditMaterialMode.SelectedValue).Where(m => m.index == newIndex);
+                var dtrMaterialIndex = db.Materials.Where(m => m.chapterId == chapterIdINT).Where(m => m.mode == ddlFormEditMaterialMode.SelectedValue).Where(m => m.index == newIndex).Where(m => m.isVideo == isVideo);
 
 
                 if (!dtrMaterialTitle.HasRows && !fileInfo.Exists && !dtrMaterialIndex.Any())
