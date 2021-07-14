@@ -89,6 +89,7 @@
                 arguments.IsValid =
                     ((sFile.endsWith('.pdf')) ||
                     (sFile.endsWith('.pptx')) ||
+                    (sFile.endsWith('.doc')) ||
                     (sFile.endsWith('.docx')) ||
                     (sFile.endsWith('.xlsx')) ||
                     (sFile.endsWith('.jpg')) ||
