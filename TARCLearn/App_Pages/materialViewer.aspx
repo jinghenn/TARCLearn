@@ -6,9 +6,17 @@
     
    
 </asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server" >  
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server" >
+     <nav aria-label="breadcrumb" style="--bs-breadcrumb-divider: '>'; padding: 10px 0 0 30px; height:41px; background-color:#F5F5F5;">
+       <ol class="breadcrumb">
+         <li class="breadcrumb-item"><asp:Label ID="lblHome" runat="server"/></li>
+         <li class="breadcrumb-item"><asp:Label ID="lblChp" runat="server"/></li>
+         <li class="breadcrumb-item"><asp:Label ID="lblMaterial" runat="server"/></li>
+         <li class="breadcrumb-item active" aria-current="page"><asp:Label ID="lblMaterialName" runat="server"/></li>
+       </ol>
+     </nav>
      
-          <GleamTech:DocumentViewerControl runat="server" Width="100%"   Height="680"   ID="docViewer" />      
+     <GleamTech:DocumentViewerControl runat="server" Width="100%"   Height="639"   ID="docViewer" />      
 
  
   

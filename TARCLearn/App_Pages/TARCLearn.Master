@@ -12,15 +12,13 @@
             width:250px;
             height:100%;
         }
-        .image{
-            margin: 30px 0px 0px 30px;
-            border-radius: 50%
-        }
+       
         .label{
+            margin: 60px 0px 0px 0px;
             padding-left:30px;      
         }
         .button{
-            background-color:white;
+            background-color:#F8F8F8;
             text-align:left;
             padding-left:30px; 
             border-radius: 0px;
@@ -53,7 +51,7 @@
      
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <title>TARUC Education Repository</title>
+    <title>TARCLearn</title>
     <link rel="icon" href="favicon.ico">   
 </head>
 
@@ -63,7 +61,7 @@
             <div class="container-fluid ">                
                 <a class="navbar-brand">
                     <asp:Image ID="imgLogo" Width="30px" runat="server" ImageUrl="~/images/TARC_logo.png"/>
-                    TARUC Learn
+                    TARCLearn
                 </a>                  
                 <a class="navbar-nav justify-content-end navbar-brand" id="logoutLink" runat="server" href="Login.aspx" >Logout</a>                                
             </div>
@@ -71,10 +69,9 @@
         
         <table style="width:100%; " >
                     <tr >
-                        <td class="size shadow ">                      
-                           <asp:Panel ID="Panel1" runat="server" ScrollBars="Auto" HorizontalAlign="Left" style="min-height: 680px;">
+                        <td class="size shadow" style="background-color:#F8F8F8;">                      
+                           <asp:Panel ID="Panel1" runat="server" ScrollBars="Auto" HorizontalAlign="Left" style="min-height: 680px; background-color:#F8F8F8;">
                                 <asp:Panel ID="Panel2" runat="server"  HorizontalAlign="Left">
-                                    <asp:Image ID="imgUser" CssClass="image" runat="server" Width="50px" Height="50px" ImageUrl="~/images/TARC_logo.png"/>
                                       <div class="label">
                                          <asp:Label ID="lblUserName" CssClass="text" runat="server" Width="250px" Font-Bold="True" Font-Size="Large" Height="20px"  ></asp:Label>
                                          <asp:Label ID="lblUserType" runat="server" Width="250px"  ForeColor="#666666" Font-Size="Smaller" Height="20px"></asp:Label>
@@ -83,7 +80,7 @@
                                
                                  <asp:Button ID="btnCourses" runat="server" class=" button" Text="Courses" Width="280px" Height="70px" BorderWidth="0px" OnClick="btnCourses_Click" />
                                  <asp:Button ID="btnDN" runat="server" class=" button" Text="My Discussions" Width="280px" Height="70px" BorderWidth="0px" OnClick="btnDN_Click"/>                                                             
-                               <asp:Button ID="btnManage" runat="server" class=" button" Text="Manage Enrolment" Width="280px" Height="70px" BorderWidth="0px" OnClick="btnManage_Click" />  
+                               <asp:Button ID="btnManage" runat="server" class=" button" Text="Manage User" Width="280px" Height="70px" BorderWidth="0px" OnClick="btnManage_Click" />  
                             </asp:Panel>
                             
                         </td>
@@ -97,7 +94,7 @@
         <footer  style="min-height: 150px; background-color:#438EB9;">
             <div class="container">
                 <div style="padding: 20px 0px">
-                    <p class="text-white">&#169; TARUC Education Repository, 2021. All Rights Reserved    </div>
+                    <p class="text-white">&#169; TARCLearn, 2021. All Rights Reserved    </div>
             </div>
         </footer>
 

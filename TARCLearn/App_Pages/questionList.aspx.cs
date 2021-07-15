@@ -43,7 +43,21 @@ namespace TARCLearn.App_Pages
                 String strSelectTitle = "Select quizTitle FROM Quiz Where quizId=@quizId;";
                 SqlCommand cmdSelectTitle = new SqlCommand(strSelectTitle, quizCon);
                 cmdSelectTitle.Parameters.AddWithValue("@quizId", quizId);
-                lblTittle.Text = Convert.ToString(cmdSelectTitle.ExecuteScalar());
+                string title = Convert.ToString(cmdSelectTitle.ExecuteScalar());
+                lblTittle.Text = title;
+
+                SqlCommand cmdGetChpId = new SqlCommand("Select chapterId from [dbo].[Quiz] where quizId=@quizId;", quizCon);
+                cmdGetChpId.Parameters.AddWithValue("@quizId", quizId);
+                string chapterId = Convert.ToString(cmdGetChpId.ExecuteScalar());
+
+                SqlCommand cmdGetCourseId = new SqlCommand("Select courseId from [dbo].[Chapter] where chapterId=@chapterId;", quizCon);
+                cmdGetCourseId.Parameters.AddWithValue("@chapterId", chapterId);
+                string courseId = Convert.ToString(cmdGetCourseId.ExecuteScalar());
+
+                lblHome.Text = "<a href = 'course.aspx'> Home </a>";
+                lblChp.Text = "<a href = 'Chapter.aspx?courseId=" + courseId + "'> Chapter </a>";
+                lblQuiz.Text = "<a href = 'quiz.aspx?chapterId=" + chapterId + "'> Quizs </a>";
+                lblQues.Text = title;
 
                 quizCon.Close();
 

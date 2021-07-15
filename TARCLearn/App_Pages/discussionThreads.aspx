@@ -122,6 +122,14 @@
         </div>
 
     <div class="main main-raised" >
+        <nav aria-label="breadcrumb" style="--bs-breadcrumb-divider: '>'; padding: 10px 0 0 30px; height:41px; background-color:#F5F5F5;">
+       <ol class="breadcrumb">
+         <li class="breadcrumb-item"><asp:Label ID="lblHome" runat="server"/></li>
+         <li class="breadcrumb-item"><asp:Label ID="lblChp" runat="server"/></li>
+         <li class="breadcrumb-item"><asp:Label ID="lblDis" runat="server"/></li>
+         <li class="breadcrumb-item active" aria-current="page"><asp:Label ID="lblDisTitle" runat="server"/></li>
+       </ol>
+     </nav>
         <div class="label2"> 
             <div>
                 <asp:ImageButton ID="btnDeleteDT" CssClass="rightButton" Height="15px" Width="15px" runat="server" ImageUrl="~/images/delete_icon.png" OnClientClick='return confirm("Are you sure you want to delete this item?");' OnClick="btnDeleteDT_Click"/> 

@@ -26,6 +26,25 @@ namespace TARCLearn.App_Pages
             cmdSelectCourse.Parameters.AddWithValue("@materialId", materialId);
             viewVideoRepeater.DataSource = cmdSelectCourse.ExecuteReader();
             viewVideoRepeater.DataBind();
+
+            SqlCommand cmdGetChpId = new SqlCommand("Select chapterId from [dbo].[Material] where materialId=@materialId;", materialCon);
+            cmdGetChpId.Parameters.AddWithValue("@materialId", materialId);
+            string chapterId = Convert.ToString(cmdGetChpId.ExecuteScalar());
+
+            SqlCommand cmdGetCourseId = new SqlCommand("Select courseId from [dbo].[Chapter] where chapterId=@chapterId;", materialCon);
+            cmdGetCourseId.Parameters.AddWithValue("@chapterId", chapterId);
+            string courseId = Convert.ToString(cmdGetCourseId.ExecuteScalar());
+
+            SqlCommand cmdGetMtitle = new SqlCommand("Select materialTitle from [dbo].[Material] where materialId=@materialId;", materialCon);
+            cmdGetMtitle.Parameters.AddWithValue("@materialId", materialId);
+            lblMaterialName.Text = Convert.ToString(cmdGetMtitle.ExecuteScalar());
+
+            lblHome.Text = "<a href = 'course.aspx'> Home </a>";
+            lblChp.Text = "<a href = 'Chapter.aspx?courseId=" + courseId + "'> Chapter </a>";
+            lblMaterial.Text = "<a href = 'material.aspx?chapterId=" + chapterId + "&materialType=video'> Video </a>";
+
+
+            materialCon.Close();
         }
     }
 }

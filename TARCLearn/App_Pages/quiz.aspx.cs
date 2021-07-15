@@ -32,7 +32,12 @@ namespace TARCLearn.App_Pages
                 quizRepeater.DataSource = cmdSelectQuiz.ExecuteReader();
                 quizRepeater.DataBind();
 
+                SqlCommand cmdGetCourseId = new SqlCommand("Select courseId from [dbo].[Chapter] where chapterId=@chapterId;", quizCon);
+                cmdGetCourseId.Parameters.AddWithValue("@chapterId", chapterId);
+                string courseId = Convert.ToString(cmdGetCourseId.ExecuteScalar());
 
+                lblHome.Text = "<a href = 'course.aspx'> Home </a>";
+                lblChp.Text = "<a href = 'Chapter.aspx?courseId=" + courseId + "'> Chapter </a>";
 
                 String userType = Session["userType"].ToString();
                 if (userType == "Lecturer")
