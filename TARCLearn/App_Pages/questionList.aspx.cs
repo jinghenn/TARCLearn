@@ -74,6 +74,19 @@ namespace TARCLearn.App_Pages
 
 
         }
+
+        public void successMsg(string msg, string id)
+        {
+            System.Text.StringBuilder javaScript = new System.Text.StringBuilder();
+            string scriptKey = "SuccessMessage";
+            string url = "questionList.aspx?quizId=" + id;
+
+            javaScript.Append("var userConfirmation = window.confirm('" + "Successfully " + msg + "');\n");
+            javaScript.Append("window.location='" + url + "';");
+
+            ClientScript.RegisterStartupScript(this.GetType(), scriptKey, javaScript.ToString(), true);
+        }
+
         protected void quizRepeater_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
 
@@ -200,8 +213,7 @@ namespace TARCLearn.App_Pages
 
                 quizCon.Close();
 
-                String url = "questionList.aspx?quizId=" + quizId;
-                Response.Redirect(url);
+                successMsg("added", quizId);
 
 
             }
@@ -263,8 +275,7 @@ namespace TARCLearn.App_Pages
 
                 quizCon.Close();
 
-                String url = "questionList.aspx?quizId=" + quizId;
-                Response.Redirect(url);
+                successMsg("deleted", quizId);
             }
             if (e.CommandName == "edit")
             {
@@ -310,8 +321,7 @@ namespace TARCLearn.App_Pages
                         cmdEdit.ExecuteNonQuery();
 
                         quizCon.Close();
-                        String url = "questionList.aspx?quizId=" + quizId;
-                        Response.Redirect(url);
+                        successMsg("updated", quizId);
                     }
                     else if (dtr.HasRows)
                     {
@@ -372,8 +382,7 @@ namespace TARCLearn.App_Pages
 
                 quizCon.Close();
 
-                String url = "questionList.aspx?quizId=" + quizId;
-               Response.Redirect(url);
+                successMsg("added", quizId);
 
 
             }
@@ -416,8 +425,7 @@ namespace TARCLearn.App_Pages
                 cmdDel.Parameters.AddWithValue("@choiceId", choiceId);
                 cmdDel.ExecuteNonQuery();
                 quizCon.Close();
-                String url = "questionList.aspx?quizId=" + quizId;
-                Response.Redirect(url);
+                successMsg("deleted", quizId);
             }
             if (e.CommandName == "save")
             {
@@ -438,8 +446,7 @@ namespace TARCLearn.App_Pages
                     cmdEdit.Parameters.AddWithValue("@choiceId", choiceId);
                     cmdEdit.ExecuteNonQuery();
                     quizCon.Close();
-                    String url = "questionList.aspx?quizId=" + quizId;
-                    Response.Redirect(url);
+                    successMsg("updated", quizId);
 
                 }
 

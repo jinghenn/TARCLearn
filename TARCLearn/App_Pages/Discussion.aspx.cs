@@ -51,6 +51,18 @@ namespace TARCLearn.App_Pages
             }
         }
 
+        public void successMsg(string msg, string id)
+        {
+            System.Text.StringBuilder javaScript = new System.Text.StringBuilder();
+            string scriptKey = "SuccessMessage";
+            string url = "Discussion.aspx?chapterId=" + id;
+
+            javaScript.Append("var userConfirmation = window.confirm('" + "Successfully "+ msg + "');\n");
+            javaScript.Append("window.location='" + url + "';");
+
+            ClientScript.RegisterStartupScript(this.GetType(), scriptKey, javaScript.ToString(), true);
+        }
+
         protected void addDiscussionFormSubmitClicked(object sender, EventArgs e)
         {
             if (Page.IsValid)
@@ -83,8 +95,7 @@ namespace TARCLearn.App_Pages
                     cmdAddDis.ExecuteNonQuery();
                     disCon.Close();
                     disRepeater.DataBind();
-                    String url = "Discussion.aspx?chapterId=" + chapterId;
-                    Response.Redirect(url);
+                    successMsg("added", chapterId);
                 }
                 else
                 {
@@ -190,8 +201,7 @@ namespace TARCLearn.App_Pages
                 cmdDel.Parameters.AddWithValue("@threadId", threadId);
                 cmdDel.ExecuteNonQuery();
                 disCon.Close();
-                String url = "Discussion.aspx?chapterId=" + chapterId;
-                Response.Redirect(url);
+                successMsg("deleted", chapterId);
             }
             if (e.CommandName == "save")
             {
@@ -220,8 +230,7 @@ namespace TARCLearn.App_Pages
                         cmdEdit.Parameters.AddWithValue("@threadTitle", txtDiscussionTitle.Text);
                         cmdEdit.Parameters.AddWithValue("@threadId", threadId);
                         cmdEdit.ExecuteNonQuery();
-                        String url = "Discussion.aspx?chapterId=" + chapterId;
-                        Response.Redirect(url);
+                        successMsg("updated", chapterId);
                     }
                     else
                     {

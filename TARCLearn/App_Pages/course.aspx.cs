@@ -51,6 +51,18 @@ namespace TARCLearn.App_Pages
             }
         }
 
+        public void successMsg(string msg)
+        {
+            System.Text.StringBuilder javaScript = new System.Text.StringBuilder();
+            string scriptKey = "SuccessMessage";
+            string url = "course.aspx";
+
+            javaScript.Append("var userConfirmation = window.confirm('" + "Successfully " + msg + "');\n");
+            javaScript.Append("window.location='" + url + "';");
+
+            ClientScript.RegisterStartupScript(this.GetType(), scriptKey, javaScript.ToString(), true);
+        }
+
         protected void btnMore_Click(object sender, ImageClickEventArgs e)
         {
             if (rptManageCourse.Visible == false)
@@ -100,7 +112,8 @@ namespace TARCLearn.App_Pages
                     cmdDelCourse.ExecuteNonQuery();
                     courseCon.Close();
 
-                    Response.Redirect("course.aspx");
+                    successMsg("deleted");
+                                      
                 }
                 else
                 {
@@ -183,7 +196,7 @@ namespace TARCLearn.App_Pages
                     cmdEditCourse.Parameters.AddWithValue("@courseId", courseId);
                     cmdEditCourse.ExecuteNonQuery();
                     courseCon.Close();
-                    Response.Redirect("course.aspx");
+                    successMsg("updated");
                 }
                 else if (dtrCourseCode.HasRows && dtrCourseTitle.HasRows)
                 {
@@ -195,7 +208,7 @@ namespace TARCLearn.App_Pages
                         cmdEditCourse.Parameters.AddWithValue("@courseId", courseId);
                         cmdEditCourse.ExecuteNonQuery();
                         courseCon.Close();
-                        Response.Redirect("course.aspx");
+                        successMsg("updated");
                     }
                     else
                     {
@@ -213,7 +226,7 @@ namespace TARCLearn.App_Pages
                     cmdEditCourse.Parameters.AddWithValue("@courseId", courseId);
                     cmdEditCourse.ExecuteNonQuery();
                     courseCon.Close();
-                    Response.Redirect("course.aspx");
+                    successMsg("updated");
                 }
                 else if (dtrCourseCode.HasRows && (newCourseCode != currentCourseCode) && !dtrCourseTitle.HasRows)
                 {
@@ -230,7 +243,7 @@ namespace TARCLearn.App_Pages
                     cmdEditCourse.Parameters.AddWithValue("@courseId", courseId);
                     cmdEditCourse.ExecuteNonQuery();
                     courseCon.Close();
-                    Response.Redirect("course.aspx");
+                    successMsg("updated");
                 }
                 else if (!dtrCourseCode.HasRows && (newCourseTitle != currentCourseTitle) && dtrCourseTitle.HasRows)
                 {
@@ -294,7 +307,7 @@ namespace TARCLearn.App_Pages
                     cmdEnrolCourse.ExecuteNonQuery();
 
                     courseCon.Close();
-                    Response.Redirect("course.aspx");
+                    successMsg("added");
                 }
                 else if (dtrCourseCode.HasRows && dtrCourseTitle.HasRows)
                 {
