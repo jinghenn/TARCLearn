@@ -103,6 +103,16 @@ namespace TARCLearn.Controllers
                 {
                     return Content(HttpStatusCode.NotFound, "Course: " + courseId + " not found");
                 }
+                if(course.courseCode != updatedCourse.courseCode)
+                {
+                    var courseWithCourseCode = await entities.Courses.Where(c => c.courseCode == updatedCourse.courseCode).FirstOrDefaultAsync();
+                    if (courseWithCourseCode != null)
+                    {
+                        return Content(HttpStatusCode.Conflict, "Course with Course Code: " + updatedCourse.courseCode + " already exist");
+                    }
+                }
+                
+                course.courseCode = updatedCourse.courseCode;
                 course.courseTitle = updatedCourse.courseTitle;
                 course.courseDescription = updatedCourse.courseDescription;
                 await entities.SaveChangesAsync();
