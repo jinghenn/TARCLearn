@@ -61,6 +61,18 @@ namespace TARCLearn.App_Pages
             }
         }
 
+        public void successMsg(string msg, string id)
+        {
+            System.Text.StringBuilder javaScript = new System.Text.StringBuilder();
+            string scriptKey = "SuccessMessage";
+            string url = "quiz.aspx?chapterId=" + id;
+
+            javaScript.Append("var userConfirmation = window.confirm('" + "Successfully " + msg + "');\n");
+            javaScript.Append("window.location='" + url + "';");
+
+            ClientScript.RegisterStartupScript(this.GetType(), scriptKey, javaScript.ToString(), true);
+        }
+
         protected void rptDeleteQuiz_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
             string chapterId = Request.QueryString["chapterId"];
@@ -88,8 +100,7 @@ namespace TARCLearn.App_Pages
 
                 quizCon.Close();
 
-                String url = "quiz.aspx?chapterId=" + chapterId;
-                Response.Redirect(url);
+                successMsg("deleted", chapterId);
             }
             if (e.CommandName == "edit")
             {
@@ -133,8 +144,9 @@ namespace TARCLearn.App_Pages
                         cmdEdit.ExecuteNonQuery();
 
                         quizCon.Close();
-                        String url = "quiz.aspx?chapterId=" + chapterId;
-                        Response.Redirect(url);
+
+                        successMsg("updated", chapterId);
+                        
                     }
                     else if (dtr.HasRows)
                     {
@@ -198,8 +210,7 @@ namespace TARCLearn.App_Pages
                     cmdAdd.ExecuteNonQuery();
                     quizCon.Close();
 
-                    String url = "quiz.aspx?chapterId=" + chapterId;
-                    Response.Redirect(url);
+                    successMsg("added", chapterId);
                 }               
                 else if (dtr.HasRows)
                 {

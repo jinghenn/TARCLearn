@@ -39,7 +39,7 @@ namespace TARCLearn.App_Pages
                 {
                     isVideo = false;
                     lblMaterial.Text = "Material";
-                    lblSupport.Text = "Supported file extensions : .pdf, .pptx, .doc, .docx, .xlsx, .jpg, .jpeg and .png";
+                    lblSupport.Text = "Supported file extensions : .pdf, .ppt, .pptx, .doc, .docx, .xlsx, .jpg, .jpeg and .png";
                 }
 
 

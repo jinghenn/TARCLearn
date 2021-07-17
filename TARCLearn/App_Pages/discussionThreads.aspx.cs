@@ -86,6 +86,19 @@ namespace TARCLearn.App_Pages
                 threadCon.Close();
             }
         }
+
+        public void successMsg(string msg, string threadId, string chapterId)
+        {
+            System.Text.StringBuilder javaScript = new System.Text.StringBuilder();
+            string scriptKey = "SuccessMessage";
+            string url = "discussionThreads.aspx?threadId=" + threadId + "&chapterId=" + chapterId;
+
+            javaScript.Append("var userConfirmation = window.confirm('" + "Successfully " + msg + "');\n");
+            javaScript.Append("window.location='" + url + "';");
+
+            ClientScript.RegisterStartupScript(this.GetType(), scriptKey, javaScript.ToString(), true);
+        }
+
         protected void rptComment_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
 
@@ -130,6 +143,7 @@ namespace TARCLearn.App_Pages
         }
         protected void rptComment_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
+            string chapterId = Request.QueryString["chapterId"];
             string userId = Session["userId"].ToString();
             string threadId = Request.QueryString["threadId"];
             string messageId = e.CommandArgument.ToString();
@@ -170,9 +184,9 @@ namespace TARCLearn.App_Pages
                 cmdDel.Parameters.AddWithValue("@messageId", messageId);
                 cmdDel.ExecuteNonQuery();
                 threadCon.Close();
-                string chapterId = Request.QueryString["chapterId"];
-                String url = "discussionThreads.aspx?threadId=" + threadId + "&chapterId=" + chapterId;
-                Response.Redirect(url);
+                
+                successMsg( "deleted", threadId, chapterId);
+                
             }
             if (e.CommandName == "save")
             {
@@ -193,17 +207,14 @@ namespace TARCLearn.App_Pages
                     cmdEditMsg.Parameters.AddWithValue("@newMessage", txtDiscussionComment.Text);
                     cmdEditMsg.Parameters.AddWithValue("@messageId", messageId);
                     cmdEditMsg.ExecuteNonQuery();
-
-                    string chapterId = Request.QueryString["chapterId"];
-                    String url = "discussionThreads.aspx?threadId=" + threadId + "&chapterId=" + chapterId;
-                    Response.Redirect(url);
+                    
+                    successMsg("updated", threadId, chapterId);                    
 
                 }
 
             }
             if (e.CommandName == "cancel")
-            {
-                string chapterId = Request.QueryString["chapterId"];
+            {              
                 String url = "discussionThreads.aspx?threadId=" + threadId + "&chapterId=" + chapterId;
                 Response.Redirect(url);
             }
@@ -255,8 +266,15 @@ namespace TARCLearn.App_Pages
             threadCon.Close();
 
             string chapterId = Request.QueryString["chapterId"];
+            System.Text.StringBuilder javaScript = new System.Text.StringBuilder();
+            string scriptKey = "SuccessMessage";
             string url = "Discussion.aspx?chapterId=" + chapterId;
-            Response.Redirect(url);
+
+            javaScript.Append("var userConfirmation = window.confirm('" + "Successfully deleted!');\n");
+            javaScript.Append("window.location='" + url + "';");
+
+            ClientScript.RegisterStartupScript(this.GetType(), scriptKey, javaScript.ToString(), true);
+           
         }
 
         protected void btnEditDT_Click(object sender, ImageClickEventArgs e)
@@ -328,8 +346,8 @@ namespace TARCLearn.App_Pages
                     cmdAddDis.ExecuteNonQuery();
                     disCon.Close();
 
-                    string url = "discussionThreads.aspx?threadId=" + Request.QueryString["threadId"] + "&chapterId=" + chapterId;
-                    Response.Redirect(url);
+                    successMsg("updated", threadId, chapterId);
+                    
                 }
                 else if (dtrDisTitle.HasRows && dtrDisDesc.HasRows)
                 {
@@ -348,8 +366,7 @@ namespace TARCLearn.App_Pages
 
                     cmdEditDis.ExecuteNonQuery();
                     disCon.Close();
-                    string url = "discussionThreads.aspx?threadId=" + Request.QueryString["threadId"] + "&chapterId=" + chapterId;
-                    Response.Redirect(url);
+                    successMsg("updated", threadId, chapterId);
                 }
                 else if (dtrDisTitle.HasRows && (threadTitle != currentTitle) && !dtrDisDesc.HasRows)
                 {
@@ -366,8 +383,7 @@ namespace TARCLearn.App_Pages
 
                     cmdEditDis.ExecuteNonQuery();
                     disCon.Close();
-                    string url = "discussionThreads.aspx?threadId=" + Request.QueryString["threadId"] + "&chapterId=" + chapterId;
-                    Response.Redirect(url);
+                    successMsg("updated", threadId, chapterId);
                 }
                 else if (!dtrDisTitle.HasRows && (threadDescription != currentDesc) && dtrDisDesc.HasRows)
                 {

@@ -96,7 +96,7 @@ namespace TARCLearn.App_Pages
                             string from = "tarclearn@gmail.com"; //From address    
                             MailMessage message = new MailMessage(from, to);                           
 
-                            string mailbody = "You have been invite to new course" + courseCode + " " + courseTitle;
+                            string mailbody = "You have been invite to new course " + courseCode + " " + courseTitle;
                             message.Subject = "Invited to New Course";
                             message.Body = mailbody;
                             message.BodyEncoding = Encoding.UTF8;
@@ -154,7 +154,7 @@ namespace TARCLearn.App_Pages
                             string from = "tarclearn@gmail.com"; //From address    
                             MailMessage message = new MailMessage(from, to);
 
-                            string mailbody = "You have been drop from the course" + courseCode + " " + courseTitle;
+                            string mailbody = "You have been drop from the course " + courseCode + " " + courseTitle;
                             message.Subject = "Dropped from a Course";
                             message.Body = mailbody;
                             message.BodyEncoding = Encoding.UTF8;

@@ -14,7 +14,7 @@ namespace TARCLearn.App_Pages
     public partial class Chapter : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
-        {
+        {  
             if (!IsPostBack)
             {
                 
@@ -60,6 +60,17 @@ namespace TARCLearn.App_Pages
             
         }
 
+        public void successMsg(string msg, string id)
+        {
+            System.Text.StringBuilder javaScript = new System.Text.StringBuilder();
+            string scriptKey = "SuccessMessage";
+            string url = "Chapter.aspx?courseId=" + id;
+
+            javaScript.Append("var userConfirmation = window.confirm('" + "Successfully " + msg + "');\n");
+            javaScript.Append("window.location='" + url + "';");
+
+            ClientScript.RegisterStartupScript(this.GetType(), scriptKey, javaScript.ToString(), true);
+        }
         protected void chapterRepeater_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
             String chapter = e.CommandArgument.ToString();
@@ -136,6 +147,7 @@ namespace TARCLearn.App_Pages
         protected void rptDeleteChapter_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
             String chpId = e.CommandArgument.ToString();
+            string courseId = Request.QueryString["courseId"];
             TextBox txtChapterNo = (TextBox)e.Item.FindControl("txtChapterNo");
             TextBox txtChapterTitle = (TextBox)e.Item.FindControl("txtChapterTitle");
 
@@ -183,9 +195,8 @@ namespace TARCLearn.App_Pages
 
                 chpCon.Close();
 
-                string courseId = Request.QueryString["courseId"];
-                String url = "Chapter.aspx?courseId=" + courseId;
-                Response.Redirect(url);
+                System.Text.StringBuilder javaScript = new System.Text.StringBuilder();
+                successMsg("deleted", courseId);
 
             }
             if (e.CommandName == "save")
@@ -227,9 +238,8 @@ namespace TARCLearn.App_Pages
                         cmdEditCourse.ExecuteNonQuery();
                          
                         chpCon.Close();
-                        string courseId = Request.QueryString["courseId"];
-                        String url = "Chapter.aspx?courseId=" + courseId;
-                        Response.Redirect(url);
+                        System.Text.StringBuilder javaScript = new System.Text.StringBuilder();
+                        successMsg("updated", courseId);
                     }
                     else if (dtrChapterNo.HasRows && dtrChapterTitle.HasRows)
                     {
@@ -246,9 +256,8 @@ namespace TARCLearn.App_Pages
                         cmdEditCourse.ExecuteNonQuery();
 
                         chpCon.Close();
-                        string courseId = Request.QueryString["courseId"];
-                        String url = "Chapter.aspx?courseId=" + courseId;
-                        Response.Redirect(url);
+                        System.Text.StringBuilder javaScript = new System.Text.StringBuilder();
+                        successMsg("updated", courseId);
                     }
                     else if (dtrChapterNo.HasRows && (txtChapterNo.Text != currentChpNo) && !dtrChapterTitle.HasRows)
                     {
@@ -265,9 +274,7 @@ namespace TARCLearn.App_Pages
                         cmdEditCourse.ExecuteNonQuery();
 
                         chpCon.Close();
-                        string courseId = Request.QueryString["courseId"];
-                        String url = "Chapter.aspx?courseId=" + courseId;
-                        Response.Redirect(url);
+                        successMsg("updated", courseId);
                     }
                     else if (!dtrChapterNo.HasRows && (txtChapterTitle.Text != currentChpTitle) && dtrChapterTitle.HasRows)
                     {
@@ -284,7 +291,7 @@ namespace TARCLearn.App_Pages
             if (e.CommandName == "cancel")
             {
                 chpCon.Close();
-                string courseId = Request.QueryString["courseId"];
+                
                 String url = "Chapter.aspx?courseId=" + courseId;
                 Response.Redirect(url);
 
@@ -324,8 +331,7 @@ namespace TARCLearn.App_Pages
                     cmdAddChapter.ExecuteNonQuery();
                     courseCon.Close();
                     chpRepeater.DataBind();
-                    String url = "Chapter.aspx?courseId=" + courseId;
-                    Response.Redirect(url);
+                    successMsg("added", courseId);
                 }
                 else if (dtrChpNo.HasRows && dtrChpTitle.HasRows)
                 {
