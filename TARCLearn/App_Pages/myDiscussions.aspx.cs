@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -23,11 +24,23 @@ namespace TARCLearn.App_Pages
                 TARCLearnEntities db = new TARCLearnEntities();
 
                 HttpClient client = new HttpClient();
-                client.BaseAddress = new Uri("https://localhost:44348/api/"); //change the base address to match your current address
-
-                var userId = Session["userId"].ToString(); //change to any user id
-                var consumeApi = client.GetAsync($"users/{userId}/discussions");
-                consumeApi.Wait();
+                Task<HttpResponseMessage> consumeApi;
+                try
+                {
+                    client.BaseAddress = new Uri("https://localhost:44348/api/"); //change the base address to match your current address
+                    var userId = Session["userId"].ToString(); //change to any user id
+                    consumeApi = client.GetAsync($"users/{userId}/discussions");
+                    consumeApi.Wait();
+                }
+                catch 
+                {
+                    client = new HttpClient();
+                    client.BaseAddress = new Uri("http://192.168.0.72:50000/api/");
+                    var userId = Session["userId"].ToString(); //change to any user id
+                    consumeApi = client.GetAsync($"users/{userId}/discussions");
+                    consumeApi.Wait();
+                }
+                
                 var result = consumeApi.Result;
                 if (result.IsSuccessStatusCode)
                 {
