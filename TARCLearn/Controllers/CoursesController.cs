@@ -9,6 +9,7 @@ using System.Web.Http.Description;
 using System.Threading.Tasks;
 using TARCLearn.Models;
 using System.Net.Mail;
+using System.Web;
 //using System.Linq.Dynamic.Core;
 namespace TARCLearn.Controllers
 {
@@ -179,40 +180,94 @@ namespace TARCLearn.Controllers
 
         }
 
-        [HttpDelete]
-        [Route("api/courses/unenrol")]
-        public async Task<IHttpActionResult> DeleteEnrolment(int courseId, string userId)
+        [HttpPut]
+        [Route("api/courses/{courseId}/unenrol")]
+        [ResponseType(typeof(IEnumerable<string>))]
+        public async Task<IHttpActionResult> DeleteEnrolment(int courseId, [FromBody] List<string> emailList, string requesterEmail)
         {
-            TARCLearnEntities entities = new TARCLearnEntities();
             try
             {
-                var course = await entities.Courses.Include(c => c.Users)
-                    .FirstOrDefaultAsync(c => c.courseId == courseId);
-                var user = await entities.Users.FirstOrDefaultAsync(u => u.userId == userId);
-                if (course == null || user == null)
+                TARCLearnEntities db = new TARCLearnEntities();
+                var course = db.Courses.Include(c => c.Users).FirstOrDefault(c => c.courseId == courseId);
+                if (course == null)
                 {
-                    return Content(HttpStatusCode.NotFound, "Course: " + courseId + " does not exist.");
+                    return Content(HttpStatusCode.NotFound, "course" + courseId + " not found.");
                 }
-                if (user == null)
+                requesterEmail = HttpUtility.UrlDecode(requesterEmail);
+                var failedEmail = new List<string>();
+                var successedEmail = new List<string>();
+                bool failFlag = false;
+                foreach (string email in emailList)
                 {
-                    return Content(HttpStatusCode.NotFound, "User: " + userId + " does not exist.");
+                    if(email == requesterEmail)
+                    {
+                        failFlag = true;
+                        failedEmail.Add(email);
+                        continue;
+                    }
+                    var currentUser = db.Users.Where(u => u.email == email).FirstOrDefault();
+                    if (currentUser == null || !(course.Users.Any(u => u.Equals(currentUser))))
+                    {
+                        failFlag = true;
+                        failedEmail.Add(email);
+                        continue;
+                    }
+                    course.Users.Remove(currentUser);
+                    successedEmail.Add(email);
                 }
-                if (!(course.Users.Contains(user)))
+                await db.SaveChangesAsync();
+                //SendEnrolmentEmail(successedEmail, $"{course.courseCode} {course.courseTitle}");
+                if (failFlag)
                 {
-                    return Content(HttpStatusCode.NotFound, "User: " + userId + " not in course: " + courseId);
+                    IEnumerable<string> mList = failedEmail;
+                    return Content(HttpStatusCode.NotFound, mList);
                 }
 
-                course.Users.Remove(user);
-                await entities.SaveChangesAsync();
+                return Ok(emailList);
 
-                return Ok();
             }
             catch (Exception e)
             {
-                return Content(HttpStatusCode.BadRequest, e.ToString());
+                return Content(HttpStatusCode.BadRequest, e);
             }
 
+
         }
+
+        //[HttpDelete]
+        //[Route("api/courses/unenrol")]
+        //public async Task<IHttpActionResult> DeleteEnrolment(int courseId, string userId)
+        //{
+        //    TARCLearnEntities entities = new TARCLearnEntities();
+        //    try
+        //    {
+        //        var course = await entities.Courses.Include(c => c.Users)
+        //            .FirstOrDefaultAsync(c => c.courseId == courseId);
+        //        var user = await entities.Users.FirstOrDefaultAsync(u => u.userId == userId);
+        //        if (course == null || user == null)
+        //        {
+        //            return Content(HttpStatusCode.NotFound, "Course: " + courseId + " does not exist.");
+        //        }
+        //        if (user == null)
+        //        {
+        //            return Content(HttpStatusCode.NotFound, "User: " + userId + " does not exist.");
+        //        }
+        //        if (!(course.Users.Contains(user)))
+        //        {
+        //            return Content(HttpStatusCode.NotFound, "User: " + userId + " not in course: " + courseId);
+        //        }
+
+        //        course.Users.Remove(user);
+        //        await entities.SaveChangesAsync();
+
+        //        return Ok();
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return Content(HttpStatusCode.BadRequest, e.ToString());
+        //    }
+
+        //}
 
         [HttpDelete]
         [Route("api/courses/{courseId}")]
