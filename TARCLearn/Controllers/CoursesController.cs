@@ -183,7 +183,7 @@ namespace TARCLearn.Controllers
         [HttpPut]
         [Route("api/courses/{courseId}/unenrol")]
         [ResponseType(typeof(IEnumerable<string>))]
-        public async Task<IHttpActionResult> DeleteEnrolment(int courseId, [FromBody] List<string> emailList, string requesterEmail)
+        public async Task<IHttpActionResult> DeleteEnrolment(int courseId, [FromBody] List<string> emailList)
         {
             try
             {
@@ -193,20 +193,21 @@ namespace TARCLearn.Controllers
                 {
                     return Content(HttpStatusCode.NotFound, "course" + courseId + " not found.");
                 }
-                requesterEmail = HttpUtility.UrlDecode(requesterEmail);
+                
                 var failedEmail = new List<string>();
                 var successedEmail = new List<string>();
                 bool failFlag = false;
                 foreach (string email in emailList)
                 {
-                    if(email == requesterEmail)
+                    var currentUser = db.Users.Where(u => u.email == email).FirstOrDefault();
+                    var lecturerList = course.Users.Where(u => u.isLecturer).ToList();
+                    if (currentUser == null || !(course.Users.Any(u => u.Equals(currentUser))))
                     {
                         failFlag = true;
                         failedEmail.Add(email);
                         continue;
                     }
-                    var currentUser = db.Users.Where(u => u.email == email).FirstOrDefault();
-                    if (currentUser == null || !(course.Users.Any(u => u.Equals(currentUser))))
+                    if(lecturerList.Contains(currentUser) && lecturerList.Count == 1)
                     {
                         failFlag = true;
                         failedEmail.Add(email);
@@ -216,7 +217,6 @@ namespace TARCLearn.Controllers
                     successedEmail.Add(email);
                 }
                 await db.SaveChangesAsync();
-                //SendEnrolmentEmail(successedEmail, $"{course.courseCode} {course.courseTitle}");
                 if (failFlag)
                 {
                     IEnumerable<string> mList = failedEmail;
@@ -328,7 +328,15 @@ namespace TARCLearn.Controllers
             return Ok(course.Chapters);
         }
 
+        private bool IsNoLecturer(int courseId)
+        {
+            var db = new TARCLearnEntities();
+            var course = db.Courses.FirstOrDefault(c => c.courseId == courseId);
+            var lecturerList = course.Users.Where(u => u.isLecturer).ToList();
 
+            return lecturerList.Count < 1;
+
+        }
         private void SendEnrolmentEmail(List<string> address, string course)
         {
             try
@@ -359,6 +367,7 @@ namespace TARCLearn.Controllers
             
         }
     }
+    
     internal class ChapterComparer : IComparer<ChapterDetailDto>
     {
         public int Compare(ChapterDetailDto x, ChapterDetailDto y)
