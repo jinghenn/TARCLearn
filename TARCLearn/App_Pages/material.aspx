@@ -233,7 +233,7 @@
         </div>
 
     <div class="main main-raised" >
-        <nav aria-label="breadcrumb" style="--bs-breadcrumb-divider: '>'; padding: 10px 0 0 30px; height:41px; background-color:#F5F5F5;">
+        <nav aria-label="breadcrumb" style="--bs-breadcrumb-divider: '>'; padding: 10px 0 0 30px; height:41px; background-color:#F5F5F5;width:100%;">
           <ol class="breadcrumb">
             <li class="breadcrumb-item"><asp:Label ID="lblHome" runat="server"/></li>
              <li class="breadcrumb-item"><asp:Label ID="lblChp" runat="server"/></li>
@@ -249,13 +249,13 @@
        
 
 <%-- lecture section  --%>     
-      <asp:Button Text='Lecture'  runat="server" ID="btnLecture" CssClass="button1" OnClick="btnLecture_Click"  />
+      <asp:Button Text='Lecture'  runat="server" ID="btnLecture" CssClass="button1" OnClick="btnLecture_Click"  /> 
 
       <%-- normal repeater  --%>   
       <asp:Repeater ID="rptLect" runat="server" OnItemCommand="rptMaterial_ItemCommand" Visible="False" >
         <ItemTemplate>
             <asp:Button CommandName="selectRM" CommandArgument='<%# Eval("materialId")%>' 
-                Text='<%# (Eval("materialTitle")) %>'   runat="server" ID="btnCourse" CssClass="button2"  />
+                Text='<%# (Eval("materialTitle")) %>'   runat="server" ID="btnCourse" CssClass="button2" ToolTip='<%# Eval("materialDescription")%>' />
             
         </ItemTemplate>
       </asp:Repeater>
@@ -287,7 +287,7 @@
     <asp:Repeater ID="rptPrac" runat="server" OnItemCommand="rptMaterial_ItemCommand" Visible="False" >
         <ItemTemplate>
             <asp:Button CommandName="selectRM" CommandArgument='<%# Eval("materialId")%>' 
-                Text='<%# (Eval("materialTitle")) %>'  runat="server" ID="btnCourse" CssClass="button2"  />
+                Text='<%# (Eval("materialTitle")) %>'  runat="server" ID="btnCourse" CssClass="button2"  ToolTip='<%# Eval("materialDescription")%>'/>
             
         </ItemTemplate>
     </asp:Repeater>
@@ -317,7 +317,7 @@
     <asp:Repeater ID="rptTut" runat="server" OnItemCommand="rptMaterial_ItemCommand" Visible="False" >
         <ItemTemplate>
             <asp:Button CommandName="selectRM" CommandArgument='<%# Eval("materialId")%>' 
-                Text='<%# (Eval("materialTitle")) %>'  runat="server" ID="btnCourse" CssClass="button2"  />
+                Text='<%# (Eval("materialTitle")) %>'  runat="server" ID="btnCourse" CssClass="button2"  ToolTip='<%# Eval("materialDescription")%>'/>
             
         </ItemTemplate>
     </asp:Repeater>
@@ -346,7 +346,7 @@
     <asp:Repeater ID="rptOth" runat="server" OnItemCommand="rptMaterial_ItemCommand" Visible="False" >
         <ItemTemplate>
             <asp:Button CommandName="selectRM" CommandArgument='<%# Eval("materialId")%>' 
-                Text='<%# (Eval("materialTitle")) %>'  runat="server" ID="btnCourse" CssClass="button2"  />
+                Text='<%# (Eval("materialTitle")) %>'  runat="server" ID="btnCourse" CssClass="button2" ToolTip='<%# Eval("materialDescription")%>' />
             
         </ItemTemplate>
     </asp:Repeater> 

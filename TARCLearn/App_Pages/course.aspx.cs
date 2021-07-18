@@ -17,20 +17,31 @@ namespace TARCLearn.App_Pages
         {
             if (!IsPostBack)
             {
+                string userType = Session["userType"].ToString();
+                if (userType == null)
+                {
+                    System.Text.StringBuilder javaScript = new System.Text.StringBuilder();
+                    string scriptKey = "ErrorMessage";
+
+                    javaScript.Append("var userConfirmation = window.confirm('" + "Your Session has Expired, Please login again.');\n");
+                    javaScript.Append("window.location='Login.aspx';");
+
+                    ClientScript.RegisterStartupScript(this.GetType(), scriptKey, javaScript.ToString(), true);
+                }
+
                 string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
                 string providerConStr = new EntityConnectionStringBuilder(conStr).ProviderConnectionString;
                 SqlConnection courseCon = new SqlConnection(providerConStr);
                 courseCon.Open();
 
                 //select data to be bound
-                String strSelectCourse = "Select c.courseTitle AS courseTitle, c.courseId AS courseId, c.courseCode AS courseCode from Course c, Enrolment e Where c.courseId = e.courseId and e.userId =@userId;";
+                String strSelectCourse = "Select c.courseDescription AS courseDesc, c.courseTitle AS courseTitle, c.courseId AS courseId, c.courseCode AS courseCode from Course c, Enrolment e Where c.courseId = e.courseId and e.userId =@userId;";
                 SqlCommand cmdSelectCourse = new SqlCommand(strSelectCourse, courseCon);
                 cmdSelectCourse.Parameters.AddWithValue("@userId", Session["userId"].ToString());
 
                 rptCourse.DataSource = cmdSelectCourse.ExecuteReader();
                 rptCourse.DataBind();
-
-                string userType = Session["userType"].ToString();
+                
                 if (userType == "Lecturer")
                 {
                     //select data to be bound for delete repeater

@@ -16,7 +16,18 @@ namespace TARCLearn.App_Pages
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
-            {               
+            {
+                string userId = Session["userId"].ToString();
+                if (userId == null)
+                {
+                    System.Text.StringBuilder javaScript = new System.Text.StringBuilder();
+                    string scriptKey = "ErrorMessage";
+
+                    javaScript.Append("var userConfirmation = window.confirm('" + "Your Session has Expired, Please login again.');\n");
+                    javaScript.Append("window.location='Login.aspx';");
+
+                    ClientScript.RegisterStartupScript(this.GetType(), scriptKey, javaScript.ToString(), true);
+                }
                 string threadId = Request.QueryString["threadId"];
 
                 string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
@@ -49,7 +60,7 @@ namespace TARCLearn.App_Pages
                 rptComment.DataSource = cmdSelect.ExecuteReader();
                 rptComment.DataBind();
 
-                string userId = Session["userId"].ToString();
+                
                 string userType = Session["userType"].ToString();
 
                 String strGetUser = "SELECT userId FROM DiscussionThread WHERE threadId = @threadId;";

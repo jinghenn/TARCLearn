@@ -17,7 +17,17 @@ namespace TARCLearn.App_Pages
         {  
             if (!IsPostBack)
             {
-                
+                string userType = Session["userType"].ToString();
+                if(userType == null)
+                {
+                    System.Text.StringBuilder javaScript = new System.Text.StringBuilder();
+                    string scriptKey = "ErrorMessage";                   
+
+                    javaScript.Append("var userConfirmation = window.confirm('" + "Your Session has Expired, Please login again.');\n");
+                    javaScript.Append("window.location='Login.aspx';");
+
+                    ClientScript.RegisterStartupScript(this.GetType(), scriptKey, javaScript.ToString(), true);
+                }
                 string courseId = Request.QueryString["courseId"];
                 string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
                 string providerConStr = new EntityConnectionStringBuilder(conStr).ProviderConnectionString;
@@ -32,7 +42,7 @@ namespace TARCLearn.App_Pages
                 chpRepeater.DataSource = cmdSelectChapter.ExecuteReader();
                 chpRepeater.DataBind();
 
-                string userType = Session["userType"].ToString();
+                
                 if (userType == "Lecturer")
                 {
                     //select data to be bound

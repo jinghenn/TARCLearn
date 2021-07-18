@@ -7,7 +7,7 @@
    
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server" >
-     <nav aria-label="breadcrumb" style="--bs-breadcrumb-divider: '>'; padding: 10px 0 0 30px; height:41px; background-color:#F5F5F5;">
+     <nav aria-label="breadcrumb" style="--bs-breadcrumb-divider: '>'; padding: 10px 0 0 30px; height:41px; background-color:#F5F5F5;width:100%;">
        <ol class="breadcrumb">
          <li class="breadcrumb-item"><asp:Label ID="lblHome" runat="server"/></li>
          <li class="breadcrumb-item"><asp:Label ID="lblChp" runat="server"/></li>

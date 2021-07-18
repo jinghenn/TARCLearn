@@ -14,7 +14,17 @@ namespace TARCLearn.App_Pages
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            
+            string userId = Session["userId"].ToString();
+            if (userId == null)
+            {
+                System.Text.StringBuilder javaScript = new System.Text.StringBuilder();
+                string scriptKey = "ErrorMessage";
+
+                javaScript.Append("var userConfirmation = window.confirm('" + "Your Session has Expired, Please login again.');\n");
+                javaScript.Append("window.location='Login.aspx';");
+
+                ClientScript.RegisterStartupScript(this.GetType(), scriptKey, javaScript.ToString(), true);
+            }
 
             string materialId = Request.QueryString["materialId"];
             string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;

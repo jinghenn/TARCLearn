@@ -136,11 +136,11 @@
             </div>
         </div>
     <div class="main main-raised" >
-        <nav style="--bs-breadcrumb-divider: '>';  padding: 10px 0 0 30px; height:41px; background-color:#F5F5F5;" aria-label="breadcrumb" >
+        <nav style="--bs-breadcrumb-divider: '>';  padding: 10px 0 0 30px; height:41px; background-color:#F5F5F5; width:100%;" aria-label="breadcrumb" >
               <ol class="breadcrumb">       
                 <li class="breadcrumb-item active"  aria-current="page">Home</li>
               </ol>
-            </nav>
+         </nav>
         <div class="label1">
             <asp:Label ID="lblTittle" runat="server" Font-Bold="true" Font-Size="Large">Courses</asp:Label> 
             <asp:ImageButton ID="btnMore" CssClass="rightButton"  Height="15px" Width="15px" runat="server" ImageUrl="~/images/more_icon.png" OnClick="btnMore_Click" /> 
@@ -151,7 +151,7 @@
             <ItemTemplate>
                 <asp:Button CommandName="select" CommandArgument='<%# Eval("courseId")%>' 
                     Text= '<%# (Eval("courseCode")) + " " + (Eval("courseTitle")) %>' 
-                    runat="server" ID="btnCourse" CssClass="button1"  />
+                    runat="server" ID="btnCourse" CssClass="button1"  ToolTip='<%# Eval("courseDesc")%>' />
             
             </ItemTemplate>
         </asp:Repeater>

@@ -19,7 +19,18 @@ namespace TARCLearn.App_Pages
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
-            {          
+            {
+                string userId = Session["userId"].ToString();
+                if (userId == null)
+                {
+                    System.Text.StringBuilder javaScript = new System.Text.StringBuilder();
+                    string scriptKey = "ErrorMessage";
+
+                    javaScript.Append("var userConfirmation = window.confirm('" + "Your Session has Expired, Please login again.');\n");
+                    javaScript.Append("window.location='Login.aspx';");
+
+                    ClientScript.RegisterStartupScript(this.GetType(), scriptKey, javaScript.ToString(), true);
+                }
 
                 TARCLearnEntities db = new TARCLearnEntities();
 
@@ -27,16 +38,14 @@ namespace TARCLearn.App_Pages
                 Task<HttpResponseMessage> consumeApi;
                 try
                 {
-                    client.BaseAddress = new Uri("https://localhost:44348/api/"); //change the base address to match your current address
-                    var userId = Session["userId"].ToString(); //change to any user id
+                    client.BaseAddress = new Uri("https://localhost:44348/api/"); //change the base address to match your current address                   
                     consumeApi = client.GetAsync($"users/{userId}/discussions");
                     consumeApi.Wait();
                 }
                 catch 
                 {
                     client = new HttpClient();
-                    client.BaseAddress = new Uri("http://192.168.0.72:50000/api/");
-                    var userId = Session["userId"].ToString(); //change to any user id
+                    client.BaseAddress = new Uri("http://192.168.0.72:50000/api/");                    
                     consumeApi = client.GetAsync($"users/{userId}/discussions");
                     consumeApi.Wait();
                 }

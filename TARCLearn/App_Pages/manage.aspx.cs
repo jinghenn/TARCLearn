@@ -19,6 +19,18 @@ namespace TARCLearn.App_Pages
         {
             if (!IsPostBack)
             {
+                string userId = Session["userId"].ToString();
+                if (userId == null)
+                {
+                    System.Text.StringBuilder javaScript = new System.Text.StringBuilder();
+                    string scriptKey = "ErrorMessage";
+
+                    javaScript.Append("var userConfirmation = window.confirm('" + "Your Session has Expired, Please login again.');\n");
+                    javaScript.Append("window.location='Login.aspx';");
+
+                    ClientScript.RegisterStartupScript(this.GetType(), scriptKey, javaScript.ToString(), true);
+                }
+
                 string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
                 string providerConStr = new EntityConnectionStringBuilder(conStr).ProviderConnectionString;
                 SqlConnection manageCon = new SqlConnection(providerConStr);
@@ -48,6 +60,7 @@ namespace TARCLearn.App_Pages
                 string email = formtxtMStudent.Text;
                 List<string> failList = new List<string>();
                 List<string> invalidEmailList = new List<string>();
+                List<string> lecturerFailList = new List<string>();
                 char[] delimiterChars = { ' ', ','};
                 string[] emailList = email.Split(delimiterChars);
 
@@ -59,25 +72,37 @@ namespace TARCLearn.App_Pages
 
                 for (int i = 0; i < emailList.Length; i++)
                 {
-                    //get StudentId 
-                    SqlCommand cmdGetStudentId = new SqlCommand("Select userId from [dbo].[User] where email=@email", manageCon);
-                    cmdGetStudentId.Parameters.AddWithValue("@email", emailList[i]);
-                    string studentId = Convert.ToString(cmdGetStudentId.ExecuteScalar());
+                    //get userId 
+                    SqlCommand cmdGetuserId = new SqlCommand("Select userId from [dbo].[User] where email=@email", manageCon);
+                    cmdGetuserId.Parameters.AddWithValue("@email", emailList[i]);
+                    string userId = Convert.ToString(cmdGetuserId.ExecuteScalar());
 
                     //check student enrol ard or not
                     SqlCommand cmdSelectCourse = new SqlCommand("Select * from [dbo].[Enrolment] where userId=@userId and courseId=@courseId", manageCon);
-                    cmdSelectCourse.Parameters.AddWithValue("@userId", studentId);
+                    cmdSelectCourse.Parameters.AddWithValue("@userId", userId);
                     cmdSelectCourse.Parameters.AddWithValue("@courseId", courseId);
                     SqlDataReader dtrCourse = cmdSelectCourse.ExecuteReader();
 
+                    //get lecturer count
+                    SqlCommand cmdGetLecCount = new SqlCommand("Select COUNT(e.userId) from [dbo].[Enrolment] e, [dbo].[User] u where u.userId=e.userId AND e.courseId=@courseId AND u.isLecturer=@isLecturer;", manageCon);
+                    cmdGetLecCount.Parameters.AddWithValue("@isLecturer", true);
+                    cmdGetLecCount.Parameters.AddWithValue("@courseId", courseId);
+                    int availableLecture = Convert.ToInt32(cmdGetLecCount.ExecuteScalar());
+
+                    //get user type
+                    SqlCommand cmdGetUserType = new SqlCommand("Select isLecturer from [dbo].[User] where email=@email", manageCon);
+                    cmdGetUserType.Parameters.AddWithValue("@email", emailList[i]);
+                    Boolean dropUserType = Convert.ToBoolean(cmdGetUserType.ExecuteScalar());
+                    
+
                     if (Session["manageStudent"].ToString() == "enrol")
                     {
-                        if (!dtrCourse.HasRows && studentId != "")
+                        if (!dtrCourse.HasRows && userId != "")
                         {
                             String addEnrolment = "INSERT INTO [dbo].[Enrolment] VALUES(@userId,@courseId);";
                             SqlCommand cmdAddEnrolment = new SqlCommand(addEnrolment, manageCon);
 
-                            cmdAddEnrolment.Parameters.AddWithValue("@userId", studentId);
+                            cmdAddEnrolment.Parameters.AddWithValue("@userId", userId);
                             cmdAddEnrolment.Parameters.AddWithValue("@courseId", courseId);
                             cmdAddEnrolment.ExecuteNonQuery();
 
@@ -119,7 +144,7 @@ namespace TARCLearn.App_Pages
                             }
 
                         } 
-                        else if (studentId == "" && emailList[i] != "")
+                        else if (userId == "" && emailList[i] != "")
                         {
                             invalidEmailList.Add(emailList[i]);
                         }
@@ -130,54 +155,61 @@ namespace TARCLearn.App_Pages
                     }
                     else if (Session["manageStudent"].ToString() == "drop")
                     {
-                        if (dtrCourse.HasRows && studentId != null)
+                        if (dtrCourse.HasRows && userId != null)
                         {
-                            String strDrop = "DELETE FROM Enrolment WHERE courseId=@courseId AND userId=@userId";
-                            SqlCommand cmdDrop = new SqlCommand(strDrop, manageCon);
-                            cmdDrop.Parameters.AddWithValue("@userId", studentId);
-                            cmdDrop.Parameters.AddWithValue("@courseId", courseId);
-                            cmdDrop.ExecuteNonQuery();
-
-                            //send email notify
-                            //get course code                            
-                            SqlCommand cmdGetCC = new SqlCommand("Select courseCode from [dbo].[Course] where courseId=@courseId", manageCon);
-                            cmdGetCC.Parameters.AddWithValue("@courseId", courseId);
-                            string courseCode = Convert.ToString(cmdGetCC.ExecuteScalar());
-
-                            //get course Title                            
-                            SqlCommand cmdGetCT = new SqlCommand("Select courseTitle from [dbo].[Course] where courseId=@courseId", manageCon);
-                            cmdGetCT.Parameters.AddWithValue("@courseId", courseId);
-                            string courseTitle = Convert.ToString(cmdGetCT.ExecuteScalar());
-
-                            //send email notify
-                            string to = emailList[i]; //To address    
-                            string from = "tarclearn@gmail.com"; //From address    
-                            MailMessage message = new MailMessage(from, to);
-
-                            string mailbody = "You have been drop from the course " + courseCode + " " + courseTitle;
-                            message.Subject = "Dropped from a Course";
-                            message.Body = mailbody;
-                            message.BodyEncoding = Encoding.UTF8;
-                            message.IsBodyHtml = true;
-                            SmtpClient client = new SmtpClient("smtp.gmail.com", 587); //Gmail smtp    
-                            System.Net.NetworkCredential basicCredential1 = new
-                            System.Net.NetworkCredential("tarclearn@gmail.com", "tarclearn1122");
-                            client.EnableSsl = true;
-                            client.UseDefaultCredentials = false;
-                            client.Credentials = basicCredential1;
-
-                            try
+                            if(dropUserType && availableLecture < 3)
                             {
-                                client.Send(message);
+                                lecturerFailList.Add(emailList[i]);
                             }
-
-                            catch (Exception ex)
+                            else
                             {
-                                throw ex;
-                            }
+                                String strDrop = "DELETE FROM Enrolment WHERE courseId=@courseId AND userId=@userId";
+                                SqlCommand cmdDrop = new SqlCommand(strDrop, manageCon);
+                                cmdDrop.Parameters.AddWithValue("@userId", userId);
+                                cmdDrop.Parameters.AddWithValue("@courseId", courseId);
+                                cmdDrop.ExecuteNonQuery();
 
+                                //send email notify
+                                //get course code                            
+                                SqlCommand cmdGetCC = new SqlCommand("Select courseCode from [dbo].[Course] where courseId=@courseId", manageCon);
+                                cmdGetCC.Parameters.AddWithValue("@courseId", courseId);
+                                string courseCode = Convert.ToString(cmdGetCC.ExecuteScalar());
+
+                                //get course Title                            
+                                SqlCommand cmdGetCT = new SqlCommand("Select courseTitle from [dbo].[Course] where courseId=@courseId", manageCon);
+                                cmdGetCT.Parameters.AddWithValue("@courseId", courseId);
+                                string courseTitle = Convert.ToString(cmdGetCT.ExecuteScalar());
+
+                                //send email notify
+                                string to = emailList[i]; //To address    
+                                string from = "tarclearn@gmail.com"; //From address    
+                                MailMessage message = new MailMessage(from, to);
+
+                                string mailbody = "You have been drop from the course " + courseCode + " " + courseTitle;
+                                message.Subject = "Dropped from a Course";
+                                message.Body = mailbody;
+                                message.BodyEncoding = Encoding.UTF8;
+                                message.IsBodyHtml = true;
+                                SmtpClient client = new SmtpClient("smtp.gmail.com", 587); //Gmail smtp    
+                                System.Net.NetworkCredential basicCredential1 = new
+                                System.Net.NetworkCredential("tarclearn@gmail.com", "tarclearn1122");
+                                client.EnableSsl = true;
+                                client.UseDefaultCredentials = false;
+                                client.Credentials = basicCredential1;
+
+                                try
+                                {
+                                    client.Send(message);
+                                }
+
+                                catch (Exception ex)
+                                {
+                                    throw ex;
+                                }
+                            }                            
+                        
                         }
-                        else if (studentId == "" && emailList[i] != "")
+                        else if (userId == "" && emailList[i] != "")
                         {
                             invalidEmailList.Add(emailList[i]);
                         }
@@ -189,7 +221,7 @@ namespace TARCLearn.App_Pages
                     }
                 }
                 manageCon.Close();
-                if (!failList.Any() && !invalidEmailList.Any())
+                if (!failList.Any() && !invalidEmailList.Any() && !lecturerFailList.Any())
                 {
                     if (Session["manageStudent"].ToString() == "enrol")
                     {
@@ -222,7 +254,7 @@ namespace TARCLearn.App_Pages
 
 
                         }
-                        
+
 
                         respond += " And " + invalidEmailList.Count + " Invalid Email ";
 
@@ -247,40 +279,65 @@ namespace TARCLearn.App_Pages
                     }
                     else if (Session["manageStudent"].ToString() == "drop")
                     {
-                        string respond = "<script>alert('Succecful Drop All Entered User except " + failList.Count + " Does not Enrolled User ";
+                        string respond = "<script>alert('Succecful Drop All Entered User except";
 
-                        for (int i = 0; i < failList.Count; i++)
+                        if (lecturerFailList.Any())
                         {
-
-                            if (i == failList.Count - 1)
+                            respond += " " + lecturerFailList.Count + " lecturer (At least 2 lecturer must be in a course) ";
+                            for (int i = 0; i < lecturerFailList.Count; i++)
                             {
-                                respond += failList[i] + ". ";
-                            }
-                            else
-                            {
-                                respond += failList[i] + ", ";
-                            }
+
+                                if (i == lecturerFailList.Count - 1)
+                                {
+                                    respond += lecturerFailList[i] + ". ";
+                                }
+                                else
+                                {
+                                    respond += lecturerFailList[i] + ", ";
+                                }
 
 
+                            }
                         }
-
-
-                        respond += " And " + invalidEmailList.Count + " Invalid Email ";
-
-                        for (int i = 0; i < invalidEmailList.Count; i++)
+                        if (failList.Any())
                         {
+                            respond += " " + failList.Count + " Does not Enrolled User ";
 
-                            if (i == invalidEmailList.Count - 1)
+                            for (int i = 0; i < failList.Count; i++)
                             {
-                                respond += invalidEmailList[i] + ". ";
-                            }
-                            else
-                            {
-                                respond += invalidEmailList[i] + ", ";
-                            }
+
+                                if (i == failList.Count - 1)
+                                {
+                                    respond += failList[i] + ". ";
+                                }
+                                else
+                                {
+                                    respond += failList[i] + ", ";
+                                }
 
 
+                            }
                         }
+                        if (failList.Any())
+                        {
+                            respond += " " + invalidEmailList.Count + " Invalid Email ";
+
+                            for (int i = 0; i < invalidEmailList.Count; i++)
+                            {
+
+                                if (i == invalidEmailList.Count - 1)
+                                {
+                                    respond += invalidEmailList[i] + ". ";
+                                }
+                                else
+                                {
+                                    respond += invalidEmailList[i] + ", ";
+                                }
+
+
+                            }
+                        }                       
+                                       
                         respond += "')</script>";
 
                         Response.Write(respond);
