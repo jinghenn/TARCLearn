@@ -19,6 +19,7 @@ namespace TARCLearn.App_Pages
         {
             if (!IsPostBack)
             {
+                Session["userNo"] = "0";
                 string userId = Session["userId"].ToString();
                 if (userId == null)
                 {
@@ -41,18 +42,48 @@ namespace TARCLearn.App_Pages
                 SqlDataAdapter sdaEnrolCourse = new SqlDataAdapter(cmdEnrolCourse);
                 DataTable dtEnrolCourse = new DataTable();
                 sdaEnrolCourse.Fill(dtEnrolCourse);
+
                 formddlMCourse.DataSource = dtEnrolCourse;
                 formddlMCourse.DataTextField = "courseTitle";
                 formddlMCourse.DataValueField = "courseId";
                 formddlMCourse.DataBind();
 
-                
+                ddlCourse.DataSource = dtEnrolCourse;
+                ddlCourse.DataTextField = "courseTitle";
+                ddlCourse.DataValueField = "courseId";
+                ddlCourse.DataBind();
+
+                //select data to be bound
+                String strGetUser = "Select u.userId AS userId, u.username AS username, u.email AS email from [dbo].[User] u, [dbo].[Enrolment] e Where u.userId = e.userId AND courseId=@courseId;";
+                SqlCommand cmdSelectQuiz = new SqlCommand(strGetUser, manageCon);
+                cmdSelectQuiz.Parameters.AddWithValue("@courseId", ddlCourse.SelectedValue);
+
+                rptUserList.DataSource = cmdSelectQuiz.ExecuteReader();
+                rptUserList.DataBind();
 
                 manageCon.Close();
-            }
-        }               
 
-        protected void manageStudentFormSubmitClicked(object sender, EventArgs e)
+                
+                
+            }
+        }
+
+        protected void rptUserList_ItemDataBound(object sender, RepeaterItemEventArgs e)
+        {
+
+            // determines which position in the outer layer repeater in the repeater (AlternatingItemTemplate, FooterTemplate,
+
+            //HeaderTemplate，，ItemTemplate，SeparatorTemplate）
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+                Label lblNo = (Label)e.Item.FindControl("lblNo");
+
+                int userNo = Convert.ToInt32(Session["userNo"].ToString()) + 1;
+                Session["userNo"] = userNo;
+                lblNo.Text = Convert.ToString(userNo);
+            }
+        }
+                protected void manageStudentFormSubmitClicked(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
@@ -347,32 +378,9 @@ namespace TARCLearn.App_Pages
             }
         }
 
-        protected void lbDrop_Click1(object sender, EventArgs e)
-        {
-            string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
-            string providerConStr = new EntityConnectionStringBuilder(conStr).ProviderConnectionString;
-            SqlConnection manageCon = new SqlConnection(providerConStr);
-            manageCon.Open();
+        
 
-            SqlCommand cmdCheckCourse = new SqlCommand("SELECT * FROM Course c, Enrolment e WHERE c.courseId=e.courseId AND e.userId =@userId", manageCon);
-            cmdCheckCourse.Parameters.AddWithValue("@userId", Session["userId"].ToString());
-            SqlDataReader dtrCheckCourse = cmdCheckCourse.ExecuteReader();
-
-            if (dtrCheckCourse.HasRows)
-            {
-                Session["manageStudent"] = "drop";
-                lblMTitle.Text = "Drop Student";
-                manageCon.Close();
-                ClientScript.RegisterStartupScript(this.GetType(), "Pop", "openModal();", true);
-            }
-            else
-            {
-                manageCon.Close();
-                Response.Write("<script>alert('You does not enrol in any course. Please create or enrol yourself in a course to perform this action.')</script>");
-            }
-        }
-
-        protected void lbEnrol_Click(object sender, EventArgs e)
+        protected void btnEnrol_Click(object sender, EventArgs e)
         {
             string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
             string providerConStr = new EntityConnectionStringBuilder(conStr).ProviderConnectionString;
@@ -397,6 +405,48 @@ namespace TARCLearn.App_Pages
             }
         }
 
-        
+        protected void btnDrop_Click(object sender, EventArgs e)
+        {
+            string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
+            string providerConStr = new EntityConnectionStringBuilder(conStr).ProviderConnectionString;
+            SqlConnection manageCon = new SqlConnection(providerConStr);
+            manageCon.Open();
+
+            SqlCommand cmdCheckCourse = new SqlCommand("SELECT * FROM Course c, Enrolment e WHERE c.courseId=e.courseId AND e.userId =@userId", manageCon);
+            cmdCheckCourse.Parameters.AddWithValue("@userId", Session["userId"].ToString());
+            SqlDataReader dtrCheckCourse = cmdCheckCourse.ExecuteReader();
+
+            if (dtrCheckCourse.HasRows)
+            {
+                Session["manageStudent"] = "drop";
+                lblMTitle.Text = "Drop Student";
+                manageCon.Close();
+                ClientScript.RegisterStartupScript(this.GetType(), "Pop", "openModal();", true);
+            }
+            else
+            {
+                manageCon.Close();
+                Response.Write("<script>alert('You does not enrol in any course. Please create or enrol yourself in a course to perform this action.')</script>");
+            }
+        }
+
+        protected void ddlCourse_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Session["userNo"] = "0";
+            string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
+            string providerConStr = new EntityConnectionStringBuilder(conStr).ProviderConnectionString;
+            SqlConnection manageCon = new SqlConnection(providerConStr);
+            manageCon.Open();
+
+            //select data to be bound
+            String strGetUser = "Select u.userId AS userId, u.username AS username, u.email AS email from [dbo].[User] u, [dbo].[Enrolment] e Where u.userId = e.userId AND courseId=@courseId;";
+            SqlCommand cmdSelectQuiz = new SqlCommand(strGetUser, manageCon);
+            cmdSelectQuiz.Parameters.AddWithValue("@courseId", ddlCourse.SelectedValue);
+
+            rptUserList.DataSource = cmdSelectQuiz.ExecuteReader();
+            rptUserList.DataBind();
+
+            manageCon.Close();
+        }
     }
 }

@@ -105,16 +105,55 @@
       </nav>
 
         <div class="label1">
-            <asp:Label ID="lblTittle" runat="server" Font-Bold="true" Font-Size="Large">Manage Enrolment</asp:Label>
-             
+            <asp:Label ID="lblTittle" runat="server" Font-Bold="true" Font-Size="Large">Manage User</asp:Label>            
         </div>
-        <div class=" rightButton "  role="group">         
-            <asp:LinkButton ID="lbEnrol"  CssClass="btn btn-outline-success " runat="server" OnClick="lbEnrol_Click" >Enrol</asp:LinkButton>
-            <asp:LinkButton ID="lbDrop"  CssClass="btn btn-outline-danger " runat="server" OnClick="lbDrop_Click">Drop</asp:LinkButton>
-        </div>  
-                                
+
+        <div class="label1" >
+            <asp:DropDownList ID="ddlCourse" CssClass="form-select" style="width:30%;" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddlCourse_SelectedIndexChanged"></asp:DropDownList>   
+            <asp:Button ID="btnDrop"   CssClass="btn btn-outline-danger rightButton" runat="server" OnClick="btnDrop_Click" Text="Drop"/>
+            <asp:Button ID="btnEnrol"  CssClass="btn btn-outline-success rightButton" runat="server" OnClick="btnEnrol_Click" Text="Enrol" />           
+        </div>                        
        
+         <asp:Repeater ID="rptUserList" runat="server"  OnItemDataBound="rptUserList_ItemDataBound">
+            <HeaderTemplate>
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th style="width: 4%"></th>
+                      <th style="width: 6%">#</th>
+                      <th style="width: 20%">User Id</th>
+                      <th style="width: 30%">Username</th>
+                      <th style="width: 40%">Email</th>
+                    </tr>
+                  </thead>         
+                </table>
+            </HeaderTemplate>
+            <ItemTemplate>
+                <table class="table table-borderless table-hover table-responsive">
+                   <tr>
+                     <td style="width: 10%; text-align: center" class="align-middle">
+                         <asp:Label ID="lblNo" runat="server"  />
+                     </td>
+                     <td style="width: 20%">
+                         <asp:Label ID="lblUserId" Text='<%#Eval("userId") %>' runat="server"  />
+                     </td>
+                     <td style="width: 30%">
+                         <asp:Label ID="lblUsername" Text='<%#Eval("username") %>' runat="server"  />
+                     </td>
+                    <td style="width: 40%">
+                         <asp:Label ID="lblEmail" Text='<%#Eval("email") %>' runat="server"  />
+                     </td>
+                </table>
+            </ItemTemplate>
+            <FooterTemplate>
+            <%-- Label used for showing Error Message --%>
+                <asp:Label ID="lblErrorMsg" runat="server" Text="Sorry, this course have no user." Visible="false">
+                </asp:Label>
+            </FooterTemplate>
+        </asp:Repeater>
+
         
         
-    </div>
+    </div>   
+    
 </asp:Content>
