@@ -347,7 +347,7 @@ namespace TARCLearn.App_Pages
             }
         }
 
-        protected void btnDrop_Click(object sender, EventArgs e)
+        protected void lbDrop_Click1(object sender, EventArgs e)
         {
             string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
             string providerConStr = new EntityConnectionStringBuilder(conStr).ProviderConnectionString;
@@ -372,7 +372,7 @@ namespace TARCLearn.App_Pages
             }
         }
 
-        protected void btnEnrol_Click(object sender, EventArgs e)
+        protected void lbEnrol_Click(object sender, EventArgs e)
         {
             string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
             string providerConStr = new EntityConnectionStringBuilder(conStr).ProviderConnectionString;
@@ -396,5 +396,7 @@ namespace TARCLearn.App_Pages
                 Response.Write("<script>alert('You does not enrol in any course. Please create or enrol yourself in a course to perform this action.')</script>");
             }
         }
+
+        
     }
 }
