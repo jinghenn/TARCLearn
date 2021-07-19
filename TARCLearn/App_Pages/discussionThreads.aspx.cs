@@ -349,7 +349,7 @@ namespace TARCLearn.App_Pages
                 {
                     String addDis = "UPDATE [dbo].[DiscussionThread] SET threadTitle=@threadTitle, threadDescription=@threadDescription WHERE threadId=@threadId;";
                     SqlCommand cmdAddDis = new SqlCommand(addDis, disCon);
-
+                    cmdAddDis.Parameters.AddWithValue("@threadId", threadId);
                     cmdAddDis.Parameters.AddWithValue("@threadTitle", threadTitle);
                     cmdAddDis.Parameters.AddWithValue("@threadDescription", threadDescription);
                     cmdAddDis.Parameters.AddWithValue("@chapterId", chapterId);

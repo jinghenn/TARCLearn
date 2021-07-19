@@ -108,9 +108,13 @@
             <asp:Label ID="lblTittle" runat="server" Font-Bold="true" Font-Size="Large">Manage Enrolment</asp:Label>
              
         </div>
-          
-        <asp:Button ID="btnEnrol"  Text= "Enrol"  CssClass="button1" runat="server"  OnClick="btnEnrol_Click"/>
-        <asp:Button ID="btnDrop"  Text= "Drop"  CssClass="button1" runat="server"  OnClick="btnDrop_Click"/>
+        <div class=" rightButton "  role="group">         
+            <asp:LinkButton ID="lbEnrol"  CssClass="btn btn-outline-success " runat="server" OnClick="lbEnrol_Click" >Enrol</asp:LinkButton>
+            <asp:LinkButton ID="lbDrop"  CssClass="btn btn-outline-danger " runat="server" OnClick="lbDrop_Click">Drop</asp:LinkButton>
+        </div>  
+                                
+       
+        
         
     </div>
 </asp:Content>
