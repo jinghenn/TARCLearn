@@ -105,7 +105,7 @@
                             <div class="col-sm-9">
                                  <asp:RadioButtonList ID="rblAnswer" runat="server">
                                     <asp:ListItem>True</asp:ListItem>
-                                    <asp:ListItem>False</asp:ListItem>                                  
+                                    <asp:ListItem Selected="True">False</asp:ListItem>                                  
                                 </asp:RadioButtonList>
                                  <asp:RequiredFieldValidator ValidationGroup="Add Choice Form" ForeColor="Red" ID="rfvrblAnswer" ControlToValidate="rblAnswer" runat="server" Display="Dynamic" ErrorMessage="Is Answer Cannot Be Blank"></asp:RequiredFieldValidator>
                             </div>

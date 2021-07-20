@@ -395,6 +395,7 @@ namespace TARCLearn.App_Pages
             {
                 Session["manageStudent"] = "enrol";
                 lblMTitle.Text = "Enrol Student";
+                formddlMCourse.SelectedValue = ddlCourse.SelectedValue;
                 manageCon.Close();
                 ClientScript.RegisterStartupScript(this.GetType(), "Pop", "openModal();", true);
             }
@@ -420,6 +421,7 @@ namespace TARCLearn.App_Pages
             {
                 Session["manageStudent"] = "drop";
                 lblMTitle.Text = "Drop Student";
+                formddlMCourse.SelectedValue = ddlCourse.SelectedValue;
                 manageCon.Close();
                 ClientScript.RegisterStartupScript(this.GetType(), "Pop", "openModal();", true);
             }
