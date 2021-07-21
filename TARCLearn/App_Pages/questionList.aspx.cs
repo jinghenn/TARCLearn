@@ -113,13 +113,13 @@ namespace TARCLearn.App_Pages
                 Repeater rptEditChoice = (Repeater)e.Item.FindControl("rptEditChoice");
                 LinkButton btnEditQuesText = (LinkButton)e.Item.FindControl("btnEditQuesText");
                 LinkButton btnAddChoice = (LinkButton)e.Item.FindControl("btnAddChoice");
-                TextBox txtQuesText = (TextBox)e.Item.FindControl("txtQuesText");
+                TextBox txtQuesNo = (TextBox)e.Item.FindControl("txtQuesNo");
                 string questionId = DataBinder.Eval(e.Item.DataItem, "questionId").ToString();
-                string questionText = DataBinder.Eval(e.Item.DataItem, "questionText").ToString();
+                
 
                 int questionNo = Convert.ToInt32(Session["quesNo"].ToString()) + 1;
                 Session["quesNo"] = questionNo;
-                txtQuesText.Text = Convert.ToString(questionNo) + ".) " + questionText;
+                txtQuesNo.Text = Convert.ToString(questionNo) + ".) " ;
 
                 string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
                 string providerConStr = new EntityConnectionStringBuilder(conStr).ProviderConnectionString;
@@ -366,7 +366,40 @@ namespace TARCLearn.App_Pages
             if (e.CommandName == "add")
             {
                 Session["questionId"] = questionId;
-                
+                Session["manageChoice"] = "add";
+                formChoice.Text = "";               
+
+                SqlCommand cmdSelectChoice = new SqlCommand("Select * from [dbo].[Choices] c, [dbo].[Question] q where c.questionId = q.questionId AND c.questionId=@questionId AND c.isAnswer=@isAnswer;", quizCon);
+                cmdSelectChoice.Parameters.AddWithValue("@questionId", questionId);
+                cmdSelectChoice.Parameters.AddWithValue("@isAnswer", true);
+                SqlDataReader dtrChoice = cmdSelectChoice.ExecuteReader();
+
+                if (dtrChoice.HasRows)
+                {
+                    foreach (ListItem item in rblAnswer.Items)
+                    {
+                        if (item.Text == "True")
+                        {
+                            item.Enabled = false;
+                            item.Attributes.Add("style", "color:#999;");
+                            break;
+                        }
+                    }
+                    lblAnswer.Text = "Is Answer (Already have an answer.)";
+                }
+                else
+                {
+                    foreach (ListItem item in rblAnswer.Items)
+                    {
+                        if (item.Text == "True")
+                        {
+                            item.Enabled = true;                           
+                            break;
+                        }
+                    }
+                    lblAnswer.Text = "Is Answer";
+                }
+                lblMTitle.Text = "Add New Choice";
                 ClientScript.RegisterStartupScript(this.GetType(), "Pop", "openModal();", true);
                 
                              
@@ -383,32 +416,36 @@ namespace TARCLearn.App_Pages
                 SqlConnection quizCon = new SqlConnection(providerConStr);
                 quizCon.Open();
 
-                string add = "INSERT INTO [dbo].[Choices] VALUES(@choiceText,@isAnswer,@questionId);";
-                SqlCommand cmdAdd = new SqlCommand(add, quizCon);
+                if(Session["manageChoice"].ToString() == "add") {
+                    string add = "INSERT INTO [dbo].[Choices] VALUES(@choiceText,@isAnswer,@questionId);";
+                    SqlCommand cmdAdd = new SqlCommand(add, quizCon);
 
-                cmdAdd.Parameters.AddWithValue("@choiceText", formChoice.Text);
-                cmdAdd.Parameters.AddWithValue("@isAnswer", Convert.ToBoolean(rblAnswer.SelectedItem.Text));
-                cmdAdd.Parameters.AddWithValue("@questionId", Session["questionId"].ToString());
-                cmdAdd.ExecuteNonQuery();
-
-                quizCon.Close();
-
-                successMsg("added", quizId);
-
-
+                    cmdAdd.Parameters.AddWithValue("@choiceText", formChoice.Text);
+                    cmdAdd.Parameters.AddWithValue("@isAnswer", Convert.ToBoolean(rblAnswer.SelectedItem.Text));
+                    cmdAdd.Parameters.AddWithValue("@questionId", Session["questionId"].ToString());
+                    cmdAdd.ExecuteNonQuery();
+                    quizCon.Close();
+                    successMsg("added", quizId);
+                }
+                else if (Session["manageChoice"].ToString() == "update")
+                {
+                    String edit = "UPDATE [dbo].[Choices] SET choiceText = @choiceText, isAnswer=@isAnswer WHERE choiceId = @choiceId";
+                    SqlCommand cmdEdit = new SqlCommand(edit, quizCon);
+                    cmdEdit.Parameters.AddWithValue("@choiceText", formChoice.Text);
+                    cmdEdit.Parameters.AddWithValue("@choiceId", Session["choiceId"].ToString());
+                    cmdEdit.Parameters.AddWithValue("@isAnswer", Convert.ToBoolean(rblAnswer.SelectedItem.Text));
+                    cmdEdit.ExecuteNonQuery();
+                    quizCon.Close();
+                    successMsg("updated", quizId);
+                }
+                
             }
         }
 
         protected void rptEditChoice_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
             string choiceId = e.CommandArgument.ToString();
-            string quizId = Request.QueryString["quizId"];
-            TextBox txtChoice = (TextBox)e.Item.FindControl("txtChoice");
-
-            LinkButton btnEdit = (LinkButton)e.Item.FindControl("btnEdit");
-            LinkButton btnSave = (LinkButton)e.Item.FindControl("btnSave");
-            LinkButton btnCancel = (LinkButton)e.Item.FindControl("btnCancel");
-            LinkButton btnDel = (LinkButton)e.Item.FindControl("btnDelete");
+            string quizId = Request.QueryString["quizId"];          
 
             string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
             string providerConStr = new EntityConnectionStringBuilder(conStr).ProviderConnectionString;
@@ -416,17 +453,76 @@ namespace TARCLearn.App_Pages
             quizCon.Open();
 
             if (e.CommandName == "edit")
-            {               
+            {
+                SqlCommand cmdGetQuestionId = new SqlCommand("Select questionId from [dbo].[Choices] where choiceId=@choiceId", quizCon);
+                cmdGetQuestionId.Parameters.AddWithValue("@choiceId", choiceId);
+                String questionId = Convert.ToString(cmdGetQuestionId.ExecuteScalar());
 
-                txtChoice.Enabled = true;
-                txtChoice.BorderStyle = BorderStyle.Inset;
-                txtChoice.BackColor = Color.White;
+                SqlCommand cmdGetChoiceText = new SqlCommand("Select choiceText from [dbo].[Choices] where choiceId=@choiceId", quizCon);
+                cmdGetChoiceText.Parameters.AddWithValue("@choiceId", choiceId);
+                formChoice.Text = Convert.ToString(cmdGetChoiceText.ExecuteScalar());
 
-                btnEdit.Visible = false;
-                btnSave.Visible = true;
-                btnCancel.Visible = true;
-                btnDel.Visible = true;
+                SqlCommand cmdGetAnswer = new SqlCommand("Select isAnswer from [dbo].[Choices] where choiceId=@choiceId", quizCon);
+                cmdGetAnswer.Parameters.AddWithValue("@choiceId", choiceId);
+                rblAnswer.SelectedValue = Convert.ToString(cmdGetAnswer.ExecuteScalar());
 
+                SqlCommand cmdSelectChoice = new SqlCommand("Select * from [dbo].[Choices] c, [dbo].[Question] q where c.questionId = q.questionId AND c.questionId=@questionId AND c.isAnswer=@isAnswer;", quizCon);
+                cmdSelectChoice.Parameters.AddWithValue("@questionId", questionId);
+                cmdSelectChoice.Parameters.AddWithValue("@isAnswer", true);
+                SqlDataReader dtrChoice = cmdSelectChoice.ExecuteReader();
+
+                if (dtrChoice.HasRows)
+                {
+                    SqlCommand cmdGetChoice = new SqlCommand("Select isAnswer from [dbo].[Choices] where choiceId=@choiceId", quizCon);
+                    cmdGetChoice.Parameters.AddWithValue("@choiceId", choiceId);
+                    Boolean currentChoice = Convert.ToBoolean(cmdGetChoice.ExecuteScalar());
+
+                    if (!currentChoice)
+                    {
+                        foreach (ListItem item in rblAnswer.Items)
+                        {
+                            if (item.Text == "True")
+                            {
+                                item.Enabled = false;
+                                item.Attributes.Add("style", "color:#999;");
+                                break;
+                            }
+                        }
+                        lblAnswer.Text = "Is Answer (Already have an answer.)";
+                    }
+                    else
+                    {
+                        foreach (ListItem item in rblAnswer.Items)
+                        {
+                            if (item.Text == "True")
+                            {
+                                item.Enabled = true;
+                                break;
+                            }
+                        }
+                        lblAnswer.Text = "Is Answer";
+                    }
+
+
+                }
+                else
+                {
+                    foreach (ListItem item in rblAnswer.Items)
+                    {
+                        if (item.Text == "True")
+                        {
+                            item.Enabled = true;
+                            break;
+                        }
+                    }
+                    lblAnswer.Text = "Is Answer";
+                }
+            
+
+                Session["choiceId"] = choiceId;
+                Session["manageChoice"] = "update";
+                lblMTitle.Text = "Edit Choice";
+                ClientScript.RegisterStartupScript(this.GetType(), "Pop", "openModal();", true);
 
             }
             if (e.CommandName == "delete")
@@ -438,46 +534,7 @@ namespace TARCLearn.App_Pages
                 quizCon.Close();
                 successMsg("deleted", quizId);
             }
-            if (e.CommandName == "save")
-            {
-                if (Page.IsValid)
-                {
-                    txtChoice.Enabled = true;
-                    txtChoice.BorderStyle = BorderStyle.Inset;
-                    txtChoice.BackColor = Color.White;
-
-                    btnEdit.Visible = false;
-                    btnSave.Visible = true;
-                    btnCancel.Visible = true;
-                    btnDel.Visible = true;
-
-                    String edit = "UPDATE [dbo].[Choices] SET choiceText = @choiceText WHERE choiceId = @choiceId";
-                    SqlCommand cmdEdit = new SqlCommand(edit, quizCon);
-                    cmdEdit.Parameters.AddWithValue("@choiceText", txtChoice.Text);
-                    cmdEdit.Parameters.AddWithValue("@choiceId", choiceId);
-                    cmdEdit.ExecuteNonQuery();
-                    quizCon.Close();
-                    successMsg("updated", quizId);
-
-                }
-
-            }
-            if (e.CommandName == "cancel")
-            {
-
-                txtChoice.Enabled = false;
-                txtChoice.BorderStyle = BorderStyle.None;
-                txtChoice.BackColor = Color.Transparent;
-
-                btnEdit.Visible = true;
-                btnCancel.Visible = false;
-                btnDel.Visible = false;
-                btnSave.Visible = false;
-
-                String url = "questionList.aspx?quizId=" + quizId;
-                Response.Redirect(url);
-
-            }
+            
         }
     }
 }

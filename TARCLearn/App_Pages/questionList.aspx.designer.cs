@@ -33,6 +33,15 @@ namespace TARCLearn.App_Pages
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvQues;
 
         /// <summary>
+        /// lblMTitle control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblMTitle;
+
+        /// <summary>
         /// formChoice control.
         /// </summary>
         /// <remarks>
@@ -49,6 +58,15 @@ namespace TARCLearn.App_Pages
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvFormChoice;
+
+        /// <summary>
+        /// lblAnswer control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAnswer;
 
         /// <summary>
         /// rblAnswer control.

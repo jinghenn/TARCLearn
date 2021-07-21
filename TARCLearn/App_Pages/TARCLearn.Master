@@ -62,8 +62,9 @@
                 <a class="navbar-brand">
                     <asp:Image ID="imgLogo" Width="30px" runat="server" ImageUrl="~/images/TARC_logo.png"/>
                     TARCLearn
-                </a>                  
-                <a class="navbar-nav justify-content-end navbar-brand" id="logoutLink" runat="server" href="Login.aspx" >Logout</a>                                
+                </a>
+                <asp:Button ID="btnLogout" style="background-color:#438EB9;" class=" btn navbar-nav justify-content-end navbar-brand" runat="server" Text="Logout" OnClick="btnLogout_Click" />
+                                                
             </div>
         </nav>
         

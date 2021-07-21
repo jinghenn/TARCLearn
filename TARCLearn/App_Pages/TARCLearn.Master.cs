@@ -11,8 +11,8 @@ namespace TARCLearn.App_Pages
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            string userId = Session["userId"].ToString();
-            if (userId == null)
+
+            if (Session["Userid"] == null)
             {
                 System.Text.StringBuilder javaScript = new System.Text.StringBuilder();
                 string scriptKey = "ErrorMessage";
@@ -21,20 +21,24 @@ namespace TARCLearn.App_Pages
                 javaScript.Append("window.location='Login.aspx';");
 
                 ScriptManager.RegisterStartupScript(this, this.GetType(), scriptKey, javaScript.ToString(), true);
-                
-            }
 
-            if (Session["username"] != null)
+            }
+            else 
             {
-                lblUserName.Text = Session["username"].ToString();
-                lblUserType.Text = Session["usertype"].ToString();
+                if (Session["username"] != null)
+                {
+                    lblUserName.Text = Session["username"].ToString();
+                    lblUserType.Text = Session["usertype"].ToString();
 
+                }
+
+                if (Session["usertype"].ToString() == "Student")
+                {
+                    btnManage.Visible = false;
+                }
             }
+
             
-            if (Session["usertype"].ToString() == "Student")
-            {
-                btnManage.Visible = false;
-            }
         }
 
         protected void btnCourses_Click(object sender, EventArgs e)
@@ -50,6 +54,12 @@ namespace TARCLearn.App_Pages
         protected void btnDN_Click(object sender, EventArgs e)
         {
             Response.Redirect("myDiscussions.aspx");
+        }
+
+        protected void btnLogout_Click(object sender, EventArgs e)
+        {
+            Session.Abandon();
+            Response.Redirect("Login.aspx");
         }
     }
 }

@@ -86,7 +86,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Add New Choice</h4>
+                        <asp:Label ID="lblMTitle" runat="server"  class="modal-title"></asp:Label>  
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">
@@ -101,7 +101,7 @@
                         </div>
                         
                         <div class="row mb-3">
-                            <label for="rblAnswer" class="col-sm-3 col-form-label">Is Answer</label>
+                            <asp:Label ID="lblAnswer" class="col-sm-3 col-form-label" runat="server" Text="Is Answer"></asp:Label>                            
                             <div class="col-sm-9">
                                  <asp:RadioButtonList ID="rblAnswer" runat="server">
                                     <asp:ListItem>True</asp:ListItem>
@@ -157,7 +157,10 @@
             <ItemTemplate>
                 <div class="questionBox">
                     <div>
-                            <asp:TextBox ID="txtQuesText"  runat="server"  Width="70%" Enabled="false" BorderStyle="None" BackColor="Transparent" TextMode="MultiLine" Rows="2" ></asp:TextBox>
+                                                    
+                            <asp:TextBox ID="txtQuesNo" runat="server" Width="5%"  Enabled="false" BorderStyle="None" BackColor="Transparent" TextMode="MultiLine" Rows="2" ></asp:TextBox>
+                            <asp:TextBox ID="txtQuesText"  Text='<%# Eval("questionText")%>' runat="server" Width="65%"  Enabled="false" BorderStyle="None" BackColor="Transparent" TextMode="MultiLine" Rows="2" ></asp:TextBox>
+                          
                             <div class=" rightButton "  role="group">
                                 <asp:LinkButton ID="btnEditQuesText" CommandName="edit" CommandArgument='<%# Eval("questionId")%>' CssClass="btn btn-outline-info" runat="server" CausesValidation="false"  Visible="False">Edit</asp:LinkButton>
                                 <asp:LinkButton ID="btnAddChoice" CommandName="add" CommandArgument='<%# Eval("questionId")%>' CssClass="btn btn-outline-secondary " runat="server"  Visible="False" ValidationGroup="Edit" >Add Choice</asp:LinkButton>
@@ -172,18 +175,11 @@
 
                     <asp:Repeater ID="rptEditChoice" runat="server"  OnItemCommand="rptEditChoice_ItemCommand" Visible="False">
                         <ItemTemplate>
-                           <div class="label1">                    
-                                <asp:TextBox ID="txtChoice" runat="server" style="width: 700px;" Text='<%# Eval("choiceText") %>' Enabled="false" BorderStyle="None" BackColor="Transparent"  ></asp:TextBox>                                                    
-                                <asp:RequiredFieldValidator ValidationGroup="Edit" ForeColor="Red" Display="Dynamic" ID="rfvtxtChoice" runat="server" ErrorMessage=" choiceId Cannot Be Blank" ControlToValidate="txtChoice" ></asp:RequiredFieldValidator>
-                    
+                           <div class="label1">
+                                <asp:Label ID="lblChoice" runat="server" Text= '<%# Eval("choiceText") %>'/>
+                                <asp:ImageButton ID="btnDelete" CommandName="delete" CommandArgument='<%# Eval("choiceId")%>' CssClass="rightButton" Height="15px" Width="15px" runat="server" ImageUrl="~/images/delete_icon.png"  OnClientClick='return confirm("Are you sure you want to delete this course?");'/> 
+                                <asp:ImageButton ID="btnEdit" CommandName="edit" CommandArgument='<%# Eval("choiceId")%>' CssClass="rightButton" Height="15px" Width="15px" runat="server" ImageUrl="~/images/edit_icon.png"   />                                                      
                             
-                            <div class=" rightButton "  role="group">
-                                <asp:LinkButton ID="btnEdit" CommandName="edit" CommandArgument='<%# Eval("choiceId")%>' CssClass="btn btn-outline-info" runat="server" CausesValidation="false">Edit</asp:LinkButton>
-                                <asp:LinkButton ID="btnSave" CommandName="save" CommandArgument='<%# Eval("choiceId")%>' CssClass="btn btn-outline-success " runat="server"  Visible="False" ValidationGroup="Edit">Save</asp:LinkButton>
-                                <asp:LinkButton ID="btnCancel" CommandName="cancel"  CssClass="btn btn-outline-danger " runat="server"  Visible="False" CausesValidation="false">Cancel</asp:LinkButton>
-                                <asp:LinkButton ID="btnDelete" CommandName="delete" CommandArgument='<%# Eval("choiceId")%>' CssClass="btn btn-danger" runat="server"  Visible="False" CausesValidation="false" OnClientClick='return confirm("Are you sure you want to delete this item?");'>Delete</asp:LinkButton>
-                            </div>
-                    
                            </div> 
                         </ItemTemplate>
                     </asp:Repeater>
