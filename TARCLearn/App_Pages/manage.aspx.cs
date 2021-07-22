@@ -188,7 +188,7 @@ namespace TARCLearn.App_Pages
                     {
                         if (dtrCourse.HasRows && userId != null)
                         {
-                            if(dropUserType && availableLecture < 3)
+                            if(dropUserType && availableLecture < 2)
                             {
                                 lecturerFailList.Add(emailList[i]);
                             }
@@ -314,7 +314,7 @@ namespace TARCLearn.App_Pages
 
                         if (lecturerFailList.Any())
                         {
-                            respond += " " + lecturerFailList.Count + " lecturer (At least 2 lecturer must be in a course) ";
+                            respond += " " + lecturerFailList.Count + " lecturer (At least 1 lecturer must be in a course) ";
                             for (int i = 0; i < lecturerFailList.Count; i++)
                             {
 
