@@ -447,7 +447,7 @@ namespace TARCLearn.App_Pages
                 TARCLearnEntities db = new TARCLearnEntities();
                 int chapterIdINT = Convert.ToInt32(chapterId);
                 int newIndex = Convert.ToInt32(formIndex.Text);
-                var dtrMaterialIndex = db.Materials.Where(m => m.chapterId == chapterIdINT).Where(m => m.mode == ddlFormEditMaterialMode.SelectedValue).Where(m => m.index == newIndex).Where(m => m.isVideo == isVideo);
+                var dtrMaterialIndex = db.Materials.Where(m => m.chapterId == chapterIdINT).Where(m => m.mode == formMaterialMode.SelectedValue).Where(m => m.index == newIndex).Where(m => m.isVideo == isVideo);
 
 
                 if (!dtrMaterialTitle.HasRows && !fileInfo.Exists && !dtrMaterialIndex.Any())
@@ -586,30 +586,12 @@ namespace TARCLearn.App_Pages
                 int chapterIdINT = Convert.ToInt32(chapterId);
                 int newIndex = Convert.ToInt32(formEditIndex.Text);
                 var dtrMaterialIndex = db.Materials.Where(m => m.chapterId == chapterIdINT).Where(m => m.mode == ddlFormEditMaterialMode.SelectedValue).Where(m => m.index == newIndex);
-               
+                string extension = System.IO.Path.GetExtension(materialFileName);
+
                 //When both title and index does not exist
                 if (!dtrMaterialTitle.HasRows && !dtrMaterialIndex.Any())
                 {
-                    string newFileName;
-                    string oldFileName;
-                    string extension = System.IO.Path.GetExtension(materialFileName);
-
-                    if (isVideo)
-                    {
-                        newFileName = "~/videos/" + formEditTitle.Text + extension;
-                        oldFileName = "~/videos/" + materialFileName;
-                    }
-                    else
-                    {
-                        newFileName = "~/ReadingMaterials/" + formEditTitle.Text + extension;
-                        oldFileName = "~/ReadingMaterials/" + materialFileName;
-                    }
-
-                    string newMaterialTitle = Server.MapPath(newFileName);
-                    string oldMaterialTitle = Server.MapPath(oldFileName);
-
-                    System.IO.File.Move(oldMaterialTitle, newMaterialTitle);                    
-
+                   
                     materialCon.Close();
                     var materialIndex = db.Materials.SingleOrDefault(m => m.materialId == materialIdINT);
                     
@@ -694,26 +676,7 @@ namespace TARCLearn.App_Pages
 
                 }
                 else if (!dtrMaterialTitle.HasRows && (formEditIndex.Text == currentIndex) && dtrMaterialIndex.Any())
-                {
-                    string newFileName;
-                    string oldFileName;
-                    string extension = System.IO.Path.GetExtension(materialFileName);
-
-                    if (isVideo)
-                    {
-                        newFileName = "~/videos/" + formEditTitle.Text + extension;
-                        oldFileName = "~/videos/" + materialFileName;
-                    }
-                    else
-                    {
-                        newFileName = "~/ReadingMaterials/" + formEditTitle.Text + extension;
-                        oldFileName = "~/ReadingMaterials/" + materialFileName;
-                    }
-
-                    string newMaterialTitle = Server.MapPath(newFileName);
-                    string oldMaterialTitle = Server.MapPath(oldFileName);
-
-                    System.IO.File.Move(oldMaterialTitle, newMaterialTitle);
+                {                 
 
                     String editMaterial = "UPDATE [dbo].[Material] SET materialTitle=@materialTitle , mode=@mode, materialName=@materialName, materialDescription=@materialDescription WHERE materialId = @materialId";
                     SqlCommand cmdEditMaterial = new SqlCommand(editMaterial, materialCon);
