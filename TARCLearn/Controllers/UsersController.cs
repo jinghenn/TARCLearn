@@ -158,34 +158,26 @@ namespace TARCLearn.Controllers
                 if (user == null)
                 {
                     return Content(HttpStatusCode.NotFound, $"User {id} not found");
-                    
-                }
-                var discussions = db.DiscussionThreads.Include(d => d.User)
-                    .Where(d => d.userId == id)
-                    .Select(t => new DiscussionThreadDetailDto
-                    {
-                        threadId = t.threadId,
-                        threadTitle = t.threadTitle,
-                        threadDescription = t.threadDescription,
-                        userName = t.User.username,
-                        userId = t.userId,
-                        chapterId = t.chapterId
-                    }).ToHashSet();
-                var commentedDiscussions = db.DiscussionMessages.Include(dm => dm.DiscussionThread)
-                    .Where(dm => dm.userId == id) 
-                    .Include(dm => dm.User).Select(
-                    dm => new DiscussionThreadDetailDto
-                    {
-                        threadId = dm.threadId,
-                        threadTitle = dm.DiscussionThread.threadTitle,
-                        threadDescription = dm.DiscussionThread.threadDescription,
-                        userName = dm.DiscussionThread.User.username,
-                        userId = dm.DiscussionThread.userId,
-                        chapterId = dm.DiscussionThread.chapterId
-                    }).ToHashSet();
 
-                var mergedDiscussionSet = discussions.Union(commentedDiscussions).Distinct(new DiscussionEqualityComparer());
-                return Ok(mergedDiscussionSet);
+                }
+                
+                var discussions = db.Courses
+                    .Where(c => c.Users.Any(u => u.userId == id))
+                    .SelectMany(c => c.Chapters.SelectMany(chap => chap.DiscussionThreads
+                    .Where(dt => dt.userId == id || dt.DiscussionMessages.Any(dm => dm.userId == id))
+                    .Select(
+                       t => new DiscussionThreadDetailDto
+                       {
+                           threadId = t.threadId,
+                           threadTitle = t.threadTitle,
+                           threadDescription = t.threadDescription,
+                           userName = t.User.username,
+                           userId = t.userId,
+                           chapterId = t.chapterId
+                       }))).ToHashSet();
+
+                
+                return Ok(discussions.Distinct(new DiscussionEqualityComparer()));
             }
             catch (Exception e)
             {
