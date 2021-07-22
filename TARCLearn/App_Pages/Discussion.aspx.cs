@@ -67,7 +67,7 @@ namespace TARCLearn.App_Pages
             string scriptKey = "SuccessMessage";
             string url = "Discussion.aspx?chapterId=" + id;
 
-            javaScript.Append("var userConfirmation = window.confirm('" + "Successfully "+ msg + "');\n");
+            javaScript.Append("var userConfirmation = window.confirm('" + "Successfully "+ msg + "!');\n");
             javaScript.Append("window.location='" + url + "';");
 
             ClientScript.RegisterStartupScript(this.GetType(), scriptKey, javaScript.ToString(), true);

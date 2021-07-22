@@ -120,6 +120,18 @@ namespace TARCLearn.App_Pages
 
         }
 
+        public void successMsg(string chapterId, string materialType, string msg)
+        {
+            System.Text.StringBuilder javaScript = new System.Text.StringBuilder();
+            string scriptKey = "SuccessMessage";
+            string url = "material.aspx?chapterId=" + chapterId + "&materialType=" + materialType;
+
+            javaScript.Append("var userConfirmation = window.confirm('" + "Successfully " + msg + "!');\n");
+            javaScript.Append("window.location='" + url + "';");
+
+            ClientScript.RegisterStartupScript(this.GetType(), scriptKey, javaScript.ToString(), true);
+        }
+
         protected void btnLecture_Click(object sender, EventArgs e)
         {
             String isDel = Session["isDel"].ToString();
@@ -439,9 +451,10 @@ namespace TARCLearn.App_Pages
                 SqlConnection materialCon = new SqlConnection(providerConStr);
                 materialCon.Open();
 
-                SqlCommand cmdSelectMaterialTitle = new SqlCommand("Select * from [dbo].[Material] where materialTitle=@materialTitle AND isVideo = @isVideo", materialCon);
+                SqlCommand cmdSelectMaterialTitle = new SqlCommand("Select * from [dbo].[Material] where chapterId=@chapterId AND materialTitle=@materialTitle AND isVideo = @isVideo", materialCon);
                 cmdSelectMaterialTitle.Parameters.AddWithValue("@materialTitle", formTitle.Text);
                 cmdSelectMaterialTitle.Parameters.AddWithValue("@isVideo", isVideo);
+                cmdSelectMaterialTitle.Parameters.AddWithValue("@chapterId", chapterId);
                 SqlDataReader dtrMaterialTitle = cmdSelectMaterialTitle.ExecuteReader();
 
                 TARCLearnEntities db = new TARCLearnEntities();
@@ -551,160 +564,152 @@ namespace TARCLearn.App_Pages
                 {
                     isVideo = false;
                 }
+
                 string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
                 string providerConStr = new EntityConnectionStringBuilder(conStr).ProviderConnectionString;
                 SqlConnection materialCon = new SqlConnection(providerConStr);
-                materialCon.Open();
+                materialCon.Open();                          
 
-                //get materialFileName
-                SqlCommand cmdGetFileName = new SqlCommand("Select materialName from [dbo].[Material] where materialId=@materialId;", materialCon);
-                cmdGetFileName.Parameters.AddWithValue("@materialId", materialId);
-                String materialFileName = Convert.ToString(cmdGetFileName.ExecuteScalar());
-
-                SqlCommand cmdGetTitle = new SqlCommand("Select materialTitle from [dbo].[Material] where materialId=@materialId;", materialCon);
-                cmdGetTitle.Parameters.AddWithValue("@materialId", materialId);
-                String currentMaterialTitle = Convert.ToString(cmdGetTitle.ExecuteScalar());
-
-                SqlCommand cmdGetMode = new SqlCommand("Select mode from [dbo].[Material] where materialId=@materialId;", materialCon);
-                cmdGetMode.Parameters.AddWithValue("@materialId", materialId);
-                String currentMaterialMode = Convert.ToString(cmdGetMode.ExecuteScalar());
-
-                SqlCommand cmdGetDesc = new SqlCommand("Select materialDescription from [dbo].[Material] where materialId=@materialId;", materialCon);
-                cmdGetDesc.Parameters.AddWithValue("@materialId", materialId);
-                String currentMaterialDesc = Convert.ToString(cmdGetDesc.ExecuteScalar());
-
+                //get curent material info for compare is there any changes
                 int materialIdINT = Convert.ToInt32(materialId);
                 TARCLearnEntities db = new TARCLearnEntities();
                 var material = db.Materials.FirstOrDefault(m => m.materialId == materialIdINT);
-                var index = material.index;
-                String currentIndex = Convert.ToString(index);
+                string currentMaterialTitle = Convert.ToString(material.materialTitle);
+                string currentMaterialMode = Convert.ToString(material.mode);
+                string currentMaterialDesc = Convert.ToString(material.materialDescription);
+                string currentIndex = Convert.ToString(material.index);
 
-                SqlCommand cmdSelectMaterialTitle = new SqlCommand("Select * from [dbo].[Material] where materialTitle=@materialTitle", materialCon);
+                //check wheter entered title is exist in that chapter
+                SqlCommand cmdSelectMaterialTitle = new SqlCommand("Select * from [dbo].[Material] where materialTitle=@materialTitle AND chapterId=@chapterId AND isVideo=@isVideo", materialCon);
                 cmdSelectMaterialTitle.Parameters.AddWithValue("@materialTitle", formEditTitle.Text);
+                cmdSelectMaterialTitle.Parameters.AddWithValue("@chapterId", chapterId);
+                cmdSelectMaterialTitle.Parameters.AddWithValue("@isVideo", isVideo);
                 SqlDataReader dtrMaterialTitle = cmdSelectMaterialTitle.ExecuteReader();
 
+                //check wheter entered index is exist
                 int chapterIdINT = Convert.ToInt32(chapterId);
                 int newIndex = Convert.ToInt32(formEditIndex.Text);
-                var dtrMaterialIndex = db.Materials.Where(m => m.chapterId == chapterIdINT).Where(m => m.mode == ddlFormEditMaterialMode.SelectedValue).Where(m => m.index == newIndex);
-                string extension = System.IO.Path.GetExtension(materialFileName);
+                var dtrMaterialIndex = db.Materials.Where(m => m.chapterId == chapterIdINT).Where(m => m.mode == ddlFormEditMaterialMode.SelectedValue).Where(m => m.index == newIndex).Where(m => m.isVideo == isVideo);
 
-                //When both title and index does not exist
+                //both title and index does not exits
                 if (!dtrMaterialTitle.HasRows && !dtrMaterialIndex.Any())
                 {
-                   
                     materialCon.Close();
-                    var materialIndex = db.Materials.SingleOrDefault(m => m.materialId == materialIdINT);
-                    
-                    if (materialIndex != null)
+
+                    if (material != null)
                     {
-                        materialIndex.materialTitle = formEditTitle.Text;
-                        materialIndex.index = Convert.ToInt32(formEditIndex.Text);
-                        materialIndex.materialName = formEditTitle.Text + extension;
-                        materialIndex.mode = ddlFormEditMaterialMode.SelectedValue;
-                        materialIndex.materialDescription = formEditDescription.Text;
+                        material.materialTitle = formEditTitle.Text;
+                        material.index = Convert.ToInt32(formEditIndex.Text);
+                        material.mode = ddlFormEditMaterialMode.SelectedValue;
+                        material.materialDescription = formEditDescription.Text;
                         db.SaveChanges();
                     }
-                    System.Text.StringBuilder javaScript = new System.Text.StringBuilder();
-                    string scriptKey = "SuccessMessage";
-                    string url = "material.aspx?chapterId=" + chapterId + "&materialType=" + materialType;
-
-                    javaScript.Append("var userConfirmation = window.confirm('" + "Successfully updated!" + "');\n");
-                    javaScript.Append("window.location='" + url + "';");
-
-                    ClientScript.RegisterStartupScript(this.GetType(), scriptKey, javaScript.ToString(), true);
+                    successMsg(chapterId, materialType, "updated");
                 }
-                //when both title and index exist
-                else if (dtrMaterialTitle.HasRows && dtrMaterialIndex.Any())
+                // title exits
+                else if (dtrMaterialTitle.HasRows && !dtrMaterialIndex.Any())
                 {
-                    //check if the mode changed
-                    if(ddlFormEditMaterialMode.SelectedValue != currentMaterialMode || formEditDescription.Text != currentMaterialDesc)
+                    if (formEditTitle.Text == currentMaterialTitle)
                     {
-                        String editMaterial = "UPDATE [dbo].[Material] SET mode=@mode, materialDescription=@materialDescription WHERE materialId = @materialId";
-                        SqlCommand cmdEditMaterial = new SqlCommand(editMaterial, materialCon);                        
-                        cmdEditMaterial.Parameters.AddWithValue("@materialId", materialId);
-                        cmdEditMaterial.Parameters.AddWithValue("@mode", ddlFormEditMaterialMode.SelectedValue);
-                        cmdEditMaterial.Parameters.AddWithValue("@materialDescription", formEditDescription.Text);
-                        cmdEditMaterial.ExecuteNonQuery();
-
                         materialCon.Close();
 
-                        
-                        System.Text.StringBuilder javaScript = new System.Text.StringBuilder();
-                        string scriptKey = "SuccessMessage";
-                        string url = "material.aspx?chapterId=" + chapterId + "&materialType=" + materialType;                       
-
-                        javaScript.Append("var userConfirmation = window.confirm('" + "Successfully updated!" + "');\n");
-                        javaScript.Append("window.location='" + url + "';");
-
-                        ClientScript.RegisterStartupScript(this.GetType(), scriptKey, javaScript.ToString(), true);
+                        if (material != null)
+                        {
+                            material.index = Convert.ToInt32(formEditIndex.Text);
+                            material.mode = ddlFormEditMaterialMode.SelectedValue;
+                            material.materialDescription = formEditDescription.Text;
+                            db.SaveChanges();
+                        }
+                        successMsg(chapterId, materialType, "updated");
                     }
                     else
+                    {
+                        Response.Write("<script>alert('Entered Material Title Already Exists.')</script>");
+                    }
+
+
+                }
+                // index exits
+                else if (!dtrMaterialTitle.HasRows && dtrMaterialIndex.Any())
+                {
+                    if (ddlFormEditMaterialMode.SelectedValue == currentMaterialMode)
+                    {
+                        if (formEditIndex.Text != currentIndex)
+                        {
+                            materialCon.Close();
+                            Response.Write("<script>alert('Entered Material Index Already Exists.')</script>");
+                        }
+                        else
+                        {
+                            materialCon.Close();
+
+                            if (material != null)
+                            {
+                                material.materialTitle = formEditTitle.Text;
+                                material.materialDescription = formEditDescription.Text;
+                                db.SaveChanges();
+                            }
+                            successMsg(chapterId, materialType, "updated");
+                        }
+
+                    }
+                    else
+                    {
+                        Response.Write("<script>alert('Entered Material Index Already Exists.')</script>");
+                    }
+
+                }
+                else if (dtrMaterialTitle.HasRows && dtrMaterialIndex.Any())
+                {
+                    if (formEditIndex.Text == currentIndex && formEditTitle.Text == currentMaterialTitle && ddlFormEditMaterialMode.SelectedValue == currentMaterialMode && formEditDescription.Text != currentMaterialDesc)
+                    {
+                        materialCon.Close();
+
+                        if (material != null)
+                        {
+                            material.materialDescription = formEditDescription.Text;
+                            db.SaveChanges();
+                        }
+                        successMsg(chapterId, materialType, "updated");
+                    }
+                    else if (formEditIndex.Text == currentIndex && formEditTitle.Text == currentMaterialTitle && ddlFormEditMaterialMode.SelectedValue != currentMaterialMode)
+                    {
+                        materialCon.Close();
+                        Response.Write("<script>alert('Entered Material Index Already Exists.')</script>");
+                    }
+                    else if (formEditIndex.Text != currentIndex && formEditTitle.Text == currentMaterialTitle && ddlFormEditMaterialMode.SelectedValue == currentMaterialMode)
+                    {
+                        materialCon.Close();
+                        Response.Write("<script>alert('Entered Material Index Already Exists.')</script>");
+                    }
+                    else if (formEditIndex.Text == currentIndex && formEditTitle.Text != currentMaterialTitle && ddlFormEditMaterialMode.SelectedValue == currentMaterialMode)
+                    {
+                        materialCon.Close();
+                        Response.Write("<script>alert('Entered Material Title Already Exists.')</script>");
+                    }
+                    else if (formEditIndex.Text == currentIndex && formEditTitle.Text == currentMaterialTitle)
                     {
                         materialCon.Close();
                         Response.Write("<script>alert('Both Entered Material Title and Index Already Exists.')</script>");
                     }
-
-                }
-                //when only index is change
-                else if (dtrMaterialTitle.HasRows && (formEditTitle.Text == currentMaterialTitle) && !dtrMaterialIndex.Any())
-                {
-                    var materialIndex = db.Materials.SingleOrDefault(m => m.materialId == materialIdINT);
-
-                    if (materialIndex != null)
+                    else if (formEditIndex.Text != currentIndex && formEditTitle.Text != currentMaterialTitle)
                     {
-                        materialIndex.index = Convert.ToInt32(formEditIndex.Text);
-                        materialIndex.mode = ddlFormEditMaterialMode.SelectedValue;
-                        materialIndex.materialDescription = formEditDescription.Text;
-                        db.SaveChanges();
-                    }                  
-
-                    materialCon.Close();
-                    System.Text.StringBuilder javaScript = new System.Text.StringBuilder();
-                    string scriptKey = "SuccessMessage";
-                    string url = "material.aspx?chapterId=" + chapterId + "&materialType=" + materialType;
-
-                    javaScript.Append("var userConfirmation = window.confirm('" + "Successfully updated!" + "');\n");
-                    javaScript.Append("window.location='" + url + "';");
-
-                    ClientScript.RegisterStartupScript(this.GetType(), scriptKey, javaScript.ToString(), true);
+                        materialCon.Close();
+                        Response.Write("<script>alert('Both Entered Material Title and Index Already Exists.')</script>");
+                    }
+                    else
+                    {
+                        materialCon.Close();
+                        Response.Write("<script>alert('Entered Material Index Already Exists.')</script>");
+                    }
+                       
                 }
-                //when title and index is change but title ard exist
-                else if (dtrMaterialTitle.HasRows && (formEditTitle.Text != currentMaterialTitle) && !dtrMaterialIndex.Any())
+                else
                 {
                     materialCon.Close();
-                    Response.Write("<script>alert('Entered Title Already Exists.')</script>");
-
+                    Response.Write("<script>alert('There might be some error please contact us.')</script>");
                 }
-                else if (!dtrMaterialTitle.HasRows && (formEditIndex.Text == currentIndex) && dtrMaterialIndex.Any())
-                {                 
 
-                    String editMaterial = "UPDATE [dbo].[Material] SET materialTitle=@materialTitle , mode=@mode, materialName=@materialName, materialDescription=@materialDescription WHERE materialId = @materialId";
-                    SqlCommand cmdEditMaterial = new SqlCommand(editMaterial, materialCon);
-                    cmdEditMaterial.Parameters.AddWithValue("@materialTitle", formEditTitle.Text);
-                    cmdEditMaterial.Parameters.AddWithValue("@materialName", formEditTitle.Text + extension);
-                    cmdEditMaterial.Parameters.AddWithValue("@mode", ddlFormEditMaterialMode.SelectedValue);
-                    cmdEditMaterial.Parameters.AddWithValue("@materialDescription", formEditDescription.Text);
-                    cmdEditMaterial.Parameters.AddWithValue("@materialId", materialId);
-                    cmdEditMaterial.ExecuteNonQuery();
-
-                    materialCon.Close();
-
-                    System.Text.StringBuilder javaScript = new System.Text.StringBuilder();
-                    string scriptKey = "SuccessMessage";
-                    string url = "material.aspx?chapterId=" + chapterId + "&materialType=" + materialType;
-
-                    javaScript.Append("var userConfirmation = window.confirm('" + "Successfully updated!" + "');\n");
-                    javaScript.Append("window.location='" + url + "';");
-
-                    ClientScript.RegisterStartupScript(this.GetType(), scriptKey, javaScript.ToString(), true);
-                }
-                else if (!dtrMaterialTitle.HasRows && (formEditIndex.Text != currentIndex) && dtrMaterialIndex.Any())
-                {
-                    materialCon.Close();
-                    Response.Write("<script>alert('Entered Material Index Already Exists For This Chapter.')</script>");
-
-                }
-                
             }
         }
     }
