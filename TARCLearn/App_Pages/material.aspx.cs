@@ -72,38 +72,38 @@ namespace TARCLearn.App_Pages
                 TARCLearnEntities db = new TARCLearnEntities();
                 int chapterIdINT = Convert.ToInt32(chapterId);
                 
-                var materialLec = db.Materials.Where(m => m.chapterId == chapterIdINT).Where(m => m.mode == "LECTURE").Where(m => m.isVideo == isVideo).OrderBy(m => m.index);
+                var materialLec = db.Materials.Where(m => m.chapterId == chapterIdINT).Where(m => m.mode == "Lecture").Where(m => m.isVideo == isVideo).OrderBy(m => m.index);
                 rptLect.DataSource = materialLec.ToList(); ;
                 rptLect.DataBind();
 
-                var materialTut = db.Materials.Where(m => m.chapterId == chapterIdINT).Where(m => m.mode == "TUTORIAL").Where(m => m.isVideo == isVideo).OrderBy(m => m.index);
+                var materialTut = db.Materials.Where(m => m.chapterId == chapterIdINT).Where(m => m.mode == "Tutorial").Where(m => m.isVideo == isVideo).OrderBy(m => m.index);
                 rptTut.DataSource = materialTut.ToList(); ;
                 rptTut.DataBind();
 
-                var materialPrac = db.Materials.Where(m => m.chapterId == chapterIdINT).Where(m => m.mode == "PRACTICAL").Where(m => m.isVideo == isVideo).OrderBy(m => m.index);
+                var materialPrac = db.Materials.Where(m => m.chapterId == chapterIdINT).Where(m => m.mode == "Practical").Where(m => m.isVideo == isVideo).OrderBy(m => m.index);
                 rptPrac.DataSource = materialPrac.ToList(); ;
                 rptPrac.DataBind();
 
-                var materialOth = db.Materials.Where(m => m.chapterId == chapterIdINT).Where(m => m.mode == "OTHER").Where(m => m.isVideo == isVideo).OrderBy(m => m.index);
+                var materialOth = db.Materials.Where(m => m.chapterId == chapterIdINT).Where(m => m.mode == "Other").Where(m => m.isVideo == isVideo).OrderBy(m => m.index);
                 rptOth.DataSource = materialOth.ToList(); ;
                 rptOth.DataBind();
 
                 string userType = Session["userType"].ToString();
                 if (userType == "Lecturer")
                 {
-                    var materialDelLec = db.Materials.Where(m => m.chapterId == chapterIdINT).Where(m => m.mode == "LECTURE").Where(m => m.isVideo == isVideo).OrderBy(m => m.index);
+                    var materialDelLec = db.Materials.Where(m => m.chapterId == chapterIdINT).Where(m => m.mode == "Lecture").Where(m => m.isVideo == isVideo).OrderBy(m => m.index);
                     rptDelLect.DataSource = materialDelLec.ToList(); ;
                     rptDelLect.DataBind();
 
-                    var materialDelTut = db.Materials.Where(m => m.chapterId == chapterIdINT).Where(m => m.mode == "TUTORIAL").Where(m => m.isVideo == isVideo).OrderBy(m => m.index);
+                    var materialDelTut = db.Materials.Where(m => m.chapterId == chapterIdINT).Where(m => m.mode == "Tutorial").Where(m => m.isVideo == isVideo).OrderBy(m => m.index);
                     rptDelTut.DataSource = materialDelTut.ToList(); ;
                     rptDelTut.DataBind();
 
-                    var materialDelPrac = db.Materials.Where(m => m.chapterId == chapterIdINT).Where(m => m.mode == "PRACTICAL").Where(m => m.isVideo == isVideo).OrderBy(m => m.index);
+                    var materialDelPrac = db.Materials.Where(m => m.chapterId == chapterIdINT).Where(m => m.mode == "Practical").Where(m => m.isVideo == isVideo).OrderBy(m => m.index);
                     rptDelPrac.DataSource = materialDelPrac.ToList(); ;
                     rptDelPrac.DataBind();
 
-                    var materialDelOth = db.Materials.Where(m => m.chapterId == chapterIdINT).Where(m => m.mode == "OTHER").Where(m => m.isVideo == isVideo).OrderBy(m => m.index);
+                    var materialDelOth = db.Materials.Where(m => m.chapterId == chapterIdINT).Where(m => m.mode == "Other").Where(m => m.isVideo == isVideo).OrderBy(m => m.index);
                     rptDelOth.DataSource = materialDelOth.ToList(); ;
                     rptDelOth.DataBind();
 

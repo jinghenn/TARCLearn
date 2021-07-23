@@ -14,7 +14,7 @@
 			<asp:Image ID="Image1" class="image" runat="server" ImageUrl="~/images/TARC.png"/>
 		
 			<span class= "test">
-			TARC LEARN
+			TARCLEARN
 			</span>
 
 			<div class="loginWhiteboxSize">
