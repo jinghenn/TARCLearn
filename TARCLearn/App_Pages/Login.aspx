@@ -6,6 +6,7 @@
 <head runat="server">
 	<link rel="stylesheet" type="text/css" href="../Css/cssLogin.css" />
     <title>TARC Learn</title>
+	<link rel="icon" href="~/images/TARC_logo.png"> 
 </head>
 <body>
 	

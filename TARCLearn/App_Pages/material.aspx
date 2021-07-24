@@ -70,32 +70,35 @@
             const params = new URLSearchParams(window.location.search);
             var materialType = params.get('materialType').toString();
             if (materialType == "video") {
-
-                arguments.IsValid =
-                    ((sFile.endsWith('.flv')) ||
-                    (sFile.endsWith('.mov')) ||
-                    (sFile.endsWith('.wmv')) ||
-                    (sFile.endsWith('.avi')) ||
-                    (sFile.endsWith('.avchd')) ||
-                    (sFile.endsWith('.f4v')) ||
-                    (sFile.endsWith('.swf')) ||
-                    (sFile.endsWith('.mkv')) ||
-                    (sFile.endsWith('.webm')) ||
-                    (sFile.endsWith('.html5')) ||
-                    (sFile.endsWith('.mpeg-2')) ||
-                    (sFile.endsWith('.mp4')));
+                
+                 arguments.IsValid =
+                     ((sFile.endsWith('.flv')) ||
+                         (sFile.endsWith('.mov')) ||
+                         (sFile.endsWith('.wmv')) ||
+                         (sFile.endsWith('.avi')) ||
+                         (sFile.endsWith('.avchd')) ||
+                         (sFile.endsWith('.f4v')) ||
+                         (sFile.endsWith('.swf')) ||
+                         (sFile.endsWith('.mkv')) ||
+                         (sFile.endsWith('.webm')) ||
+                         (sFile.endsWith('.html5')) ||
+                         (sFile.endsWith('.mpeg-2')) ||
+                         (sFile.endsWith('.mp4')));
+              
 
             } else {
-                arguments.IsValid =
-                    ((sFile.endsWith('.pdf')) ||
-                    (sFile.endsWith('.pptx')) ||
-                    (sFile.endsWith('.ppt')) ||
-                    (sFile.endsWith('.doc')) ||
-                    (sFile.endsWith('.docx')) ||
-                    (sFile.endsWith('.xlsx')) ||
-                    (sFile.endsWith('.jpg')) ||
-                    (sFile.endsWith('.png')) ||
-                    (sFile.endsWith('.jpeg')));
+                
+                 arguments.IsValid =
+                     ((sFile.endsWith('.pdf')) ||
+                         (sFile.endsWith('.pptx')) ||
+                         (sFile.endsWith('.ppt')) ||
+                         (sFile.endsWith('.doc')) ||
+                         (sFile.endsWith('.docx')) ||
+                         (sFile.endsWith('.xlsx')) ||
+                         (sFile.endsWith('.jpg')) ||
+                         (sFile.endsWith('.png')) ||
+                         (sFile.endsWith('.jpeg')));
+                
             }
         }
 
@@ -161,7 +164,9 @@
                             <label for="file" class="form-label">Upload your file here</label>
                             <asp:FileUpload ID="file" runat="server" CssClass="form-control" />
                             <asp:CustomValidator ValidationGroup="Add Form" ForeColor="Red" ID="CustomValidator1" ControlToValidate="file" runat="server" SetFocusOnError="true" Display="Dynamic" ErrorMessage="Invalid: File Type." ClientValidationFunction="UploadFileCheck"></asp:CustomValidator>
-                            <div id="uploadHelp" class="form-text">
+                            <asp:RequiredFieldValidator ValidationGroup="Add Form" ForeColor="Red" ID="rfvFile" ControlToValidate="file" runat="server" Display="Dynamic" ErrorMessage="File Cannot Be Blank"></asp:RequiredFieldValidator>
+
+                             <div id="uploadHelp" class="form-text">
                                 <asp:Label ID="lblSupport" runat="server" ></asp:Label>                                
                             </div>
                         </div>

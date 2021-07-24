@@ -16,9 +16,8 @@ namespace TARCLearn.App_Pages
         protected void Page_Load(object sender, EventArgs e)
         {  
             if (!IsPostBack)
-            {
-                string userType = Session["userType"].ToString();
-                if(userType == null)
+            {                
+                if(Session["Userid"] == null)
                 {
                     System.Text.StringBuilder javaScript = new System.Text.StringBuilder();
                     string scriptKey = "ErrorMessage";                   
@@ -42,7 +41,7 @@ namespace TARCLearn.App_Pages
                 chpRepeater.DataSource = cmdSelectChapter.ExecuteReader();
                 chpRepeater.DataBind();
 
-                
+                string userType = Session["userType"].ToString();
                 if (userType == "Lecturer")
                 {
                     //select data to be bound
@@ -76,7 +75,7 @@ namespace TARCLearn.App_Pages
             string scriptKey = "SuccessMessage";
             string url = "Chapter.aspx?courseId=" + id;
 
-            javaScript.Append("var userConfirmation = window.confirm('" + "Successfully " + msg + "');\n");
+            javaScript.Append("var userConfirmation = window.confirm('" + "Successfully " + msg + "!');\n");
             javaScript.Append("window.location='" + url + "';");
 
             ClientScript.RegisterStartupScript(this.GetType(), scriptKey, javaScript.ToString(), true);
@@ -228,12 +227,14 @@ namespace TARCLearn.App_Pages
                     btnDel.Visible = true;
                     btnSave.Visible = false;
 
-                    SqlCommand cmdSelectChapterNo = new SqlCommand("Select * from [dbo].[Chapter] where chapterNo=@chapterNo", chpCon);
+                    SqlCommand cmdSelectChapterNo = new SqlCommand("Select * from [dbo].[Chapter] where chapterNo=@chapterNo AND courseId=@courseId;", chpCon);
                     cmdSelectChapterNo.Parameters.AddWithValue("@chapterNo", txtChapterNo.Text);
+                    cmdSelectChapterNo.Parameters.AddWithValue("@courseId", courseId);
                     SqlDataReader dtrChapterNo = cmdSelectChapterNo.ExecuteReader();
 
-                    SqlCommand cmdSelectChapterTitle = new SqlCommand("Select * from [dbo].[Chapter] where chapterTitle=@chapterTitle", chpCon);
+                    SqlCommand cmdSelectChapterTitle = new SqlCommand("Select * from [dbo].[Chapter] where chapterTitle=@chapterTitle AND courseId=@courseId;", chpCon);
                     cmdSelectChapterTitle.Parameters.AddWithValue("@chapterTitle", txtChapterTitle.Text);
+                    cmdSelectChapterTitle.Parameters.AddWithValue("@courseId", courseId);
                     SqlDataReader dtrChapterTitle = cmdSelectChapterTitle.ExecuteReader();
 
                     
@@ -253,48 +254,63 @@ namespace TARCLearn.App_Pages
                     }
                     else if (dtrChapterNo.HasRows && dtrChapterTitle.HasRows)
                     {
-                        chpCon.Close();
-                        Response.Write("<script>alert('Both Entered Chapter No. and Chapter Title Already Exists.')</script>");                      
+                        if (txtChapterNo.Text == currentChpNo)
+                        {
+                            chpCon.Close();
+                            Response.Write("<script>alert('Entered Chapter Title Already Exists.')</script>");
+                        }else if (txtChapterTitle.Text == currentChpTitle)
+                        {
+                            chpCon.Close();
+                            Response.Write("<script>alert('Entered Chapter No. Already Exists.')</script>");
+                        }
+                        else
+                        {
+                            chpCon.Close();
+                            Response.Write("<script>alert('Both Entered Chapter No. and Chapter Title Already Exists.')</script>");
+                        }
+                                           
 
                     }
-                    else if (dtrChapterNo.HasRows && (txtChapterNo.Text == currentChpNo) && !dtrChapterTitle.HasRows)
+                    else if (dtrChapterNo.HasRows && !dtrChapterTitle.HasRows)
                     {
-                        String editCourse = "UPDATE [dbo].[Chapter] SET chapterTitle = @newChapterTitle WHERE chapterId = @chapterId";
-                        SqlCommand cmdEditCourse = new SqlCommand(editCourse, chpCon);
-                        cmdEditCourse.Parameters.AddWithValue("@newChapterTitle", txtChapterTitle.Text);
-                        cmdEditCourse.Parameters.AddWithValue("@chapterId", chpId);
-                        cmdEditCourse.ExecuteNonQuery();
+                        if (txtChapterNo.Text == currentChpNo)
+                        {
+                            String editCourse = "UPDATE [dbo].[Chapter] SET chapterTitle = @newChapterTitle WHERE chapterId = @chapterId";
+                            SqlCommand cmdEditCourse = new SqlCommand(editCourse, chpCon);
+                            cmdEditCourse.Parameters.AddWithValue("@newChapterTitle", txtChapterTitle.Text);
+                            cmdEditCourse.Parameters.AddWithValue("@chapterId", chpId);
+                            cmdEditCourse.ExecuteNonQuery();
 
-                        chpCon.Close();
-                        System.Text.StringBuilder javaScript = new System.Text.StringBuilder();
-                        successMsg("updated", courseId);
-                    }
-                    else if (dtrChapterNo.HasRows && (txtChapterNo.Text != currentChpNo) && !dtrChapterTitle.HasRows)
+                            chpCon.Close();
+                            System.Text.StringBuilder javaScript = new System.Text.StringBuilder();
+                            successMsg("updated", courseId);
+                        }else if (txtChapterNo.Text != currentChpNo)
+                        {
+                            chpCon.Close();
+                            Response.Write("<script>alert('Entered Chapter No. Already Exists.')</script>");
+                        }
+                       
+                    }                  
+                    else if (!dtrChapterNo.HasRows && dtrChapterTitle.HasRows)
                     {
-                        chpCon.Close();
-                        Response.Write("<script>alert('Entered Chapter No. Already Exists.')</script>");
+                        if (txtChapterTitle.Text == currentChpTitle)
+                        {
+                            String editCourse = "UPDATE [dbo].[Chapter] SET chapterNo = @newChapterNo WHERE chapterId = @chapterId";
+                            SqlCommand cmdEditCourse = new SqlCommand(editCourse, chpCon);
+                            cmdEditCourse.Parameters.AddWithValue("@newChapterNo", txtChapterNo.Text);
+                            cmdEditCourse.Parameters.AddWithValue("@chapterId", chpId);
+                            cmdEditCourse.ExecuteNonQuery();
 
+                            chpCon.Close();
+                            successMsg("updated", courseId);
+                        }else if (txtChapterTitle.Text != currentChpTitle)
+                        {
+                            chpCon.Close();
+                            Response.Write("<script>alert('Entered Chapter Title Already Exists.')</script>");
+                        }
+                        
                     }
-                    else if (!dtrChapterNo.HasRows && (txtChapterTitle.Text == currentChpTitle) && dtrChapterTitle.HasRows)
-                    {
-                        String editCourse = "UPDATE [dbo].[Chapter] SET chapterNo = @newChapterNo WHERE chapterId = @chapterId";
-                        SqlCommand cmdEditCourse = new SqlCommand(editCourse, chpCon);
-                        cmdEditCourse.Parameters.AddWithValue("@newChapterNo", txtChapterNo.Text);
-                        cmdEditCourse.Parameters.AddWithValue("@chapterId", chpId);
-                        cmdEditCourse.ExecuteNonQuery();
-
-                        chpCon.Close();
-                        successMsg("updated", courseId);
-                    }
-                    else if (!dtrChapterNo.HasRows && (txtChapterTitle.Text != currentChpTitle) && dtrChapterTitle.HasRows)
-                    {
-                        chpCon.Close();
-                        Response.Write("<script>alert('Entered Chapter Title Already Exists.')</script>");
-
-                    }
-
-
-
+                    
                 }
 
             }

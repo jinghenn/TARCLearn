@@ -19,8 +19,8 @@ namespace TARCLearn.App_Pages
 
             if (!IsPostBack)
             {
-                string userId = Session["userId"].ToString();
-                if (userId == null)
+                
+                if (Session["Userid"] == null)
                 {
                     System.Text.StringBuilder javaScript = new System.Text.StringBuilder();
                     string scriptKey = "ErrorMessage";
@@ -298,7 +298,7 @@ namespace TARCLearn.App_Pages
                 if (rptDelTut.Visible == true)
                 {
                     rptDelTut.Visible = false;
-                    rptDelTut.Visible = true;
+                    rptTut.Visible = true;
                 }
                 if (rptDelOth.Visible == true)
                 {

@@ -14,8 +14,8 @@ namespace TARCLearn.App_Pages
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            string userId = Session["userId"].ToString();
-            if (userId == null)
+            
+            if (Session["Userid"] == null)
             {
                 System.Text.StringBuilder javaScript = new System.Text.StringBuilder();
                 string scriptKey = "ErrorMessage";

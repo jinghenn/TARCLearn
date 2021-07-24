@@ -17,8 +17,8 @@ namespace TARCLearn.App_Pages
         {
             if (!IsPostBack)
             {
-                string userId = Session["userId"].ToString();
-                if (userId == null)
+                
+                if (Session["Userid"] == null)
                 {
                     System.Text.StringBuilder javaScript = new System.Text.StringBuilder();
                     string scriptKey = "ErrorMessage";

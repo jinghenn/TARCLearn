@@ -19,8 +19,8 @@ namespace TARCLearn.App_Pages
 
             if (!IsPostBack)
             {
-                string userId = Session["userId"].ToString();
-                if (userId == null)
+                
+                if (Session["Userid"] == null)
                 {
                     System.Text.StringBuilder javaScript = new System.Text.StringBuilder();
                     string scriptKey = "ErrorMessage";
@@ -208,23 +208,34 @@ namespace TARCLearn.App_Pages
                 string questionText = formQues.Text;
 
                 string quizId = Request.QueryString["quizId"];
-
-
                 string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
                 string providerConStr = new EntityConnectionStringBuilder(conStr).ProviderConnectionString;
                 SqlConnection quizCon = new SqlConnection(providerConStr);
                 quizCon.Open();
 
-                string addQues = "INSERT INTO [dbo].[Question] VALUES(@questionText,@quizId);";
-                SqlCommand cmdAddQues = new SqlCommand(addQues, quizCon);
+                SqlCommand cmdSelectQues = new SqlCommand("Select * from [dbo].[Question] where questionText=@questionText AND quizId=@quizId", quizCon);
+                cmdSelectQues.Parameters.AddWithValue("@questionText", questionText);
+                cmdSelectQues.Parameters.AddWithValue("@quizId", quizId);
+                SqlDataReader dtrQues = cmdSelectQues.ExecuteReader();
 
-                cmdAddQues.Parameters.AddWithValue("@questionText", questionText);
-                cmdAddQues.Parameters.AddWithValue("@quizId", quizId);
-                cmdAddQues.ExecuteNonQuery();
+                if (!dtrQues.HasRows)
+                {
+                    
+                    string addQues = "INSERT INTO [dbo].[Question] VALUES(@questionText,@quizId);";
+                    SqlCommand cmdAddQues = new SqlCommand(addQues, quizCon);
 
-                quizCon.Close();
+                    cmdAddQues.Parameters.AddWithValue("@questionText", questionText);
+                    cmdAddQues.Parameters.AddWithValue("@quizId", quizId);
+                    cmdAddQues.ExecuteNonQuery();
 
-                successMsg("added", quizId);
+                    quizCon.Close();
+
+                    successMsg("added", quizId);
+                }
+                else
+                {
+                    Response.Write("<script>alert('Entered Question Already Exists.')</script>");
+                }
 
 
             }
@@ -316,8 +327,9 @@ namespace TARCLearn.App_Pages
                     btnCancelQuesText.Visible = false;
                     btnDeleteQuesText.Visible = false;
 
-                    SqlCommand cmdSelect = new SqlCommand("Select * from [dbo].[Question] where questionText=@questionText", quizCon);
+                    SqlCommand cmdSelect = new SqlCommand("Select * from [dbo].[Question] where questionText=@questionText AND quizId=@quizId", quizCon);
                     cmdSelect.Parameters.AddWithValue("@questionText", txtQuesText.Text);
+                    cmdSelect.Parameters.AddWithValue("@quizId", quizId);
                     SqlDataReader dtr = cmdSelect.ExecuteReader();
 
 
@@ -416,27 +428,68 @@ namespace TARCLearn.App_Pages
                 SqlConnection quizCon = new SqlConnection(providerConStr);
                 quizCon.Open();
 
-                if(Session["manageChoice"].ToString() == "add") {
-                    string add = "INSERT INTO [dbo].[Choices] VALUES(@choiceText,@isAnswer,@questionId);";
-                    SqlCommand cmdAdd = new SqlCommand(add, quizCon);
+                
 
-                    cmdAdd.Parameters.AddWithValue("@choiceText", formChoice.Text);
-                    cmdAdd.Parameters.AddWithValue("@isAnswer", Convert.ToBoolean(rblAnswer.SelectedItem.Text));
-                    cmdAdd.Parameters.AddWithValue("@questionId", Session["questionId"].ToString());
-                    cmdAdd.ExecuteNonQuery();
-                    quizCon.Close();
-                    successMsg("added", quizId);
+                SqlCommand cmdSelectChoice = new SqlCommand("Select * from [dbo].[Choices] where choiceText=@choiceText AND questionId=@questionId", quizCon);
+                cmdSelectChoice.Parameters.AddWithValue("@choiceText", formChoice.Text);
+                cmdSelectChoice.Parameters.AddWithValue("@questionId", Session["questionId"].ToString());
+                SqlDataReader dtrChoice = cmdSelectChoice.ExecuteReader();
+
+                if (Session["manageChoice"].ToString() == "add") {
+                    
+                    if (!dtrChoice.HasRows)
+                    {
+                        string add = "INSERT INTO [dbo].[Choices] VALUES(@choiceText,@isAnswer,@questionId);";
+                        SqlCommand cmdAdd = new SqlCommand(add, quizCon);
+
+                        cmdAdd.Parameters.AddWithValue("@choiceText", formChoice.Text);
+                        cmdAdd.Parameters.AddWithValue("@isAnswer", Convert.ToBoolean(rblAnswer.SelectedItem.Text));
+                        cmdAdd.Parameters.AddWithValue("@questionId", Session["questionId"].ToString());
+                        cmdAdd.ExecuteNonQuery();
+                        quizCon.Close();
+                        successMsg("added", quizId);
+                    }
+                    else
+                    {
+                        Response.Write("<script>alert('Entered Choice Already Exists.')</script>");
+                    }
                 }
                 else if (Session["manageChoice"].ToString() == "update")
                 {
-                    String edit = "UPDATE [dbo].[Choices] SET choiceText = @choiceText, isAnswer=@isAnswer WHERE choiceId = @choiceId";
-                    SqlCommand cmdEdit = new SqlCommand(edit, quizCon);
-                    cmdEdit.Parameters.AddWithValue("@choiceText", formChoice.Text);
-                    cmdEdit.Parameters.AddWithValue("@choiceId", Session["choiceId"].ToString());
-                    cmdEdit.Parameters.AddWithValue("@isAnswer", Convert.ToBoolean(rblAnswer.SelectedItem.Text));
-                    cmdEdit.ExecuteNonQuery();
-                    quizCon.Close();
-                    successMsg("updated", quizId);
+                    String strGetChoice = "Select isAnswer FROM Choices Where choiceId=@choiceId;";
+                    SqlCommand cmdGetChoice = new SqlCommand(strGetChoice, quizCon);
+                    cmdGetChoice.Parameters.AddWithValue("@choiceId", Session["choiceId"].ToString());
+                    Boolean currentChoice = Convert.ToBoolean(cmdGetChoice.ExecuteScalar());
+
+                    if (!dtrChoice.HasRows)
+                    {
+                        String edit = "UPDATE [dbo].[Choices] SET choiceText = @choiceText, isAnswer=@isAnswer WHERE choiceId = @choiceId";
+                        SqlCommand cmdEdit = new SqlCommand(edit, quizCon);
+                        cmdEdit.Parameters.AddWithValue("@choiceText", formChoice.Text);
+                        cmdEdit.Parameters.AddWithValue("@choiceId", Session["choiceId"].ToString());
+                        cmdEdit.Parameters.AddWithValue("@isAnswer", Convert.ToBoolean(rblAnswer.SelectedItem.Text));
+                        cmdEdit.ExecuteNonQuery();
+                        quizCon.Close();
+                        successMsg("updated", quizId);
+                    }
+                    else if(dtrChoice.HasRows)
+                    {
+                        if(Convert.ToBoolean(rblAnswer.SelectedItem.Text) != currentChoice)
+                        {
+                            String edit = "UPDATE [dbo].[Choices] SET choiceText = @choiceText, isAnswer=@isAnswer WHERE choiceId = @choiceId";
+                            SqlCommand cmdEdit = new SqlCommand(edit, quizCon);
+                            cmdEdit.Parameters.AddWithValue("@choiceText", formChoice.Text);
+                            cmdEdit.Parameters.AddWithValue("@choiceId", Session["choiceId"].ToString());
+                            cmdEdit.Parameters.AddWithValue("@isAnswer", Convert.ToBoolean(rblAnswer.SelectedItem.Text));
+                            cmdEdit.ExecuteNonQuery();
+                            quizCon.Close();
+                            successMsg("updated", quizId);
+                        }
+                        else
+                        {
+                            Response.Write("<script>alert('Entered Choice Already Exists.')</script>");
+                        }
+                    }
                 }
                 
             }
@@ -517,8 +570,8 @@ namespace TARCLearn.App_Pages
                     }
                     lblAnswer.Text = "Is Answer";
                 }
-            
 
+                Session["questionId"] = questionId;
                 Session["choiceId"] = choiceId;
                 Session["manageChoice"] = "update";
                 lblMTitle.Text = "Edit Choice";

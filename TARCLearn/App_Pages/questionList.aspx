@@ -177,7 +177,7 @@
                         <ItemTemplate>
                            <div class="label1">
                                 <asp:Label ID="lblChoice" runat="server" Text= '<%# Eval("choiceText") %>'/>
-                                <asp:ImageButton ID="btnDelete" CommandName="delete" CommandArgument='<%# Eval("choiceId")%>' CssClass="rightButton" Height="15px" Width="15px" runat="server" ImageUrl="~/images/delete_icon.png"  OnClientClick='return confirm("Are you sure you want to delete this course?");'/> 
+                                <asp:ImageButton ID="btnDelete" CommandName="delete" CommandArgument='<%# Eval("choiceId")%>' CssClass="rightButton" Height="15px" Width="15px" runat="server" ImageUrl="~/images/delete_icon.png"  OnClientClick='return confirm("Are you sure you want to delete this item?");'/> 
                                 <asp:ImageButton ID="btnEdit" CommandName="edit" CommandArgument='<%# Eval("choiceId")%>' CssClass="rightButton" Height="15px" Width="15px" runat="server" ImageUrl="~/images/edit_icon.png"   />                                                      
                             
                            </div> 

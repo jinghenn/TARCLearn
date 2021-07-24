@@ -19,9 +19,8 @@ namespace TARCLearn.App_Pages
         {
             if (!IsPostBack)
             {
-                Session["userNo"] = "0";
-                string userId = Session["userId"].ToString();
-                if (userId == null)
+                
+                if (Session["Userid"] == null)
                 {
                     System.Text.StringBuilder javaScript = new System.Text.StringBuilder();
                     string scriptKey = "ErrorMessage";
@@ -31,7 +30,8 @@ namespace TARCLearn.App_Pages
 
                     ClientScript.RegisterStartupScript(this.GetType(), scriptKey, javaScript.ToString(), true);
                 }
-
+                Session["userNo"] = "0";
+                
                 string conStr = ConfigurationManager.ConnectionStrings["TARCLearnEntities"].ConnectionString;
                 string providerConStr = new EntityConnectionStringBuilder(conStr).ProviderConnectionString;
                 SqlConnection manageCon = new SqlConnection(providerConStr);
@@ -67,7 +67,17 @@ namespace TARCLearn.App_Pages
                 
             }
         }
+        public void successMsg(string msg)
+        {
+            System.Text.StringBuilder javaScript = new System.Text.StringBuilder();
+            string scriptKey = "SuccessMessage";
+            string url = "manage.aspx";
 
+            javaScript.Append("var userConfirmation = window.confirm('" + "Successfully " + msg + "');\n");
+            javaScript.Append("window.location='" + url + "';");
+
+            ClientScript.RegisterStartupScript(this.GetType(), scriptKey, javaScript.ToString(), true);
+        }
         protected void rptUserList_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
 
@@ -83,7 +93,7 @@ namespace TARCLearn.App_Pages
                 lblNo.Text = Convert.ToString(userNo);
             }
         }
-                protected void manageStudentFormSubmitClicked(object sender, EventArgs e)
+        protected void manageStudentFormSubmitClicked(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
@@ -256,11 +266,11 @@ namespace TARCLearn.App_Pages
                 {
                     if (Session["manageStudent"].ToString() == "enrol")
                     {
-                        Response.Write("<script>alert('Succecful Enrol All Entered User.')</script>");
+                        successMsg("Enrol All Entered User.");
                     }
                     else if (Session["manageStudent"].ToString() == "drop")
                     {
-                        Response.Write("<script>alert('Succecful Drop All Entered User.')</script>");
+                        successMsg("Drop All Entered User.");
                     }                                      
                  
                 }
@@ -269,48 +279,54 @@ namespace TARCLearn.App_Pages
 
                     if (Session["manageStudent"].ToString() == "enrol")
                     {
-                        string respond = "<script>alert('Succecful Enrol All Entered User except " + failList.Count + " Already Enrolled User ";
+                        string respond = "Succecful Enrol All Entered User except";
 
-                        for (int i = 0; i < failList.Count; i++)
+                        if (failList.Any())
                         {
-
-                            if (i == failList.Count - 1)
+                            respond += " " + failList.Count + " Already Enrolled User ";
+                            for (int i = 0; i < failList.Count; i++)
                             {
-                                respond += failList[i] + ". ";
-                            }
-                            else
-                            {
-                                respond += failList[i] + ", ";
-                            }
+
+                                if (i == failList.Count - 1)
+                                {
+                                    respond += failList[i] + ". ";
+                                }
+                                else
+                                {
+                                    respond += failList[i] + ", ";
+                                }
 
 
+                            }
                         }
 
-
-                        respond += " And " + invalidEmailList.Count + " Invalid Email ";
-
-                        for (int i = 0; i < invalidEmailList.Count; i++)
+                        if (invalidEmailList.Any())
                         {
+                            respond += " " + invalidEmailList.Count + " Invalid Email ";
 
-                            if (i == invalidEmailList.Count - 1)
+                            for (int i = 0; i < invalidEmailList.Count; i++)
                             {
-                                respond += invalidEmailList[i] + ". ";
-                            }
-                            else
-                            {
-                                respond += invalidEmailList[i] + ", ";
-                            }
+
+                                if (i == invalidEmailList.Count - 1)
+                                {
+                                    respond += invalidEmailList[i] + ". ";
+                                }
+                                else
+                                {
+                                    respond += invalidEmailList[i] + ", ";
+                                }
 
 
+                            }
                         }
-                        respond += "')</script>";
 
-                        Response.Write(respond);
+                        successMsg(respond);
+                        
 
                     }
                     else if (Session["manageStudent"].ToString() == "drop")
                     {
-                        string respond = "<script>alert('Succecful Drop All Entered User except";
+                        string respond = "Succecful Drop All Entered User except";
 
                         if (lecturerFailList.Any())
                         {
@@ -349,7 +365,7 @@ namespace TARCLearn.App_Pages
 
                             }
                         }
-                        if (failList.Any())
+                        if (invalidEmailList.Any())
                         {
                             respond += " " + invalidEmailList.Count + " Invalid Email ";
 
@@ -367,11 +383,11 @@ namespace TARCLearn.App_Pages
 
 
                             }
-                        }                       
-                                       
-                        respond += "')</script>";
+                        }
 
-                        Response.Write(respond);
+                        successMsg(respond);
+
+                        
                         
                     }
                 }

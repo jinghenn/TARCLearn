@@ -20,8 +20,8 @@ namespace TARCLearn.App_Pages
         {
             if (!IsPostBack)
             {
-                string userId = Session["userId"].ToString();
-                if (userId == null)
+                
+                if (Session["Userid"] == null)
                 {
                     System.Text.StringBuilder javaScript = new System.Text.StringBuilder();
                     string scriptKey = "ErrorMessage";
@@ -32,6 +32,7 @@ namespace TARCLearn.App_Pages
                     ClientScript.RegisterStartupScript(this.GetType(), scriptKey, javaScript.ToString(), true);
                 }
 
+                string userId = Session["userId"].ToString();
                 TARCLearnEntities db = new TARCLearnEntities();
 
                 HttpClient client = new HttpClient();
